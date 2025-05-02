@@ -15,10 +15,12 @@ import {
 export default function SideSection() {
   const [showScrollBar, setShowScrollBar] = useState(false);
   return (
-    <div className="w-[30%] md:flex hidden pt-12 flex-col space-y-5  fixed left-0 bottom-0 top-0 ">
+    <div className="xl:w-[30%] lg:[5%] lg:flex hidden pt-12 flex-col space-y-5  fixed left-0 bottom-0 top-0">
       <div
-        className={`w-3/4 h-full overflow-y-scroll  pt-10 pl-3 ${
-          showScrollBar ? "socrollabar" : "socrollabar-hidden"
+        className={`w-3/4 pt-10 pl-3 h-screen overflow-y-auto [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 ${
+          showScrollBar
+            ? "[&::-webkit-scrollbar]:w-2"
+            : "[&::-webkit-scrollbar]:w-0"
         }`}
         onMouseOver={() => setShowScrollBar(true)}
         onMouseOut={() => setShowScrollBar(false)}

@@ -445,7 +445,6 @@ export const userDummyData = [
     aboutYou: "",
     favouriteQoutes: "",
   },
-
 ];
 
 export const postDummyData = [
@@ -549,16 +548,77 @@ export const postDummyData = [
     userId: "98979033-c3c6-48b8-999d-619d8b9a0984",
     post: "Saw how marianne graceful dissuade new outlived prospect followed. Uneasy no settle whence nature narrow in afraid. At could merit by keeps child. While dried maids on he of linen in.",
   },
-
 ];
 
+export const storyDummyData = [
+  {
+    userId: "7df4d265-83f8-4ea0-86a2-0e8e7088f9a5",
+  },
+  {
+    userId: "2abca4c9-476e-4cde-84eb-db862db2da72",
+  },
+  {
+    userId: "70f8ee37-ec0a-4ced-af8f-a476ee0a6538",
+  },
+  {
+    userId: "a8d894c5-eded-4f2b-95bf-e7fa05bc58af",
+  },
+  {
+    userId: "b6ec4441-6d82-413c-97e0-0526b04a867d",
+  },
+  {
+    userId: "24adf7f5-6969-4078-889e-77cfdd15875c",
+  },
+  {
+    userId: "c3cbb697-c18d-4710-9b2f-fd41c4984b3a",
+  },
+  {
+    userId: "f803e17f-ef00-4fab-9055-2104faef398d",
+  },
+  {
+    userId: "fd671154-fb06-4075-83aa-5dddd0d63105",
+  },
+  {
+    userId: "acd0b129-ee77-42e2-8813-5aed3e86bba7	",
+  },
+  {
+    userId: "a36fb64f-6a06-4f83-9570-c590d7c7688c",
+  },
+  {
+    userId: "f4ce5f76-40b0-4d2b-9b98-90e104fbb558	",
+  },
+  {
+    userId: "3430f909-7972-4b4d-be93-9fc6a13ca911",
+  },
+  {
+    userId: "aa88e562-94b8-497d-9858-24b1094d8f76",
+  },
+  {
+    userId: "02a772d9-f7f2-4c1a-b329-4c6833d0ce80",
+  },
+  {
+    userId: "eaf07af0-fb23-4020-bbef-9c2826cd46215",
+  },
+  {
+    userId: "b7183f73-4fb9-496c-ae03-418a2e68f201",
+  },
+  {
+    userId: "39615465-6b8d-4a21-b559-895771dfef79",
+  },
+  {
+    userId: "44f5d785-3824-4528-8dc4-02d6896fe7f2",
+  },
+  {
+    userId: "98979033-c3c6-48b8-999d-619d8b9a0984",
+  },
+];
 
 export const commentDummyData = [
   {
     postId: "",
     userId: "",
     comment: "",
-  }
+  },
 ];
 
 export const postReactionDummyData = [
@@ -566,7 +626,7 @@ export const postReactionDummyData = [
     postId: "",
     userId: "",
     reactionType: "",
-  }
+  },
 ];
 
 export const commentReactionDummyData = [
@@ -575,7 +635,7 @@ export const commentReactionDummyData = [
     userId: "",
     commentId: "",
     reactionType: "",
-  }
+  },
 ];
 
 export const replyReactionDummyData = [
@@ -585,166 +645,295 @@ export const replyReactionDummyData = [
     commentId: "",
     ReplyId: "",
     reactionType: "",
-  }
+  },
 ];
-
 
 export const replyDummyData = [
   {
     postId: "",
     userId: "",
     commentId: "",
-    reply: ""
-  }
+    reply: "",
+  },
 ];
-
 
 export const photoDummyData = [
   {
     postId: "eb8cf97f-e81c-44c8-8f07-3129e418c4d1",
-    photo: "/feeds/3.jpg"
+    photo: "/feeds/3.jpg",
   },
   {
     postId: "289ed74d-8887-4d74-b5a6-d3ee9e803069",
-    photo: "/feeds/5.jpg"
+    photo: "/feeds/5.jpg",
   },
   {
     postId: "289ed74d-8887-4d74-b5a6-d3ee9e803069",
-    photo: "/feeds/6.jpg"
+    photo: "/feeds/6.jpg",
   },
   {
     postId: "a26c1855-0cfc-475d-83a7-38bb251799f7",
-    photo: "/feeds/10.jpg"
+    photo: "/feeds/10.jpg",
   },
   {
     postId: "a26c1855-0cfc-475d-83a7-38bb251799f7",
-    photo: "/feeds/11.jpg"
+    photo: "/feeds/11.jpg",
   },
   {
     postId: "a26c1855-0cfc-475d-83a7-38bb251799f7",
-    photo: "/feeds/20.jpg"
+    photo: "/feeds/20.jpg",
   },
   {
     postId: "c4297c98-2e73-4dd6-b794-160076a0b86d",
-    photo: "/feeds/15.jpg"
+    photo: "/feeds/15.jpg",
   },
   {
     postId: "cb004860-e149-43bc-ac4a-dafa0fdbefef",
-    photo: "/feeds/19.jpg"
+    photo: "/feeds/19.jpg",
   },
   {
     postId: "4536bb56-e192-4221-8c99-5f6292a00550",
-    photo: "/feeds/1.jpg"
+    photo: "/feeds/1.jpg",
   },
   {
     postId: "4536bb56-e192-4221-8c99-5f6292a00550",
-    photo: "/feeds/2.jpg"
+    photo: "/feeds/2.jpg",
   },
   {
     postId: "4536bb56-e192-4221-8c99-5f6292a00550",
-    photo: "/feeds/3.jpg"
+    photo: "/feeds/3.jpg",
   },
   {
     postId: "4536bb56-e192-4221-8c99-5f6292a00550",
-    photo: "/feeds/4.jpg"
+    photo: "/feeds/4.jpg",
   },
   {
     postId: "0950b6cf-ae95-42d1-8deb-f7d72fc1f60b",
-    photo: "/feeds/16.jpg"
+    photo: "/feeds/16.jpg",
   },
   {
     postId: "a7788c1d-4929-4875-aa18-d75b9623431b",
-    photo: "/feeds/14.jpg"
+    photo: "/feeds/14.jpg",
   },
   {
     postId: "cfa41c3a-4954-4e09-95b9-8e66d7511e78",
-    photo: "/feeds/10.jpg"
+    photo: "/feeds/10.jpg",
   },
   {
     postId: "839dea05-e7fe-4e08-a3ca-4f8fa6f40787",
-    photo: "/feeds/11.jpg"
+    photo: "/feeds/11.jpg",
   },
   {
     postId: "10776239-027b-4292-a13d-8e7394fcf931",
-    photo: "/feeds/20.jpg"
+    photo: "/feeds/20.jpg",
   },
   {
     postId: "dca127f0-ae1a-4c0b-84cd-8cc68045135e	",
-    photo: "/feeds/13.jpg"
+    photo: "/feeds/13.jpg",
   },
   {
     postId: "dca127f0-ae1a-4c0b-84cd-8cc68045135e	",
-    photo: "/feeds/18.jpg"
+    photo: "/feeds/18.jpg",
   },
   {
     postId: "dca127f0-ae1a-4c0b-84cd-8cc68045135e	",
-    photo: "/feeds/14.jpg"
+    photo: "/feeds/14.jpg",
   },
   {
     postId: "bc8e0018-835a-4c8c-92ea-4f3091060331",
-    photo: "/feeds/28.jpg"
+    photo: "/feeds/28.jpg",
   },
 
   {
     postId: "6f8b9d0c-548c-41ec-9a9b-25e33f18b578",
-    photo: "/feeds/5.jpg"
+    photo: "/feeds/5.jpg",
   },
   {
     postId: "f191d42f-dd5c-4661-bc3d-0dfc33ff35ca",
-    photo: "/feeds/22.jpg"
+    photo: "/feeds/22.jpg",
   },
 
   {
     postId: "69820fcd-0ec9-4bf1-8fac-ca856a5b7cb0",
-    photo: "/feeds/4.jpg"
+    photo: "/feeds/4.jpg",
   },
 
   {
     postId: "69820fcd-0ec9-4bf1-8fac-ca856a5b7cb0",
-    photo: "/feeds/14.jpg"
+    photo: "/feeds/14.jpg",
+  },
+
+  {
+    postId: "1001195f-5868-4bef-93c0-919c40c62a9c",
+    photo: "/feeds/2.jpg",
   },
 
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/2.jpg"
+    photo: "/feeds/5.jpg",
   },
 
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/5.jpg"
+    photo: "/feeds/6.jpg",
   },
 
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/6.jpg"
-  },
-
-  {
-    postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/8.jpg"
+    photo: "/feeds/8.jpg",
   },
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/3.jpg"
+    photo: "/feeds/3.jpg",
   },
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/17.jpg"
+    photo: "/feeds/17.jpg",
   },
   {
     postId: "8cc13289-be9c-428b-9cb3-31a027885e69",
-    photo: "/feeds/9.jpg"
+    photo: "/feeds/9.jpg",
   },
 
   {
     postId: "93251141-ba29-449b-b740-00a400a57378",
-    photo: "/feeds/4.jpg"
-  }
-
+    photo: "/feeds/4.jpg",
+  },
 ];
 
+export const storyphotoDummyData = [
+  {
+    storyId: "8ae784a8-d949-4dca-a42a-11414e0ceb8f",
+    photo: "/feeds/3.jpg",
+  },
+  {
+    storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
+    photo: "/feeds/5.jpg",
+  },
+  {
+    storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
+    photo: "/feeds/6.jpg",
+  },
+  {
+    storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
+    photo: "/feeds/10.jpg",
+  },
+  {
+    storyId: "f652ff84-0ba4-4881-9356-a8b5c1b4a56b",
+    photo: "/feeds/11.jpg",
+  },
+  {
+    storyId: "f652ff84-0ba4-4881-9356-a8b5c1b4a56b",
+    photo: "/feeds/20.jpg",
+  },
+  {
+    storyId: "c4297c98-2e73-4dd6-b794-160076a0b86d",
+    photo: "/feeds/15.jpg",
+  },
+  {
+    storyId: "619c7f9b-8164-4419-b410-167a573ee301",
+    photo: "/feeds/19.jpg",
+  },
+  {
+    storyId: "1df9e6be-1fb2-45cd-8274-28ed33791386",
+    photo: "/feeds/1.jpg",
+  },
+  {
+    storyId: "d2bca30d-a40b-4a3b-a645-d455a5b519cb",
+    photo: "/feeds/2.jpg",
+  },
+  {
+    storyId: "47867e52-5a79-4dc5-80ae-7796d02cb845",
+    photo: "/feeds/3.jpg",
+  },
+  {
+    storyId: "ed61bb2a-95ac-46c9-9938-e9ee47487dba",
+    photo: "/feeds/4.jpg",
+  },
+  {
+    storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
+    photo: "/feeds/16.jpg",
+  },
+  {
+    storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
+    photo: "/feeds/14.jpg",
+  },
+  {
+    storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
+    photo: "/feeds/10.jpg",
+  },
+  {
+    storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
+    photo: "/feeds/11.jpg",
+  },
+  {
+    storyId: "ea67d847-fb5e-4f28-af33-f9e2ef770e30",
+    photo: "/feeds/20.jpg",
+  },
+  {
+    storyId: "a822d98a-75dc-4f31-b6ca-cbd345d5553e",
+    photo: "/feeds/13.jpg",
+  },
+  {
+    storyId: "8d9f65b3-c2ef-4b4f-a2a1-c3c5e50b00a2",
+    photo: "/feeds/18.jpg",
+  },
+  {
+    storyId: "87fe35cc-18ba-49fe-8014-2caef7901e7a",
+    photo: "/feeds/14.jpg",
+  },
+  {
+    storyId: "76507f4d-3040-4d07-8870-b87b607a65fa",
+    photo: "/feeds/28.jpg",
+  },
 
+  {
+    storyId: "de1e72e7-c1ee-45a7-a4af-2ff178157768",
+    photo: "/feeds/5.jpg",
+  },
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/22.jpg",
+  },
 
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/4.jpg",
+  },
 
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/14.jpg",
+  },
 
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/2.jpg",
+  },
 
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/5.jpg",
+  },
+
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    photo: "/feeds/6.jpg",
+  },
+
+  {
+    storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
+    photo: "/feeds/8.jpg",
+  },
+  {
+    storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
+    photo: "/feeds/3.jpg",
+  },
+  {
+    storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
+    photo: "/feeds/17.jpg",
+  },
+  {
+    storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
+    photo: "/feeds/9.jpg",
+  },
+];

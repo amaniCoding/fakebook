@@ -6,18 +6,14 @@ export default function Login() {
     <section className="bg-slate-200 h-screen">
       <div className="max-w-full">
         <div className="grid lg:grid-cols-2 grid-cols-1">
-          <div className="flex items-center justify-center">
-            <div className="lg:block hidden w-full h-full">
-              <Image
-                alt="Amanuel Ferede"
-                src={"/feeds/max-removebg-preview.png"}
-                width={0}
-                height={0}
-                sizes="100vh"
-                className="w-full"
-              />
-            </div>
-          </div>
+          <Image
+            alt="Amanuel Ferede"
+            src={"/feeds/logoc.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-full h-full"
+          />
 
           <div className="flex items-center justify-center">
             <div className="lg:w-3/4 w-full h-full">
@@ -29,13 +25,13 @@ export default function Login() {
                   <input
                     type="email"
                     required
-                    className="py-3 px-4 block w-full border-2 border-gray/45 rounded-xl"
+                    className="py-3 px-4 block w-full border-2 border-gray-200 rounded-xl"
                     placeholder="Email or phone number"
                   ></input>
                   <input
                     type="password"
                     required
-                    className="py-3 px-4  block w-full border-2 border-gray/45 rounded-xl"
+                    className="py-3 px-4  block w-full border-2 border-gray-200 rounded-xl"
                     placeholder="Password"
                   ></input>
                   <div className="flex flex-row space-x-3">

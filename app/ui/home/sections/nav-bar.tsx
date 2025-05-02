@@ -30,7 +30,7 @@ export default function NavBar() {
             placeholder="Search Developers ..."
           ></input>
         </div>
-        <div className="md:flex hidden items-center space-x-3 text-gray-500">
+        <div className="xl:flex hidden items-center space-x-3 text-gray-500">
           <div className="rounded-md transition duration-300 ease-in-out hover:bg-slate-50 py-3 px-6 cursor-pointer">
             <MdHomeFilled className="w-[26px] fill-blue-600 h-[26px]" />
           </div>

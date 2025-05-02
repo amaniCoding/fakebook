@@ -1,7 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from "@vercel/postgres";
 import bcrypt from "bcryptjs";
-import { userDummyData, postDummyData, commentDummyData, replyDummyData, postReactionDummyData, commentReactionDummyData, replyReactionDummyData, photoDummyData } from "../../libs/placeholders/user/place-holder";
+import {
+  userDummyData,
+  postDummyData,
+  commentDummyData,
+  replyDummyData,
+  postReactionDummyData,
+  commentReactionDummyData,
+  replyReactionDummyData,
+  photoDummyData,
+  storyDummyData,
+  storyphotoDummyData,
+} from "../../libs/placeholders/user/place-holder";
 const client = await db.connect();
 
 async function seedUser() {
@@ -40,7 +51,9 @@ async function seedUser() {
        homeTown, relationShipStatus, nickName, aboutYou, favouriteQoutes) VALUES
         (${user.email}, ${user.password}, ${user.phoneNumber}, ${user.fName}, 
         ${user.mName}, ${user.lName}, ${user.gender}, ${user.birthDate}, 
-        ${user.profilePic}, ${user.coverPic}, ${user.bio}, ${JSON.stringify(user.work)}, 
+        ${user.profilePic}, ${user.coverPic}, ${user.bio}, ${JSON.stringify(
+        user.work
+      )}, 
         ${JSON.stringify(user.college)}, ${user.currentCity}, ${user.homeTown}, 
         ${user.relationShipStatus}, ${user.nickName}, ${user.aboutYou}, 
         ${user.favouriteQoutes}) ON CONFLICT (userid) DO NOTHING;
@@ -65,7 +78,6 @@ async function seedPost() {
 
   const insertedPosts = await Promise.all(
     postDummyData.map(async (post) => {
-
       return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES (${post.postType}, ${post.userId}, ${post.post}) ON CONFLICT (postid) DO NOTHING;
       `;
     })
@@ -74,7 +86,25 @@ async function seedPost() {
   return insertedPosts;
 }
 
+async function seedStories() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS ustories (
+      storyid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      userid UUID NOT NULL,
+      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
 
+  const insertedStories = await Promise.all(
+    storyDummyData.map(async (story) => {
+      return client.sql`INSERT INTO ustories (userid) VALUES (${story.userId}) ON CONFLICT (storyid) DO NOTHING;
+      `;
+    })
+  );
+
+  return insertedStories;
+}
 
 async function seedComments() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -90,7 +120,6 @@ async function seedComments() {
 
   const insertedComments = await Promise.all(
     commentDummyData.map(async (comment) => {
-
       return client.sql`INSERT INTO ucomments (userpostid, userid, userpostcomment) VALUES (${comment.postId}, ${comment.userId}, ${comment.comment}) ON CONFLICT (commentid) DO NOTHING;
       `;
     })
@@ -114,7 +143,6 @@ async function seedReplies() {
 
   const insertedReplies = await Promise.all(
     replyDummyData.map(async (reply) => {
-
       return client.sql`INSERT INTO ureplies (postid, userid, commentid, reply) VALUES (${reply.postId}, ${reply.userId}, ${reply.commentId}, ${reply.reply}) ON CONFLICT (replyid) DO NOTHING;
       `;
     })
@@ -122,7 +150,6 @@ async function seedReplies() {
 
   return insertedReplies;
 }
-
 
 async function seedPostReactions() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -138,7 +165,6 @@ async function seedPostReactions() {
 
   const insertedPostReactions = await Promise.all(
     postReactionDummyData.map(async (reaction) => {
-
       return client.sql`INSERT INTO upreactions (postid, userid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.reactionType}) ON CONFLICT (reactionid) DO NOTHING;
       `;
     })
@@ -146,9 +172,6 @@ async function seedPostReactions() {
 
   return insertedPostReactions;
 }
-
-
-
 
 async function seedCommentReactions() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -165,15 +188,17 @@ async function seedCommentReactions() {
 
   const insertedCommentReactions = await Promise.all(
     commentReactionDummyData.map(async (reaction) => {
-
-      return client.sql`INSERT INTO ucreactions (postid, userid, commentid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.commentId, reaction.reactionType}) ON CONFLICT (reactionid) DO NOTHING;
+      return client.sql`INSERT INTO ucreactions (postid, userid, commentid, reactiontype) VALUES (${
+        reaction.postId
+      }, ${reaction.userId}, ${
+        (reaction.commentId, reaction.reactionType)
+      }) ON CONFLICT (reactionid) DO NOTHING;
       `;
     })
   );
 
   return insertedCommentReactions;
 }
-
 
 async function seedReplyReactions() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -191,7 +216,6 @@ async function seedReplyReactions() {
 
   const insertedReplyReactions = await Promise.all(
     replyReactionDummyData.map(async (reaction) => {
-
       return client.sql`INSERT INTO urreactions (postid, userid, commentid, replyid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.commentId}, ${reaction.ReplyId}) ON CONFLICT (reactionid) DO NOTHING;
       `;
     })
@@ -199,8 +223,6 @@ async function seedReplyReactions() {
 
   return insertedReplyReactions;
 }
-
-
 
 async function seedPhotos() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -213,18 +235,36 @@ async function seedPhotos() {
     );
   `;
 
-  const insertedReplyReactions = await Promise.all(
+  const insertedPhotos = await Promise.all(
     photoDummyData.map(async (reaction) => {
-
       return client.sql`INSERT INTO uphotos (postid, photo) VALUES (${reaction.postId}, ${reaction.photo}) ON CONFLICT (photoid) DO NOTHING;
       `;
     })
   );
 
-  return insertedReplyReactions;
+  return insertedPhotos;
 }
 
+async function seedStoryPhotos() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS ustoryphotos(
+      photoid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      storyid UUID NOT NULL,
+      photo TEXT,
+      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
 
+  const insertedStoryPhotos = await Promise.all(
+    storyphotoDummyData.map(async (photo) => {
+      return client.sql`INSERT INTO ustoryphotos (storyid, photo) VALUES (${photo.storyId}, ${photo.photo}) ON CONFLICT (photoid) DO NOTHING;
+      `;
+    })
+  );
+
+  return insertedStoryPhotos;
+}
 
 export async function GET() {
   try {
@@ -234,7 +274,9 @@ export async function GET() {
     // await seedUser();
 
     // await seedPost();
-    seedPhotos();
+    //seedPhotos();
+    //seedStories();
+    //seedStoryPhotos();
 
     /* 
 
@@ -251,6 +293,5 @@ export async function GET() {
     console.log(error);
     await client.sql`ROLLBACK`;
     return Response.json({ error }, { status: 500 });
-
   }
 }

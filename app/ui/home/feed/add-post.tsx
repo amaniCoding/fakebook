@@ -32,18 +32,18 @@ export default function AddPost() {
           ></input>
         </div>
 
-        <div className="flex items-center justify-center space-x-2 py-2">
+        <div className="flex items-center xl:justify-center justify-between space-x-2 py-2">
           <button className="rounded-md hover:bg-gray-100 px-3 flex items-center space-x-2 py-2">
             <RiLiveFill className="w-7 h-7 fill-red-500" />
-            <span>Live Video</span>
+            <span className="md:block hidden">Live Video</span>
           </button>
           <button className="rounded-md hover:bg-gray-100 px-3 flex items-center space-x-2 py-2">
             <MdPhotoLibrary className="w-7 h-7 fill-green-500" />
-            <span>Photo / Video</span>
+            <span className="md:block hidden">Photo / Video</span>
           </button>
           <button className="rounded-md hover:bg-gray-100 px-3 flex items-center space-x-2 py-2">
             <FaRegSmile className="w-7 h-7 fill-orange-300" />
-            <span>Photo / Video</span>
+            <span className="md:block hidden">Photo / Video</span>
           </button>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-
 import BirthDays from "../contact/birthdays";
 import Search from "../contact/search";
 import Contacts from "../contact/contacts";
@@ -7,7 +6,16 @@ import ContactSkeleton from "../../skeletons/contact";
 
 export default function ContactSection() {
   return (
-    <div className="md:w-[30%] bg-slate-50 opacity-50 md:pl-10 w-full md:block hidden pb-32 h-screen sticky top-24 scroll_content socrollabar">
+    <div
+      className={`xl:w-[30%] opacity-40 [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 w-full xl:pl-32 xl:block hidden sticky top-24 h-screen overflow-y-auto
+  [&::-webkit-scrollbar]:w-0"
+  `}
+    >
       <BirthDays />
       <Search />
       <Suspense fallback={<ContactSkeleton />}>
