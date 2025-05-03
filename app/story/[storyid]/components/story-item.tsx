@@ -1,8 +1,16 @@
 import { QueryResultRow } from "@vercel/postgres";
 import Image from "next/image";
-export default async function StoryItem(props: { story: QueryResultRow }) {
+export default function StoryItem(props: {
+  story: QueryResultRow;
+  showStoryPhoto: (id: string) => void;
+}) {
   return (
-    <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+    <div
+      className="flex items-center cursor-pointer space-x-3 p-2 rounded-lg hover:bg-gray-100"
+      onClick={() => {
+        props.showStoryPhoto(props.story.storyid);
+      }}
+    >
       <Image
         alt="Amanuel Ferede"
         src={props.story.profilepic}

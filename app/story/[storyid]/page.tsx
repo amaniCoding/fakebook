@@ -1,6 +1,10 @@
-import { fetchStories } from "@/app/libs/data/user";
-import Story from "./components/story";
+import {
+  fetchAllStoriesWithPhotos,
+  fetchStories,
+  fetchStoryPhotos,
+} from "@/app/libs/data/user";
 import NavBar from "@/app/ui/home/sections/nav-bar";
+import Home from "./components/home";
 
 export default async function Page(props: {
   params: Promise<{ storyid: string }>;
@@ -8,10 +12,18 @@ export default async function Page(props: {
   const params = await props.params;
   const { storyid } = params;
   const allStories = await fetchStories();
+  const allStoriesWithPhotos = await fetchAllStoriesWithPhotos();
+  const storyPhotos = await fetchStoryPhotos(storyid);
+
   return (
     <>
       <NavBar />
-      <Story stories={allStories} storyid={storyid} />
+      <Home
+        stories={allStories}
+        storyPhotos={storyPhotos}
+        allStoriesWithPhotos={allStoriesWithPhotos}
+        storyid={storyid}
+      />
     </>
   );
 }
