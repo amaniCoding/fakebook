@@ -19,9 +19,9 @@ body {
   overflow-x: hidden;
 }
 
-.slick-slide > div > div {
+.slick-slide > div {
   padding: 0 5px;
-  border-radius: 19px;
+
 }
 
 

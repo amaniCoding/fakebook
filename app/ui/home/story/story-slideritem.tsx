@@ -26,7 +26,7 @@ export default function StorySliderItem(props: {
   }, [storyId]);
 
   return (
-    <div className="group overflow-hidden">
+    <div className="group overflow-hidden rounded-xl">
       <Link href={`/story/${storyId}`}>
         <div className="relative">
           {storyPhotoLoading ? (
