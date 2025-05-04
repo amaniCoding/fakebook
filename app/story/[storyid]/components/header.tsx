@@ -1,17 +1,9 @@
-import { FaXmark } from "react-icons/fa6";
-import Link from "next/link";
 import { BiPlus } from "react-icons/bi";
 
 export default function StoryHeader() {
   return (
     <>
-      <p className="text-lg font-bold mb-3">All stories</p>
-      <div className="w-full flex items-center space-x-1 mb-3">
-        <Link href="/">
-          <FaXmark className="w-11 h-11 text-black bg-gray-200 p-3 rounded-full" />
-        </Link>
-        <p className="text-xl font-bold mb-3">Stories</p>
-      </div>
+      <p className="text-xl font-bold mb-3">Stories</p>
       <div className="flex items-center space-x-3">
         <p>Active</p>
         <p>Settings</p>

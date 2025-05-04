@@ -86,3 +86,14 @@ export async function fetchAllStoriesWithPhotos() {
     throw new Error("Faild to fetch dev data");
   }
 }
+
+export async function fetchAStory(storyId: string) {
+  try {
+    const data =
+      await sql`SELECT * FROM ustories JOIN users ON ustories.userid = users.userid WHERE storyid = ${storyId} ORDER BY ustories.date DESC`;
+    return data.rows;
+  } catch (error) {
+    console.log("Database error", error);
+    throw new Error("Faild to fetch dev data");
+  }
+}

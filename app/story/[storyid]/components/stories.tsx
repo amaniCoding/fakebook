@@ -3,7 +3,7 @@ import { QueryResultRow } from "@vercel/postgres";
 
 export default function Stories(props: {
   stories: QueryResultRow[];
-  showStoryPhoto: (id: string) => void;
+  showStoryPhoto: (story: QueryResultRow) => void;
 }) {
   return (
     <div className="flex flex-col">

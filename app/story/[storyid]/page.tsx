@@ -1,9 +1,9 @@
 import {
   fetchAllStoriesWithPhotos,
+  fetchAStory,
   fetchStories,
   fetchStoryPhotos,
 } from "@/app/libs/data/user";
-import NavBar from "@/app/ui/home/sections/nav-bar";
 import Home from "./components/home";
 
 export default async function Page(props: {
@@ -11,18 +11,19 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const { storyid } = params;
-  const allStories = await fetchStories();
-  const allStoriesWithPhotos = await fetchAllStoriesWithPhotos();
-  const storyPhotos = await fetchStoryPhotos(storyid);
+  const stories = await fetchStories();
+  const storyPhotos = await fetchAllStoriesWithPhotos();
+  const currentStory = await fetchAStory(storyid);
+  const currentStoryPhotos = await fetchStoryPhotos(storyid);
 
   return (
     <>
-      <NavBar />
       <Home
-        stories={allStories}
+        stories={stories}
         storyPhotos={storyPhotos}
-        allStoriesWithPhotos={allStoriesWithPhotos}
         storyid={storyid}
+        currentStory={currentStory}
+        currentStoryPhotos={currentStoryPhotos}
       />
     </>
   );
