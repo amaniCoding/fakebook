@@ -9,6 +9,7 @@ import { FaXmark } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import {
   setCurrentStory,
+  setCurrentStoryPhotos,
   setStories,
   setStoryPhotos,
 } from "@/app/store/slices/storySlice";
@@ -23,16 +24,19 @@ export default function Home(props: {
 }) {
   const dispatch = useDispatch();
 
-  const currentStoryIdex = props.stories.findIndex((story) => {
+  const _currentStory = props.stories.find((story) => {
     return story.storyid === props.storyid;
   });
 
   useEffect(() => {
     dispatch(setStoryPhotos(props.storyPhotos));
+    dispatch(setCurrentStory(_currentStory));
     dispatch(setStories(props.stories));
-    dispatch(setCurrentStory(currentStoryIdex));
+    dispatch(
+      setCurrentStoryPhotos({ type: "first", photos: props.currentStoryPhotos })
+    );
   }, [
-    currentStoryIdex,
+    _currentStory,
     dispatch,
     props.currentStory,
     props.currentStoryPhotos,
@@ -47,11 +51,13 @@ export default function Home(props: {
   const currentStory = useAppSelector((state) => state.stores.currentStory);
 
   const showStoryPhoto = (story: QueryResultRow) => {
-    const currentPhotoIndex = props.stories.findIndex((_story) => {
-      return _story.storyid === story.storyid;
-    });
-    dispatch(setCurrentStory(currentPhotoIndex));
+    dispatch(setCurrentStory(story));
+    dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
   };
+
+  // useEffect(() => {
+  //   console.log("all stories", _currentStory);
+  // }, [_currentStory]);
 
   return (
     <div className="story">

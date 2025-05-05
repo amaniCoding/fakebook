@@ -5,32 +5,46 @@ import { IoMdHeart } from "react-icons/io";
 import { BsEmojiSmileFill, BsFillEmojiSurpriseFill } from "react-icons/bs";
 import { QueryResultRow } from "@vercel/postgres";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "@/app/store/hooks";
-import { setCurrentStory } from "@/app/store/slices/storySlice";
+import {
+  setCurrentStory,
+  setCurrentStoryPhotos,
+} from "@/app/store/slices/storySlice";
 import { useDispatch } from "react-redux";
 export default function StoryViewer(props: {
   currentStoryPhotos: QueryResultRow[];
-  currentStory: QueryResultRow;
+  currentStory: QueryResultRow | undefined;
   storyid: string;
 }) {
+  const dispatch = useDispatch();
   const currentStory = useAppSelector((state) => state.stores.currentStory);
   const stories = useAppSelector((state) => state.stores.stories);
-  const dispatch = useDispatch();
+
+  const [currentPhotoIndex, setcurrentPhotoIndex] = useState<number>(0);
+
   const _currentStoryIndex = stories.findIndex((story) => {
-    return story.storyid === currentStory.storyid;
+    return story.storyid === currentStory?.storyid;
   });
 
   const [currentStoryIndex, setcurrentStoryIndex] =
     useState<number>(_currentStoryIndex);
 
-  const [currentPhotoIndex, setcurrentPhotoIndex] = useState<number>(0);
+  useEffect(() => {
+    setcurrentStoryIndex(_currentStoryIndex);
+  }, [_currentStoryIndex]);
 
   const handelNext = () => {
-    alert(currentPhotoIndex);
     if (currentPhotoIndex >= props.currentStoryPhotos.length - 1) {
-      setcurrentStoryIndex(currentStoryIndex + 1);
-      dispatch(setCurrentStory(currentStoryIndex + 1));
+      // becuase react update state immediately
+      if (currentStoryIndex >= stories.length - 1) {
+        return;
+      } else {
+        setcurrentStoryIndex(currentStoryIndex + 1);
+        dispatch(setCurrentStory(stories[_currentStoryIndex + 1]));
+        setcurrentPhotoIndex(0);
+        dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
+      }
     } else {
       setcurrentPhotoIndex(currentPhotoIndex + 1);
     }
@@ -38,9 +52,16 @@ export default function StoryViewer(props: {
 
   const handelPrev = () => {
     if (currentPhotoIndex <= 0) {
-      return;
+      if (currentStoryIndex <= 0) {
+      } else {
+        setcurrentStoryIndex(currentStoryIndex - 1);
+        dispatch(setCurrentStory(stories[_currentStoryIndex - 1]));
+        setcurrentPhotoIndex(0);
+        dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
+      }
+    } else {
+      setcurrentPhotoIndex(currentPhotoIndex - 1);
     }
-    setcurrentPhotoIndex(currentPhotoIndex - 1);
   };
 
   return (

@@ -13,7 +13,7 @@ export type Contnet = {
   photo?: string;
 };
 
-export type CurrentStoryPayload = {
-  index: number;
-  story: QueryResultRow;
+export type CurrentStoryPhotosPayload = {
+  type: "first" | "update";
+  photos: QueryResultRow[];
 };
