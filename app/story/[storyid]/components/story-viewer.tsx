@@ -34,6 +34,39 @@ export default function StoryViewer(props: {
     setcurrentStoryIndex(_currentStoryIndex);
   }, [_currentStoryIndex]);
 
+  useEffect(() => {
+    const handelNext = () => {
+      if (currentPhotoIndex >= props.currentStoryPhotos.length - 1) {
+        // becuase react update state immediately
+        if (currentStoryIndex >= stories.length - 1) {
+          return;
+        } else {
+          setcurrentStoryIndex(currentStoryIndex + 1);
+          dispatch(setCurrentStory(stories[_currentStoryIndex + 1]));
+          setcurrentPhotoIndex(0);
+          dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
+        }
+      } else {
+        setcurrentPhotoIndex(currentPhotoIndex + 1);
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      handelNext();
+    }, 4000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [
+    _currentStoryIndex,
+    currentPhotoIndex,
+    currentStoryIndex,
+    dispatch,
+    props.currentStoryPhotos.length,
+    stories,
+  ]);
+
   const handelNext = () => {
     if (currentPhotoIndex >= props.currentStoryPhotos.length - 1) {
       // becuase react update state immediately

@@ -65,7 +65,7 @@ export default function Home(props: {
           </Link>
           <Image
             alt="Amanuel Ferede"
-            src="/feeds/clogo.jpg"
+            src="/feeds/logoc.png"
             width={0}
             height={0}
             sizes="100vh"

@@ -3,13 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { BiSolidGrid } from "react-icons/bi";
 import { FaFacebookMessenger } from "react-icons/fa6";
+import { GiGamepad } from "react-icons/gi";
 
 import { IoNotificationsSharp } from "react-icons/io5";
 import { LiaSellcast } from "react-icons/lia";
 import { LuTvMinimalPlay } from "react-icons/lu";
 import { MdHomeFilled, MdOutlineGroups2 } from "react-icons/md";
-
-import { SiYoutubegaming } from "react-icons/si";
 export default function NavBar() {
   return (
     <nav className="py-1.5 px-4 fixed top-0 left-0 right-0 z-50 bg-white w-full shadow-md">
@@ -46,7 +45,7 @@ export default function NavBar() {
             <MdOutlineGroups2 className="w-8 h-8 " />
           </div>
           <div className="flex items-center justify-center px-10 py-1.5 rounded-lg hover:bg-gray-50">
-            <SiYoutubegaming className="w-8 h-8 " />
+            <GiGamepad className="w-8 h-8" />{" "}
           </div>
         </div>
         <div className="flex items-center space-x-3">
