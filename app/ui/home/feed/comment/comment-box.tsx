@@ -12,7 +12,7 @@ export default function CommentBox(props: {
   onClose: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
-    <section className="bg-gray-300/75 fixed top-0 bottom-0 left-0 right-0 z-10 overflow-hidden">
+    <section className="bg-gray-300/75 fixed top-0 bottom-0 left-0 right-0 z-[200] overflow-hidden">
       <div className="max-w-[600px] mx-auto rounded-xl bg-white my-10">
         <div className="flex rounded-t-xl items-center justify-between mb-2 border-b-2 border-b-slate-200 p-2 sticky w-full left-0 right-0 bg-white top-0">
           <p></p>
