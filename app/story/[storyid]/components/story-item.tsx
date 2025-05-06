@@ -1,12 +1,18 @@
+import { useAppSelector } from "@/app/store/hooks";
 import { QueryResultRow } from "@vercel/postgres";
 import Image from "next/image";
 export default function StoryItem(props: {
   story: QueryResultRow;
   showStoryPhoto: (story: QueryResultRow) => void;
 }) {
+  const currentStory = useAppSelector((state) => state.stores.currentStory);
   return (
     <div
-      className="flex items-center cursor-pointer space-x-3 p-2 rounded-lg hover:bg-gray-100"
+      className={`flex items-center cursor-pointer space-x-3 p-2 rounded-lg hover:bg-gray-100 ${
+        currentStory?.storyid === props.story.storyid
+          ? "bg-gray-100"
+          : "bg-transparent"
+      }`}
       onClick={() => {
         props.showStoryPhoto(props.story);
       }}

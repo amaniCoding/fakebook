@@ -14,6 +14,7 @@ import {
   setStoryPhotos,
 } from "@/app/store/slices/storySlice";
 import { useAppSelector } from "@/app/store/hooks";
+import Link from "next/link";
 
 export default function Home(props: {
   stories: QueryResultRow[];
@@ -55,15 +56,13 @@ export default function Home(props: {
     dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
   };
 
-  // useEffect(() => {
-  //   console.log("all stories", _currentStory);
-  // }, [_currentStory]);
-
   return (
     <div className="story">
       <div className="w-[26%] bg-white fixed top-0 left-0 bottom-0 p-1">
         <div className="flex items-center space-x-2 p-3 border-b border-b-gray-200">
-          <FaXmark className="w-11 h-11 p-3 bg-gray-200 rounded-full" />
+          <Link href="/">
+            <FaXmark className="w-11 h-11 p-3 bg-gray-200 rounded-full" />
+          </Link>
           <Image
             alt="Amanuel Ferede"
             src="/feeds/clogo.jpg"

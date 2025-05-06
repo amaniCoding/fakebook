@@ -6,7 +6,7 @@ export default function Stories(props: {
   showStoryPhoto: (story: QueryResultRow) => void;
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-1">
       {props.stories.map((story) => {
         return (
           <StoryItem

@@ -9,6 +9,7 @@ interface StoryState {
   currentStory: QueryResultRow | undefined;
   currentStoryPhotos: QueryResultRow[];
   currentPhotoIndex: number;
+  currentStoryIndex: number;
 }
 
 // Define the initial state using that type
@@ -18,6 +19,7 @@ const initialState: StoryState = {
   currentStory: {},
   currentStoryPhotos: [],
   currentPhotoIndex: 0,
+  currentStoryIndex: 0,
 };
 
 export const storySlice = createSlice({
@@ -39,6 +41,10 @@ export const storySlice = createSlice({
     ) => {
       state.currentStory = action.payload;
       state.currentPhotoIndex = 0;
+    },
+
+    setCurrentStoryIndex: (state, action: PayloadAction<number>) => {
+      state.currentStoryIndex = action.payload;
     },
     setCurrentStoryPhotos: (
       state,
@@ -68,6 +74,7 @@ export const {
   setCurrentStory,
   setCurrentStoryPhotos,
   setStoryPhotos,
+  setCurrentStoryIndex,
 } = storySlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
