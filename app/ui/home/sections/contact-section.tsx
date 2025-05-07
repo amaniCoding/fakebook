@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import BirthDays from "../contact/birthdays";
 import Search from "../contact/search";
 import Contacts from "../contact/contacts";
-import ContactSkeleton from "../../skeletons/contact";
 
 export default function ContactSection() {
   return (
@@ -18,9 +16,7 @@ export default function ContactSection() {
     >
       <BirthDays />
       <Search />
-      <Suspense fallback={<ContactSkeleton />}>
-        <Contacts />
-      </Suspense>
+      <Contacts />
     </div>
   );
 }
