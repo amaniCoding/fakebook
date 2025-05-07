@@ -22,7 +22,7 @@ const initialState: StoryState = {
   currentStoryIndex: 0,
 };
 
-export const storySlice = createSlice({
+export const userStorySlice = createSlice({
   name: "story",
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
@@ -75,8 +75,8 @@ export const {
   setCurrentStoryPhotos,
   setStoryPhotos,
   setCurrentStoryIndex,
-} = storySlice.actions;
+} = userStorySlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 
-export default storySlice.reducer;
+export default userStorySlice.reducer;

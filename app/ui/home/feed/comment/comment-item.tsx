@@ -6,17 +6,25 @@ import CommentBox from "./comment-box";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat, PiShareFatFill, PiThumbsUp } from "react-icons/pi";
 import { IoMdThumbsUp } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { showCommentBox } from "@/app/store/slices/commentSlice";
 
 export default function CommentItem() {
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
-
+  const dispatch = useDispatch();
   const handelShowCommentBox = () => {
     setToShowCommentBox(true);
+    dispatch(showCommentBox(true));
+  };
+
+  const handelHideCommentBox = () => {
+    setToShowCommentBox(false);
+    dispatch(showCommentBox(false));
   };
 
   return (
     <>
-      {toShowCommentBox && <CommentBox onClose={setToShowCommentBox} />}
+      {toShowCommentBox && <CommentBox onClose={handelHideCommentBox} />}
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
         <div className="flex items-center space-x">

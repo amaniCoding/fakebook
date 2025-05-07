@@ -18,8 +18,8 @@ export default function StoryViewer(props: {
   storyid: string;
 }) {
   const dispatch = useDispatch();
-  const currentStory = useAppSelector((state) => state.stores.currentStory);
-  const stories = useAppSelector((state) => state.stores.stories);
+  const currentStory = useAppSelector((state) => state.userStory.currentStory);
+  const stories = useAppSelector((state) => state.userStory.stories);
 
   const [currentPhotoIndex, setcurrentPhotoIndex] = useState<number>(0);
 

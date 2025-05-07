@@ -5,7 +5,7 @@ export default function StoryItem(props: {
   story: QueryResultRow;
   showStoryPhoto: (story: QueryResultRow) => void;
 }) {
-  const currentStory = useAppSelector((state) => state.stores.currentStory);
+  const currentStory = useAppSelector((state) => state.userStory.currentStory);
   return (
     <div
       className={`flex items-center cursor-pointer space-x-3 p-2 rounded-lg hover:bg-gray-100 ${

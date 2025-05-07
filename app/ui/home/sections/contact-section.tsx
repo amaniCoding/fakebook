@@ -7,7 +7,7 @@ import ContactSkeleton from "../../skeletons/contact";
 export default function ContactSection() {
   return (
     <div
-      className={`xl:w-[30%] opacity-40 [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:rounded-full
+      className={`xl:w-[30%] [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-gray-300

@@ -7,7 +7,7 @@ export default async function Contacts() {
     <>
       {users.map((user) => {
         return (
-          <div className="w-full" key={user.userid}>
+          <div className="w-full opacity-45" key={user.userid}>
             <div className="flex items-center space-x-2 py-2 px-2.5 rounded-md hover:bg-gray-100">
               <Image
                 alt="Amanuel Ferede"

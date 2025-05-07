@@ -1,6 +1,4 @@
 "use client";
-
-import { Dispatch, SetStateAction } from "react";
 import { FaLocationDot, FaLock, FaXmark } from "react-icons/fa6";
 import Image from "next/image";
 import { BsEmojiAstonished } from "react-icons/bs";
@@ -10,14 +8,12 @@ import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { PiGifFill } from "react-icons/pi";
 import { IoIosMore } from "react-icons/io";
 // import { createPost, State } from "@/app/libs/actions"
-export default function PostBox(props: {
-  onClose: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function PostBox(props: { onClose: () => void }) {
   //
 
   return (
     <>
-      <section className="bg-gray-100/70 fixed top-0 bottom-0 left-0 right-0 z-20 overflow-hidden">
+      <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
         <div className="max-w-[515px] mx-auto shadow-gray-400 shadow-lg rounded-xl z-30 bg-white mt-28">
           <div className="p-3 border-b pb-2 border-b-gray-200 flex items-center justify-between">
             <p className=""></p>
@@ -25,7 +21,7 @@ export default function PostBox(props: {
             <FaXmark
               className="w-10 h-10 p-2 hover:bg-gray-50 bg-gray-100 rounded-full cursor-pointer"
               onClick={() => {
-                props.onClose(false);
+                props.onClose();
               }}
             />
           </div>

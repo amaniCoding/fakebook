@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { storySlice } from "./slices/storySlice";
+import { userStorySlice } from "./slices/storySlice";
+import { userPostSlice } from "./slices/postSlice";
+import { userCommentSlice } from "./slices/commentSlice";
+
 // ...
 
 export const store = configureStore({
   reducer: {
-    stores: storySlice.reducer,
+    userStory: userStorySlice.reducer,
+    userPost: userPostSlice.reducer,
+    userComment: userCommentSlice.reducer,
   },
 });
 

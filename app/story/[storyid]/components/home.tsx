@@ -46,10 +46,10 @@ export default function Home(props: {
   ]);
 
   const currentStoryPhotos = useAppSelector(
-    (state) => state.stores.currentStoryPhotos
+    (state) => state.userStory.currentStoryPhotos
   );
 
-  const currentStory = useAppSelector((state) => state.stores.currentStory);
+  const currentStory = useAppSelector((state) => state.userStory.currentStory);
 
   const showStoryPhoto = (story: QueryResultRow) => {
     dispatch(setCurrentStory(story));

@@ -6,11 +6,19 @@ import { useState } from "react";
 import { RiLiveFill } from "react-icons/ri";
 import { MdPhotoLibrary } from "react-icons/md";
 import { FaRegSmile } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { showPostBox } from "@/app/store/slices/postSlice";
 export default function AddPost() {
   const [isPostBoxShow, setIsPostBoxShown] = useState<boolean>(false);
-
-  const showPostBox = () => {
+  const dispatch = useDispatch();
+  const handelShowPostBox = () => {
     setIsPostBoxShown(true);
+    dispatch(showPostBox(true));
+  };
+
+  const handelHidePostBox = () => {
+    setIsPostBoxShown(false);
+    dispatch(showPostBox(false));
   };
   return (
     <>
@@ -28,7 +36,7 @@ export default function AddPost() {
             type="text"
             placeholder="What is on your mind, Amanuel"
             className="w-full outline-none focus:outline-none p-2 bg-gray-50 rounded-3xl placeholder:font-sans pl-5 text-black"
-            onFocus={showPostBox}
+            onFocus={handelShowPostBox}
           ></input>
         </div>
 
@@ -48,7 +56,7 @@ export default function AddPost() {
         </div>
       </div>
 
-      {isPostBoxShow && <PostBox onClose={setIsPostBoxShown} />}
+      {isPostBoxShow && <PostBox onClose={handelHidePostBox} />}
     </>
   );
 }

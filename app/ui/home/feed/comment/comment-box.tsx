@@ -1,26 +1,23 @@
 "use client";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
 
 import { PiShareFat, PiThumbsUp } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 
-export default function CommentBox(props: {
-  onClose: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function CommentBox(props: { onClose: () => void }) {
   return (
-    <section className="bg-gray-300/75 fixed top-0 bottom-0 left-0 right-0 z-[200] overflow-hidden">
-      <div className="max-w-[600px] mx-auto rounded-xl bg-white my-10">
+    <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
+      <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
         <div className="flex rounded-t-xl items-center justify-between mb-2 border-b-2 border-b-slate-200 p-2 sticky w-full left-0 right-0 bg-white top-0">
           <p></p>
           <p>Amanuel Ferede&apos;s Post</p>
           <FaXmark
             className="w-10 h-10 rounded-full hover:bg-slate-300 p-2 cursor-pointer"
             onClick={() => {
-              props.onClose(false);
+              props.onClose();
             }}
           />
         </div>
