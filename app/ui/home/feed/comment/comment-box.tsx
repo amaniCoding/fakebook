@@ -1,7 +1,6 @@
 "use client";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import Image from "next/image";
-
 import { PiShareFat, PiThumbsUp } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
