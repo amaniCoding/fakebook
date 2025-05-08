@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { QueryResultRow } from "@vercel/postgres";
 import StoryHeader from "./header";
 import Stories from "./stories";
 import StoryViewer from "./story-viewer";
@@ -11,49 +10,50 @@ import {
   setCurrentStory,
   setCurrentStoryPhotos,
   setStories,
-  setStoryPhotos,
 } from "@/app/store/slices/storySlice";
-import { useAppSelector } from "@/app/store/hooks";
 import Link from "next/link";
+import { Story, StoryPhoto } from "@/app/types/db/story";
+import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 
 export default function Home(props: {
-  stories: QueryResultRow[];
-  storyPhotos: QueryResultRow[];
+  allStories: Story[];
   storyid: string;
-  currentStory: QueryResultRow[];
-  currentStoryPhotos: QueryResultRow[];
+  currentStory: Story[];
+  currentStoryPhotos: StoryPhoto[];
+  allStoriesWithPhotos: StoryPhoto[];
 }) {
   const dispatch = useDispatch();
 
-  const _currentStory = props.stories.find((story) => {
+  const _currentStory = props.allStories.find((story) => {
     return story.storyid === props.storyid;
   });
 
   useEffect(() => {
-    dispatch(setStoryPhotos(props.storyPhotos));
     dispatch(setCurrentStory(_currentStory));
-    dispatch(setStories(props.stories));
+    dispatch(setStories(props.allStories));
     dispatch(
-      setCurrentStoryPhotos({ type: "first", photos: props.currentStoryPhotos })
+      setCurrentStoryPhotos({
+        loading: false,
+        currentStoryPhotos: props.currentStoryPhotos,
+      })
     );
-  }, [
-    _currentStory,
-    dispatch,
-    props.currentStory,
-    props.currentStoryPhotos,
-    props.stories,
-    props.storyPhotos,
-  ]);
+  }, [_currentStory, dispatch, props.allStories, props.currentStoryPhotos]);
 
-  const currentStoryPhotos = useAppSelector(
-    (state) => state.userStory.currentStoryPhotos
-  );
-
-  const currentStory = useAppSelector((state) => state.userStory.currentStory);
-
-  const showStoryPhoto = (story: QueryResultRow) => {
+  const showStoryPhoto = async (story: Story) => {
+    dispatch(
+      setCurrentStoryPhotos({
+        loading: true,
+        currentStoryPhotos: [],
+      })
+    );
     dispatch(setCurrentStory(story));
-    dispatch(setCurrentStoryPhotos({ type: "update", photos: [] }));
+    const currentStoryPhotos = await fetchStoryPhotos(story.storyid);
+    dispatch(
+      setCurrentStoryPhotos({
+        loading: false,
+        currentStoryPhotos,
+      })
+    );
   };
 
   return (
@@ -74,14 +74,13 @@ export default function Home(props: {
         </div>
         <div className="h-[90vh] overflow-auto p-3">
           <StoryHeader />
-          <Stories stories={props.stories} showStoryPhoto={showStoryPhoto} />
+          <Stories
+            allStories={props.allStories}
+            showStoryPhoto={showStoryPhoto}
+          />
         </div>
       </div>
-      <StoryViewer
-        currentStoryPhotos={currentStoryPhotos}
-        currentStory={currentStory}
-        storyid={props.storyid}
-      />
+      <StoryViewer />
     </div>
   );
 }

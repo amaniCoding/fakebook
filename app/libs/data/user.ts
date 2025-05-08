@@ -1,3 +1,4 @@
+import { Story, StoryPhoto } from "@/app/types/db/story";
 import { sql } from "@vercel/postgres";
 
 export async function fetchPosts() {
@@ -11,10 +12,10 @@ export async function fetchPosts() {
   }
 }
 
-export async function fetchStories() {
+export async function fetchAllStories() {
   try {
     const data =
-      await sql`SELECT * FROM ustories JOIN users ON ustories.userid = users.userid ORDER BY ustories.date DESC`;
+      await sql<Story>`SELECT ustories.storyid, users.fname, users.lname, users.profilePic FROM ustories JOIN users ON ustories.userid = users.userid ORDER BY ustories.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -65,10 +66,10 @@ export async function fetchAPost(postId: string) {
   }
 }
 
-export async function fetchStoryPhotos(storyId: string) {
+export async function fetchCurrentStoryPhotos(storyId: string) {
   try {
     const data =
-      await sql`SELECT ustoryphotos.* FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -79,7 +80,7 @@ export async function fetchStoryPhotos(storyId: string) {
 export async function fetchAllStoriesWithPhotos() {
   try {
     const data =
-      await sql`SELECT ustoryphotos.* FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryPhoto>`SELECT ustoryphotos.photo FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid ORDER BY ustoryphotos.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -90,7 +91,7 @@ export async function fetchAllStoriesWithPhotos() {
 export async function fetchAStory(storyId: string) {
   try {
     const data =
-      await sql`SELECT * FROM ustories JOIN users ON ustories.userid = users.userid WHERE storyid = ${storyId} ORDER BY ustories.date DESC`;
+      await sql<Story>`SELECT * FROM ustories JOIN users ON ustories.userid = users.userid WHERE storyid = ${storyId} ORDER BY ustories.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);

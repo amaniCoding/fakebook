@@ -1,13 +1,12 @@
+import { Story } from "@/app/types/db/story";
 import StoryItem from "./story-item";
-import { QueryResultRow } from "@vercel/postgres";
-
 export default function Stories(props: {
-  stories: QueryResultRow[];
-  showStoryPhoto: (story: QueryResultRow) => void;
+  allStories: Story[];
+  showStoryPhoto: (story: Story) => void;
 }) {
   return (
     <div className="flex flex-col space-y-1">
-      {props.stories.map((story) => {
+      {props.allStories.map((story) => {
         return (
           <StoryItem
             key={story.storyid}

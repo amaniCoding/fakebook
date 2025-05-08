@@ -1,9 +1,9 @@
 import { useAppSelector } from "@/app/store/hooks";
-import { QueryResultRow } from "@vercel/postgres";
+import { Story } from "@/app/types/db/story";
 import Image from "next/image";
 export default function StoryItem(props: {
-  story: QueryResultRow;
-  showStoryPhoto: (story: QueryResultRow) => void;
+  story: Story;
+  showStoryPhoto: (story: Story) => void;
 }) {
   const currentStory = useAppSelector((state) => state.userStory.currentStory);
   return (

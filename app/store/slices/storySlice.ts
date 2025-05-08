@@ -1,25 +1,31 @@
-import { CurrentStoryPhotosPayload } from "@/app/types/types";
+import { CurrentStoryPhotos, Story, StoryPhoto } from "@/app/types/db/story";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { QueryResultRow } from "@vercel/postgres";
 
 // Define a type for the slice state
 interface StoryState {
-  stories: QueryResultRow[];
-  storyPhotos: QueryResultRow[];
-  currentStory: QueryResultRow | undefined;
-  currentStoryPhotos: QueryResultRow[];
-  currentPhotoIndex: number;
-  currentStoryIndex: number;
+  allStories: Story[];
+  currentStory: Story | undefined;
+  currentStoryPhotos: {
+    loading: boolean;
+    currentStoryPhotos: StoryPhoto[];
+  };
+  allStoryWithPhotos: StoryPhoto[];
 }
 
 // Define the initial state using that type
 const initialState: StoryState = {
-  stories: [],
-  storyPhotos: [],
-  currentStory: {},
-  currentStoryPhotos: [],
-  currentPhotoIndex: 0,
-  currentStoryIndex: 0,
+  allStories: [],
+  allStoryWithPhotos: [],
+  currentStory: {
+    fname: "",
+    lname: "",
+    profilepic: "",
+    storyid: "",
+  },
+  currentStoryPhotos: {
+    loading: true,
+    currentStoryPhotos: [],
+  },
 };
 
 export const userStorySlice = createSlice({
@@ -27,55 +33,31 @@ export const userStorySlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    setStories: (state, action: PayloadAction<QueryResultRow[]>) => {
-      state.stories = action.payload;
+    setStories: (state, action: PayloadAction<Story[]>) => {
+      state.allStories = action.payload;
     },
 
-    setStoryPhotos: (state, action: PayloadAction<QueryResultRow[]>) => {
-      state.storyPhotos = action.payload;
-    },
-
-    setCurrentStory: (
-      state,
-      action: PayloadAction<QueryResultRow | undefined>
-    ) => {
+    setCurrentStory: (state, action: PayloadAction<Story | undefined>) => {
       state.currentStory = action.payload;
-      state.currentPhotoIndex = 0;
     },
 
-    setCurrentStoryIndex: (state, action: PayloadAction<number>) => {
-      state.currentStoryIndex = action.payload;
-    },
     setCurrentStoryPhotos: (
       state,
-      action: PayloadAction<CurrentStoryPhotosPayload>
+      action: PayloadAction<CurrentStoryPhotos>
     ) => {
-      if (action.payload.type === "first") {
-        state.currentStoryPhotos = action.payload.photos;
-      } else {
-        const tempcurrentStoryPhotos: QueryResultRow[] = [];
-        console.log("allswithphotos", state.storyPhotos);
-        state.storyPhotos.map((story) => {
-          if (story.storyid === state.currentStory?.storyid) {
-            tempcurrentStoryPhotos.push(story);
-          }
-        });
-
-        state.currentStoryPhotos = tempcurrentStoryPhotos;
-      }
+      state.currentStoryPhotos = action.payload;
     },
 
-    // Use the PayloadAction type to declare the contents of `action.payload`
+    setAllStoriesWithPhotos: (state, action: PayloadAction<StoryPhoto[]>) => {
+      state.allStoryWithPhotos = action.payload;
+    },
   },
+
+  // Use the PayloadAction type to declare the contents of `action.payload`
 });
 
-export const {
-  setStories,
-  setCurrentStory,
-  setCurrentStoryPhotos,
-  setStoryPhotos,
-  setCurrentStoryIndex,
-} = userStorySlice.actions;
+export const { setStories, setCurrentStory, setCurrentStoryPhotos } =
+  userStorySlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 

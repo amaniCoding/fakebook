@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 
 import { z } from "zod";
+import { StoryPhoto } from "@/app/types/db/story";
 
 const postSchema = z.object({
   breif_title: z.string({
@@ -171,10 +172,10 @@ export async function createPost(
   }
 }
 
-export async function fetchStoryPhotos(storyId: string) {
+export async function fetchStoryPhotos(storyId: string | undefined) {
   try {
     const data =
-      await sql`SELECT ustoryphotos.* FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);

@@ -74,6 +74,7 @@ export default function PostBox(props: { onClose: () => void }) {
                 placeholder="What's in your mind, Amanuel"
                 className="placeholder:text-gray-500 pt-5 placeholder:text-2xl w-full text-3xl block outline-none border-none overflow-y-auto socrollabar resize-none"
                 rows={4}
+                value={post}
                 onChange={onChangePost}
               ></textarea>
             ) : (

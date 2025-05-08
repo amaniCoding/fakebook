@@ -10,7 +10,7 @@ export default function StoryHeader() {
       </div>
       <p className="font-bold mb-3 mt-3">Your Story</p>
       <div className="flex items-center space-x-3 mb-3">
-        <BiPlus className="w-14 h-14 rounded-full p-3 bg-gray-100" />
+        <BiPlus className="w-12 h-12 rounded-full p-3 bg-gray-100" />
         <div className="flex flex-col">
           <p>Create a story</p>
           <p>Share a photo or write something</p>
