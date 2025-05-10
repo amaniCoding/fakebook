@@ -18,10 +18,8 @@ export default function PostBox(props: { onClose: () => void }) {
 
   const [rows, setRows] = useState<number>(1);
 
-  const [postBoxHeightWithPhoto, setPostBoxHeightWithPhoto] =
-    useState<number>(16);
-  const [postBoxHeightTextOnly, setPostBoxHeightTextOnly] = useState<number>(6);
-
+  const [postBoxTextOnlyMarginTop, setPostBoxTextOnlyMarginTop] =
+    useState<number>(6.5);
   const input = useRef<HTMLInputElement>(null);
 
   const showDialog = () => {
@@ -45,49 +43,35 @@ export default function PostBox(props: { onClose: () => void }) {
   const onKeyDownPost = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       setRows(rows + 1);
-      //alert(rows + 1);
-      // if (postBoxHeightWithPhoto >= 20) {
-      //   return;
-      // }
-      // setPostBoxHeightWithPhoto(postBoxHeightWithPhoto + 1);
-
-      //alert(postBoxHeightTextOnly + 1);
     } else if (e.key === "Backspace") {
       if (rows <= 1) {
-        return;
+      } else {
+        setRows(rows - 1);
       }
-      setRows(rows - 1);
-      //alert(rows - 1);
-      // if (postBoxHeightWithPhoto <= 16) {
-      //   return;
-      // }
-      // setPostBoxHeightWithPhoto(postBoxHeightWithPhoto - 1);
-      //alert(postBoxHeightTextOnly - 1);
+      //even if the rows is greater than one, it should only minus one from rows
     }
   };
 
   const onKeyDownPostText = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       setRows(rows + 1);
-      //alert(rows + 1);
-      // if (postBoxHeightTextOnly >= 13) {
-      //   return;
-      // }
-      // setPostBoxHeightTextOnly(postBoxHeightTextOnly + 1);
 
-      //alert(postBoxHeightTextOnly + 1);
+      if (postBoxTextOnlyMarginTop <= 3.5) {
+      } else {
+        setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop - 0.5);
+      }
     } else if (e.key === "Backspace") {
       if (rows <= 1) {
-        return;
+      } else {
+        setRows(rows - 1);
       }
-      setRows(rows - 1);
-      //alert(rows - 1);
 
-      // if (postBoxHeightTextOnly <= 6) {
-      //   return;
-      // }
-      // setPostBoxHeightTextOnly(postBoxHeightTextOnly - 1);
-      //alert(`Height ${postBoxHeightTextOnly - 1}`);
+      if (postBoxTextOnlyMarginTop >= 6.5) {
+      } else {
+        setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 0.5);
+      }
+
+      //even if the rows is greater than one, it should only minus one from rows
     }
   };
 
@@ -95,8 +79,10 @@ export default function PostBox(props: { onClose: () => void }) {
     <>
       <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
         <div
-          className={`max-w-[517px] mx-auto shadow-gray-400 shadow-lg rounded-xl z-30 bg-white ${
-            postOption === "textonly" ? "mt-27" : "mt-[3.8rem]"
+          className={`w-[517px] absolute left-1/2 -translate-x-1/2 shadow-gray-400 shadow-lg rounded-xl z-30 bg-white ${
+            postOption === "textonly"
+              ? `top-[${postBoxTextOnlyMarginTop}rem]`
+              : `top-[3.5rem]`
           }`}
         >
           <div className="p-3 border-b pb-2 border-b-gray-200 flex items-center justify-between">
@@ -131,20 +117,13 @@ export default function PostBox(props: { onClose: () => void }) {
 
             <div
               className={`${
-                postOption === "textonly" ? "h-32" : "h-64"
-              } overflow-y-auto  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 ${
-    rows >= 5 ? "[&::-webkit-scrollbar]:w-2" : "[&::-webkit-scrollbar]:w-0"
-  }`}
+                postOption === "textonly" ? "max-h-64" : "max-h-80"
+              } overflow-y-auto`}
             >
               {postOption === "textonly" ? (
                 <textarea
                   placeholder="What's in your mind, Amanuel"
-                  className="placeholder:text-gray-500 pt-3 placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
+                  className="placeholder:text-gray-500 pt-3  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
                   value={post}
                   onChange={onChangePost}
                   onKeyDown={onKeyDownPostText}
@@ -153,7 +132,7 @@ export default function PostBox(props: { onClose: () => void }) {
               ) : (
                 <div>
                   <textarea
-                    className="pl-3 bg-green-500 resize-none overflow-y-hidden border-none outline-0 w-full"
+                    className="pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
                     placeholder="What is in your mind, Amanuel"
                     value={post}
                     onChange={onChangePost}
