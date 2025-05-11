@@ -68,10 +68,25 @@ export default function PostBox(props: { onClose: () => void }) {
 
       if (postBoxTextOnlyMarginTop >= 6.5) {
       } else {
+        /**
+         * The height of postBox will be pushed when the it's height becomes less
+         * than it's maximum height (when the scroll-bar invisible)
+         *
+         *
+         * But when the postBox height increases passing it's maximum height
+         * depending on rows of textarea, as backspace pressed it's
+         * margin pushes it down, that should not happen.
+         *
+         * updating it's marginTop should have effect when  it's height
+         * is less than it's maximum height ! How exactly i know, it's
+         * maximum height reached, well, by row count ...
+         *
+         *
+         * then it's marginTop and height will be adjusted together.
+         */
         if (rows <= 7) {
           setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 1);
         }
-        // setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 1);
       }
     }
   };
