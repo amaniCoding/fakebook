@@ -58,7 +58,7 @@ export default function PostBox(props: { onClose: () => void }) {
 
       if (postBoxTextOnlyMarginTop <= 3.5) {
       } else {
-        setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop - 0.5);
+        setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop - 1);
       }
     } else if (e.key === "Backspace") {
       if (rows <= 1) {
@@ -68,10 +68,11 @@ export default function PostBox(props: { onClose: () => void }) {
 
       if (postBoxTextOnlyMarginTop >= 6.5) {
       } else {
-        setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 0.5);
+        if (rows <= 7) {
+          setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 1);
+        }
+        // setPostBoxTextOnlyMarginTop(postBoxTextOnlyMarginTop + 1);
       }
-
-      //even if the rows is greater than one, it should only minus one from rows
     }
   };
 
@@ -79,10 +80,10 @@ export default function PostBox(props: { onClose: () => void }) {
     <>
       <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
         <div
-          className={`w-[517px] absolute left-1/2 -translate-x-1/2 shadow-gray-400 shadow-lg rounded-xl z-30 bg-white ${
+          className={`max-w-[517px] mx-auto shadow-gray-400 shadow-lg rounded-xl bg-white ${
             postOption === "textonly"
-              ? `top-[${postBoxTextOnlyMarginTop}rem]`
-              : `top-[3.5rem]`
+              ? `mt-[${postBoxTextOnlyMarginTop}rem]`
+              : `mt-[3.5rem]`
           }`}
         >
           <div className="p-3 border-b pb-2 border-b-gray-200 flex items-center justify-between">
@@ -117,18 +118,28 @@ export default function PostBox(props: { onClose: () => void }) {
 
             <div
               className={`${
-                postOption === "textonly" ? "max-h-64" : "max-h-80"
+                postOption === "textonly" ? "max-h-80" : "max-h-80"
               } overflow-y-auto`}
             >
               {postOption === "textonly" ? (
-                <textarea
-                  placeholder="What's in your mind, Amanuel"
-                  className="placeholder:text-gray-500 pt-3  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
-                  value={post}
-                  onChange={onChangePost}
-                  onKeyDown={onKeyDownPostText}
-                  rows={rows}
-                ></textarea>
+                <div>
+                  <textarea
+                    placeholder="What's in your mind, Amanuel"
+                    className="placeholder:text-gray-500 pt-3  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
+                    value={post}
+                    onChange={onChangePost}
+                    onKeyDown={onKeyDownPostText}
+                    rows={rows}
+                  ></textarea>
+                  <div
+                    className={`flex items-center justify-between my-4 ${
+                      rows <= 3 ? "visible" : "invisible"
+                    }`}
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-bl rounded-lg  from-yellow-400 to-green-500"></div>
+                    <BsEmojiAstonished className="w-7 h-7 fill-gray-600 " />
+                  </div>
+                </div>
               ) : (
                 <div>
                   <textarea
@@ -166,12 +177,6 @@ export default function PostBox(props: { onClose: () => void }) {
                 </div>
               )}
             </div>
-            {postOption === "textonly" ? (
-              <div className="flex items-center justify-between my-4">
-                <div className="w-8 h-8 bg-gradient-to-bl rounded-lg  from-yellow-400 to-green-500"></div>
-                <BsEmojiAstonished className="w-7 h-7 fill-gray-600 " />
-              </div>
-            ) : null}
 
             <div className="mb-4 p-3 border border-gray-300 rounded-lg flex items-center justify-between">
               <p>Add to your post</p>
