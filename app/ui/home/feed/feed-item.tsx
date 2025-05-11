@@ -10,7 +10,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
   const photos = await fetchPhotos(props.post.postid);
 
   return (
-    <div className="py-2 bg-white rounded-md mb-4 shadow-md">
+    <div className="py-2 bg-white rounded-lg mb-4 shadow-md">
       <div className="flex justify-between">
         <div className="flex space-x-3 px-6 pt-2">
           <div className="flex-col space-y-0.5 relative group">
