@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 
 import { z } from "zod";
-import { StoryPhoto } from "@/app/types/db/user/story";
 
 const postSchema = z.object({
   breif_title: z.string({
@@ -169,16 +168,5 @@ export async function createPost(
     };
   } catch (error) {
     console.error("Error while trying to upload a file\n", error);
-  }
-}
-
-export async function fetchStoryPhotos(storyId: string | undefined) {
-  try {
-    const data =
-      await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
-    return data.rows;
-  } catch (error) {
-    console.log("Database error", error);
-    throw new Error("Faild to fetch dev data");
   }
 }
