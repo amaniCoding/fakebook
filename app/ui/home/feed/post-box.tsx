@@ -52,6 +52,17 @@ export default function PostBox(props: { onClose: () => void }) {
     }
   };
 
+  const getClassName = () => {
+    if (postOption === "textonly") {
+      return {
+        marginTop: `${postBoxTextOnlyMarginTop}rem`,
+      };
+    } else {
+      return {
+        marginTop: "3.5rem",
+      };
+    }
+  };
   const onKeyDownPostText = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       setRows(rows + 1);
@@ -95,11 +106,9 @@ export default function PostBox(props: { onClose: () => void }) {
     <>
       <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
         <div
-          className={`max-w-[517px] mx-auto shadow-gray-400 shadow-lg rounded-xl bg-white ${
-            postOption === "textonly"
-              ? `mt-[${postBoxTextOnlyMarginTop}rem]`
-              : `mt-[3.5rem]`
-          }`}
+          className={`max-w-[517px] mx-auto shadow-gray-400 shadow-lg rounded-xl bg-white 
+            `}
+          style={getClassName()}
         >
           <div className="p-3 border-b pb-2 border-b-gray-200 flex items-center justify-between">
             <p className=""></p>
@@ -140,7 +149,7 @@ export default function PostBox(props: { onClose: () => void }) {
                 <div>
                   <textarea
                     placeholder="What's in your mind, Amanuel"
-                    className="placeholder:text-gray-500 pt-3  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
+                    className="placeholder:text-gray-500 py-2  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
                     value={post}
                     onChange={onChangePost}
                     onKeyDown={onKeyDownPostText}

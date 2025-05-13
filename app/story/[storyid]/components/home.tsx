@@ -5,15 +5,15 @@ import Stories from "./stories";
 import StoryViewer from "./story-viewer";
 import { useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
 import {
   setCurrentStory,
   setCurrentStoryPhotos,
   setStories,
 } from "@/app/store/slices/storySlice";
 import Link from "next/link";
-import { Story, StoryPhoto } from "@/app/types/db/story";
+import { Story, StoryPhoto } from "@/app/types/db/user/story";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
+import { useAppDispatch } from "@/app/store/hooks";
 
 export default function Home(props: {
   allStories: Story[];
@@ -22,7 +22,7 @@ export default function Home(props: {
   currentStoryPhotos: StoryPhoto[];
   allStoriesWithPhotos: StoryPhoto[];
 }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const _currentStory = props.allStories.find((story) => {
     return story.storyid === props.storyid;

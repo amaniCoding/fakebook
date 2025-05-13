@@ -1,11 +1,25 @@
-import { Story, StoryPhoto } from "@/app/types/db/story";
+import { Photo, Story, StoryPhoto, Post } from "@/app/types/db/user";
 import { sql } from "@vercel/postgres";
 
 export async function fetchPosts() {
   try {
-    const data =
-      await sql`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
-    return data.rows;
+    const posts =
+      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
+    const getPhotos = Promise.all(
+      posts.rows.map(async (row) => {
+        const photos =
+          await sql<Photo>`SELECT uphotos.photo, uphotos.photoid FROM uposts JOIN users ON uposts.userid = users.userid JOIN uphotos ON uposts.postid = uphotos.postid WHERE uposts.postid = ${row.postid} ORDER BY uphotos.date DESC`;
+        return {
+          postId: row.postid,
+          fname: row.fname,
+          lname: row.lname,
+          profilepic: row.profilepic,
+          post: row.post,
+          photos: photos.rows,
+        };
+      })
+    );
+    return getPhotos;
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch dev data");
@@ -93,6 +107,32 @@ export async function fetchAStory(storyId: string) {
     const data =
       await sql<Story>`SELECT * FROM ustories JOIN users ON ustories.userid = users.userid WHERE storyid = ${storyId} ORDER BY ustories.date DESC`;
     return data.rows;
+  } catch (error) {
+    console.log("Database error", error);
+    throw new Error("Faild to fetch dev data");
+  }
+}
+
+export async function fetchStoriesForSlider() {
+  try {
+    const users =
+      await sql<Story>`SELECT ustories.storyid, users.fname, users.lname, users.profilePic FROM ustories JOIN users ON ustories.userid = users.userid ORDER BY ustories.date DESC`;
+
+    const story = await Promise.all(
+      users.rows.map(async (row) => {
+        const photo =
+          await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${row.storyid} ORDER BY ustoryphotos.date DESC`;
+        return {
+          storyid: row.storyid,
+          fname: row.fname,
+          lname: row.lname,
+          profilepic: row.profilepic,
+          photo: photo.rows[0].photo,
+        };
+      })
+    );
+
+    return story;
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch dev data");

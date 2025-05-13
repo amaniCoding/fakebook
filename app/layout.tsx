@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import App from "./app";
+import AppProvider from "./app-provider";
 
 export const metadata: Metadata = {
   title: "Fakebook",
@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <App>{children}</App>
+      <body>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

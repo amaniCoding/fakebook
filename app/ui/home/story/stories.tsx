@@ -1,8 +1,8 @@
-import { fetchAllStories } from "@/app/libs/data/user";
+import { fetchStoriesForSlider } from "@/app/libs/data/user";
 import StorySlider from "./story-slider";
 
 export default async function Stories() {
-  const stories = await fetchAllStories();
+  const stories = await fetchStoriesForSlider();
 
   return (
     <div className="w-full h-60 mb-4">

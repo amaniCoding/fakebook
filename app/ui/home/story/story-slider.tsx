@@ -3,15 +3,21 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { QueryResultRow } from "@vercel/postgres";
-import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 import StorySliderItem from "./story-slideritem";
 import { useRef } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import Link from "next/link";
 import { BsPlus } from "react-icons/bs";
 
-export default function StorySlider(props: { stories: QueryResultRow[] }) {
+export default function StorySlider(props: {
+  stories: {
+    storyid: string;
+    fname: string;
+    lname: string;
+    profilepic: string;
+    photo: string;
+  }[];
+}) {
   const sliderRef = useRef<Slider>(null);
   const settings = {
     dots: false,
@@ -67,8 +73,11 @@ export default function StorySlider(props: { stories: QueryResultRow[] }) {
           return (
             <StorySliderItem
               key={story.storyid}
-              story={story}
-              fetchStoryPhotos={fetchStoryPhotos}
+              storyid={story.storyid}
+              fname={story.fname}
+              lname={story.lname}
+              profilepic={story.profilepic}
+              photo={story.photo}
             />
           );
         })}

@@ -1,18 +1,25 @@
 "use client";
 
-import { Provider } from "react-redux";
-import { store } from "./store/store";
-import React from "react";
-import Body from "./ui/home/body";
+import { useEffect } from "react";
+import { useAppSelector } from "./store/hooks";
 
 export default function App({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <Provider store={store}>
-      <Body>{children}</Body>
-    </Provider>
+  const isPostBoxOpened = useAppSelector(
+    (state) => state.userPost.isPostBoxShown
   );
+  const isCommentBoxOpened = useAppSelector(
+    (state) => state.userComment.isCommentBoxShown
+  );
+  useEffect(() => {
+    if (isPostBoxOpened || isCommentBoxOpened) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [isCommentBoxOpened, isPostBoxOpened]);
+  return <>{children}</>;
 }

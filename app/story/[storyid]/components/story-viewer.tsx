@@ -5,15 +5,14 @@ import { IoMdHeart } from "react-icons/io";
 import { BsEmojiSmileFill, BsFillEmojiSurpriseFill } from "react-icons/bs";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/app/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import {
   setCurrentStory,
   setCurrentStoryPhotos,
 } from "@/app/store/slices/storySlice";
-import { useDispatch } from "react-redux";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 export default function StoryViewer() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const currentStory = useAppSelector((state) => state.userStory.currentStory);
   const stories = useAppSelector((state) => state.userStory.allStories);
   const currentStoryPhotos = useAppSelector(

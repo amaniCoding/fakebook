@@ -7,7 +7,17 @@ export default async function Feeds() {
   return (
     <>
       {posts.map((post) => {
-        return <FeedItem post={post} key={post.postid} />;
+        return (
+          <FeedItem
+            postId={post.postId}
+            fname={post.fname}
+            lname={post.lname}
+            profilepic={post.profilepic}
+            post={post.post}
+            photos={post.photos}
+            key={post.postId}
+          />
+        );
       })}
     </>
   );

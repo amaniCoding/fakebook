@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 
 import { z } from "zod";
-import { StoryPhoto } from "@/app/types/db/story";
+import { StoryPhoto } from "@/app/types/db/user/story";
 
 const postSchema = z.object({
   breif_title: z.string({

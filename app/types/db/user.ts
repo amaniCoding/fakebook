@@ -7,12 +7,20 @@ export type Story = {
 
 export type StoryPhoto = {
   photo: string;
-  fname: string;
-  lname: string;
-  profilepic: string;
 };
 
 export type CurrentStoryPhotos = {
   loading: boolean;
   currentStoryPhotos: StoryPhoto[];
+};
+export type Photo = {
+  photo: string;
+  photoid: string;
+};
+export type Post = {
+  postid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+  post: string;
 };

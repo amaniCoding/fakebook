@@ -1,14 +1,25 @@
-import { QueryResultRow } from "@vercel/postgres";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import { FaFacebookMessenger, FaUserFriends } from "react-icons/fa";
-import { fetchPhotos } from "@/app/libs/data/user";
 import CommentItem from "./comment/comment-item";
-
-export default async function FeedItem(props: { post: QueryResultRow }) {
-  const photos = await fetchPhotos(props.post.postid);
-
+import { Photo } from "@/app/types/db/user";
+type FeedItemType = {
+  postId: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+  post: string;
+  photos: Photo[];
+};
+export default async function FeedItem({
+  postId,
+  fname,
+  lname,
+  profilepic,
+  post,
+  photos,
+}: FeedItemType) {
   return (
     <div className="py-2 bg-white rounded-lg mb-4 shadow-md">
       <div className="flex justify-between">
@@ -17,7 +28,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
             <Link href={"/profile"}>
               <Image
                 alt="Amanuel Ferede"
-                src={props.post.profilepic}
+                src={profilepic}
                 width={0}
                 height={0}
                 sizes="100vh"
@@ -34,7 +45,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                 <Image
                   className="w-20 h-20 rounded-full  object-cover"
                   alt="Amanuel Ferede"
-                  src={props.post.profilepic}
+                  src={profilepic}
                   width={0}
                   height={0}
                   sizes="100vh"
@@ -42,7 +53,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
 
                 <div className=" flex-col space-y-2 flex-1 mt-3">
                   <p className="text-lg font-bold">
-                    {props.post.fname} {props.post.lname}
+                    {fname} {lname}
                   </p>
                   <p className="">Lives in AddisAbaba Ethiopia </p>
                   <p>Studid Vivil Engineering at BahirDar University</p>
@@ -68,7 +79,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
             <div className="flex-col space-y-0.5 relative group">
               <Link href={"/profile"} className="peer block">
                 <span className="font-semibold">
-                  {props.post.fname} {props.post.lname}
+                  {fname} {lname}
                 </span>
               </Link>
               <div
@@ -80,7 +91,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                   <Image
                     className="w-20 h-20 rounded-full  object-cover"
                     alt="Amanuel Ferede"
-                    src={props.post.profilepic}
+                    src={profilepic}
                     width={0}
                     height={0}
                     sizes="100vh"
@@ -88,7 +99,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
 
                   <div className=" flex-col space-y-2 flex-1 mt-3">
                     <p className="text-lg font-bold">
-                      {props.post.fname} {props.post.lname}
+                      {fname} {lname}
                     </p>
                     <p className="">Lives in AddisAbaba Ethiopia </p>
                     <p>Studid Vivil Engineering at BahirDar University</p>
@@ -116,13 +127,11 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
         <IoMdMore className="w-8 h-8" />
       </div>
       <p className="px-5 mb-3 mt-2">
-        {props.post.post.length > 170
-          ? `${props.post.post.substring(0, 170)}... See more`
-          : props.post.post}
+        {post.length > 170 ? `${post.substring(0, 170)}... See more` : post}
       </p>
       <div className="">
         {photos.length === 1 && (
-          <Link href={`/photo/${props.post.postid}/${photos[0].photoid}`}>
+          <Link href={`/photo/${postId}/${photos[0].photoid}`}>
             <Image
               className="w-full"
               alt="Amanuel Ferede"
@@ -148,7 +157,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                     }}
-                    href={`/photo/${props.post.postid}/${photo.photoid}`}
+                    href={`/photo/${postId}/${photo.photoid}`}
                   ></Link>
                 );
               })}
@@ -170,7 +179,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                     }}
-                    href={`/photo/${props.post.postid}/${photo.photoid}`}
+                    href={`/photo/${postId}/${photo.photoid}`}
                   ></Link>
                 );
               })}
@@ -184,7 +193,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
               }}
-              href={`/photo/${props.post.postid}/${photos[2].photoid}`}
+              href={`/photo/${postId}/${photos[2].photoid}`}
             ></Link>
           </div>
         )}
@@ -203,7 +212,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                     }}
-                    href={`/photo/${props.post.postid}/${photo.photoid}`}
+                    href={`/photo/${postId}/${photo.photoid}`}
                   ></Link>
                 );
               })}
@@ -220,7 +229,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                     }}
-                    href={`/photo/${props.post.postid}/${photo.photoid}`}
+                    href={`/photo/${postId}/${photo.photoid}`}
                   ></Link>
                 );
               })}
@@ -242,7 +251,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                     }}
-                    href={`/photo/${props.post.postid}/${photo.photoid}`}
+                    href={`/photo/${postId}/${photo.photoid}`}
                   ></Link>
                 );
               })}
@@ -260,7 +269,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                       }}
-                      href={`/photo/${props.post.postid}/${photo.photoid}`}
+                      href={`/photo/${postId}/${photo.photoid}`}
                     ></Link>
                   );
                 } else {
@@ -274,7 +283,7 @@ export default async function FeedItem(props: { post: QueryResultRow }) {
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                       }}
-                      href={`/photo/${props.post.postid}/${photo.photoid}`}
+                      href={`/photo/${postId}/${photo.photoid}`}
                     >
                       <div className="absolute top-0 bottom-0 left-0 right-0 bg-black/70 flex items-center justify-center">
                         <p className="text-white text-lg">
