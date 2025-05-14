@@ -1,4 +1,4 @@
-import { Story } from "@/app/types/db/user/story";
+import { Story } from "@/app/types/db/user";
 import StoryItem from "./story-item";
 export default function Stories(props: {
   allStories: Story[];

@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/app/store/hooks";
-import { Story } from "@/app/types/db/user/story";
+import { Story } from "@/app/types/db/user";
 import Image from "next/image";
 export default function StoryItem(props: {
   story: Story;

@@ -11,7 +11,7 @@ import {
   setStories,
 } from "@/app/store/slices/storySlice";
 import Link from "next/link";
-import { Story, StoryPhoto } from "@/app/types/db/user/story";
+import { Story, StoryPhoto } from "@/app/types/db/user";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 import { useAppDispatch } from "@/app/store/hooks";
 
