@@ -4,12 +4,12 @@ interface Props {
 }
 export default function FileViewer({ files }: Props) {
   return (
-    <div className="w-full overflow-x-hidden">
-      <div className="grid grid-cols-2 w-full">
+    <div className="w-full max-h-80">
+      <div className="flex space-x-2 flex-wrap">
         {files.map((file, index) => {
           return (
             <div
-              className="w-60 h-60 grow"
+              className="w-60 h-60"
               key={index}
               style={{
                 backgroundImage: "url(" + `${file}` + ")",
