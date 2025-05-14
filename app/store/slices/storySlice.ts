@@ -1,8 +1,4 @@
-import {
-  CurrentStoryPhotos,
-  Story,
-  StoryPhoto,
-} from "@/app/types/db/user/story";
+import { CurrentStoryPhotos, Story, StoryPhoto } from "@/app/types/db/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state

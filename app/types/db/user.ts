@@ -7,6 +7,9 @@ export type Story = {
 
 export type StoryPhoto = {
   photo: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
 };
 
 export type CurrentStoryPhotos = {
