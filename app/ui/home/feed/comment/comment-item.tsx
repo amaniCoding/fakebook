@@ -7,7 +7,7 @@ import { FaRegComment } from "react-icons/fa";
 import { PiShareFat, PiShareFatFill, PiThumbsUp } from "react-icons/pi";
 import { IoMdThumbsUp } from "react-icons/io";
 import { useDispatch } from "react-redux";
-import { showCommentBox } from "@/app/store/slices/commentSlice";
+import { showCommentBox } from "@/app/store/slices/user/commentSlice";
 
 export default function CommentItem() {
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);

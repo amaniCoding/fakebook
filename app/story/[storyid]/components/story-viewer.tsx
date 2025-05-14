@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import {
   setCurrentStory,
   setCurrentStoryPhotos,
-} from "@/app/store/slices/storySlice";
+} from "@/app/store/slices/user/storySlice";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 export default function StoryViewer() {
   const dispatch = useAppDispatch();

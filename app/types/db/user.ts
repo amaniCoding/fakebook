@@ -5,6 +5,8 @@ export type Story = {
   profilepic: string;
 };
 
+export type postOption = "textonly" | "textwithphoto";
+
 export type StoryPhoto = {
   photo: string;
   fname: string;

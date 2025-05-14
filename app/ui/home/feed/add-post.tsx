@@ -7,11 +7,15 @@ import { RiLiveFill } from "react-icons/ri";
 import { MdPhotoLibrary } from "react-icons/md";
 import { FaRegSmile } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { showPostBox } from "@/app/store/slices/postSlice";
+import { setPostOption, showPostBox } from "@/app/store/slices/user/postSlice";
+import { useAppSelector } from "@/app/store/hooks";
+import { postOption } from "@/app/types/db/user";
 export default function AddPost() {
   const [isPostBoxShow, setIsPostBoxShown] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const handelShowPostBox = () => {
+  const post = useAppSelector((state) => state.userPost.post);
+  const handelShowPostBox = (postOption: postOption) => {
+    dispatch(setPostOption(postOption));
     setIsPostBoxShown(true);
     dispatch(showPostBox(true));
   };
@@ -36,7 +40,10 @@ export default function AddPost() {
             type="text"
             placeholder="What is on your mind, Amanuel"
             className="w-full outline-none focus:outline-none p-2 bg-gray-50 rounded-3xl placeholder:font-sans pl-5 text-black"
-            onFocus={handelShowPostBox}
+            value={post}
+            onFocus={() => {
+              handelShowPostBox("textonly");
+            }}
           ></input>
         </div>
 
@@ -45,7 +52,12 @@ export default function AddPost() {
             <RiLiveFill className="w-7 h-7 fill-red-500" />
             <span className="md:block hidden">Live Video</span>
           </button>
-          <button className="rounded-md hover:bg-gray-100 px-3 flex items-center space-x-2 py-2">
+          <button
+            className="rounded-md hover:bg-gray-100 px-3 flex items-center space-x-2 py-2"
+            onClick={() => {
+              handelShowPostBox("textwithphoto");
+            }}
+          >
             <MdPhotoLibrary className="w-7 h-7 fill-green-500" />
             <span className="md:block hidden">Photo / Video</span>
           </button>

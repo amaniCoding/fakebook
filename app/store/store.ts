@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userStorySlice } from "./slices/storySlice";
-import { userPostSlice } from "./slices/postSlice";
-import { userCommentSlice } from "./slices/commentSlice";
+import { userStorySlice } from "./slices/user/storySlice";
+import { userPostSlice } from "./slices/user/postSlice";
+import { userCommentSlice } from "./slices/user/commentSlice";
 
 // ...
 
