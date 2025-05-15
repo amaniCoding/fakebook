@@ -129,250 +129,257 @@ export default async function FeedItem({
       <p className="px-5 mb-3 mt-2">
         {post.length > 170 ? `${post.substring(0, 170)}... See more` : post}
       </p>
-      <div className="w-full h-auto">
-        <div className="flex flex-wrap space-x-2">
-          {photos.length > 5 && (
-            <div className="flex h-full space-x-2">
-              <div className="flex flex-col space-y-2">
-                {photos.slice(0, 3).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[10.5rem]"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
+      <div className="w-full h-[31rem]">
+        {photos.length > 5 && (
+          <div className="flex w-full h-full space-x-2">
+            <div className="flex flex-col space-y-2">
+              {photos.slice(0, 3).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    className="block w-full h-full"
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                  >
+                    <div
+                      className="w-1/2 h-[10.5rem]"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
+            </div>
 
-              <div className="flex flex-col space-y-2">
-                {photos.slice(3, 4).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[15.5rem] grow"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-                <div
-                  className="w-1/2 h-[15.5rem] relative"
-                  style={{
-                    backgroundImage: "url(" + `${photos[5]}` + ")",
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                >
-                  <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/65 flex items-center justify-center">
-                    <p className="text-white">{photos.length - 5} +</p>
-                  </div>
+            <div className="flex flex-col space-y-2">
+              {photos.slice(3, 4).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                    className="block w-full h-full"
+                  >
+                    <div
+                      className="w-1/2 h-[15.5rem] grow"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
+              <div
+                className="w-1/2 h-[15.5rem] relative"
+                style={{
+                  backgroundImage: "url(" + `${photos[5]}` + ")",
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/65 flex items-center justify-center">
+                  <p className="text-white">{photos.length - 5} +</p>
                 </div>
               </div>
             </div>
-          )}
-          {photos.length === 5 && (
-            <div className="flex h-full space-x-2">
-              <div className="flex flex-col space-y-2">
-                {photos.slice(0, 3).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[10.5rem]"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
-
-              <div className="flex flex-col space-y-2">
-                {photos.slice(3, 6).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[15.5rem] grow"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
+          </div>
+        )}
+        {photos.length === 5 && (
+          <div className="flex h-[31rem] space-x-2">
+            <div className="flex flex-col space-y-2">
+              {photos.slice(0, 3).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                  >
+                    <div
+                      className="w-1/2 h-[10.5rem]"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
             </div>
-          )}
-          {photos.length === 4 && (
-            <div className="flex h-full space-x-2">
-              <div className="flex flex-col space-y-2">
-                {photos.slice(0, 2).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[15.5rem]"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
 
-              <div className="flex flex-col space-y-2">
-                {photos.slice(2, 4).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[15.5rem]"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
+            <div className="flex flex-col space-y-2">
+              {photos.slice(3, 6).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                  >
+                    <div
+                      className="w-1/2 h-[15.5rem] grow"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
             </div>
-          )}
-          {photos.length === 3 && (
-            <div className="flex h-full space-x-2">
-              <div className="flex flex-col space-y-2">
-                {photos.slice(0, 2).map((file) => {
-                  const fileIndex = photos.findIndex((_file) => {
-                    return file.photoid === _file.photoid;
-                  });
-                  return (
-                    <Link
-                      href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                      key={file.photoid}
-                    >
-                      <div
-                        className="w-1/2 h-[15.5rem]"
-                        style={{
-                          backgroundImage: "url(" + `${file}` + ")",
-                          backgroundPosition: "center",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      ></div>
-                    </Link>
-                  );
-                })}
-              </div>
-              <Link href={`/photo/${postId}/${photos[2].photoid}`}>
-                <div
-                  className="w-1/2 h-[31.5rem]"
-                  style={{
-                    backgroundImage: "url(" + `${photos[2]}` + ")",
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                ></div>
-              </Link>
+          </div>
+        )}
+        {photos.length === 4 && (
+          <div className="flex h-full space-x-1 bg-blue-500">
+            <div className="flex flex-col space-y-1 w-1/2 h-full bg-green-400">
+              {photos.slice(0, 2).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                    className="w-full h-full bg-red-500"
+                  >
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
             </div>
-          )}
 
-          {photos.length === 2 &&
-            photos.map((file) => {
-              const fileIndex = photos.findIndex((_file) => {
-                return file.photoid === _file.photoid;
-              });
-              return (
-                <Link
-                  href={`/photo/${postId}/${photos[fileIndex].photoid}`}
-                  key={file.photoid}
-                >
-                  <div
-                    className="w-1/2 h-[15.5rem]"
-                    style={{
-                      backgroundImage: "url(" + `${file}` + ")",
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                  ></div>
-                </Link>
-              );
-            })}
-
-          {photos.length === 1 && (
-            <Link href={`/photo/${postId}/${photos[0].photoid}`}>
+            <div className="flex flex-col w-1/2 h-full space-y-2">
+              {photos.slice(2, 4).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                    className="w-full h-full bg-red-500"
+                  >
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {photos.length === 3 && (
+          <div className="flex w-full h-full space-x-1">
+            <div className="flex flex-col space-y-1">
+              {photos.slice(0, 2).map((file) => {
+                const fileIndex = photos.findIndex((_file) => {
+                  return file.photoid === _file.photoid;
+                });
+                return (
+                  <Link
+                    className="block w-1/2 h-[15.5rem]"
+                    href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                    key={file.photoid}
+                  >
+                    <div
+                      className=""
+                      style={{
+                        backgroundImage: "url(" + `${file.photo}` + ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                  </Link>
+                );
+              })}
+            </div>
+            <Link href={`/photo/${postId}/${photos[2].photoid}`}>
               <div
-                className="w-1/2 h-[15.5rem]"
+                className="w-1/2 h-[31.5rem]"
                 style={{
-                  backgroundImage: "url(" + `${photos[0]}` + ")",
+                  backgroundImage: "url(" + `${photos[2].photo}` + ")",
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
             </Link>
-          )}
-        </div>
+          </div>
+        )}
+
+        {photos.length === 2 &&
+          photos.map((file) => {
+            const fileIndex = photos.findIndex((_file) => {
+              return file.photoid === _file.photoid;
+            });
+            return (
+              <Link
+                className="w-[259.9px] h-[31rem]"
+                href={`/photo/${postId}/${photos[fileIndex].photoid}`}
+                key={file.photoid}
+              >
+                <div
+                  className="w-full h-full block"
+                  style={{
+                    backgroundImage: "url(" + `${file.photo}` + ")",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                ></div>
+              </Link>
+            );
+          })}
+
+        {photos.length === 1 && (
+          <Link
+            href={`/photo/${postId}/${photos[0].photoid}`}
+            className="w-full h-[31rem]"
+          >
+            <div
+              className="w-full h-full bg-red-400"
+              style={{
+                backgroundImage: "url(" + `${photos[0].photo}` + ")",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+              }}
+            ></div>
+          </Link>
+        )}
       </div>
 
       <CommentItem />
