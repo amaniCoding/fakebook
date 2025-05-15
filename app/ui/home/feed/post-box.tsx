@@ -115,23 +115,33 @@ export default function PostBox(props: { onClose: () => void }) {
   };
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const filesToView: string[] = [];
-    const files = e.target.files;
-    //console.log(files![0]);
-    for (const x in files) {
-      const file = files[x as unknown as number] as Blob;
-      const fr = new FileReader();
-      fr.onload = (e: ProgressEvent<FileReader>) => {
-        filesToView.push(e.target?.result as string);
-        setFilesToView(filesToView);
-        setshowFiles(true);
-      };
-      fr.readAsDataURL(file);
+    if (window.FileReader) {
+      const filesToView: string[] = [];
+      const files = e.target.files;
+
+      if (files) {
+        for (const x in files) {
+          const file = files[x];
+          console.log(file);
+          if (file) {
+            const fr = new FileReader();
+            fr.onloadend = (e: ProgressEvent<FileReader>) => {
+              filesToView.push(e.target?.result as string);
+              setFilesToView(filesToView);
+              setshowFiles(true);
+            };
+            try {
+              fr.readAsDataURL(file);
+            } catch {}
+          }
+        }
+      }
+      //console.log(files![0]);
     }
   };
 
   useEffect(() => {
-    console.log(filesToView);
+    console.log("FILES TO VIEW", filesToView.length);
   }, [filesToView]);
 
   const onChangePost = (

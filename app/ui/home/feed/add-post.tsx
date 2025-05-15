@@ -40,7 +40,7 @@ export default function AddPost() {
             type="text"
             placeholder="What is on your mind, Amanuel"
             className="w-full outline-none focus:outline-none p-2 bg-gray-50 rounded-3xl placeholder:font-sans pl-5 text-black"
-            value={post}
+            defaultValue={post}
             onFocus={() => {
               handelShowPostBox("textonly");
             }}
