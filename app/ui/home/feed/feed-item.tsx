@@ -183,7 +183,7 @@ export default async function FeedItem({
                 })}
                 <Link
                   href={`/photo/${postId}/${photos[5].photoid}`}
-                  className="block w-full h-[15.5rem] grow bg-blue-600 relative"
+                  className="block w-full h-[15.5rem] grow relative"
                 >
                   <div
                     className="w-full h-full"
@@ -194,7 +194,7 @@ export default async function FeedItem({
                       backgroundRepeat: "no-repeat",
                     }}
                   >
-                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/65 flex items-center justify-center">
+                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/45 flex items-center justify-center">
                       <p className="text-white">{photos.length - 5} +</p>
                     </div>
                   </div>
@@ -383,7 +383,7 @@ export default async function FeedItem({
               className="w-full h-[31rem]"
             >
               <div
-                className="w-full h-full bg-red-400"
+                className="w-full h-full"
                 style={{
                   backgroundImage: "url(" + `${photos[0].photo}` + ")",
                   backgroundPosition: "center",

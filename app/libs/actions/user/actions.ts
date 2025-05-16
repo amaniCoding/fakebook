@@ -1,36 +1,89 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
-import { sql } from "@vercel/postgres";
+import { QueryResultRow, sql } from "@vercel/postgres";
 
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { StoryPhoto } from "@/app/types/db/user";
-
-export async function createPost(formData: FormData) {
-  const invalidateFields = {
-    breif_photo: formData.get("breif_photo") as File,
+export type State = {
+  isSuccessfull: boolean;
+  post: {
+    post: QueryResultRow;
+    photos: QueryResultRow[];
   };
+};
+export async function createPost(
+  prevState: State | undefined,
+  formData: FormData
+) {
+  const photos: File[] = formData.getAll("photos") as File[];
+  const post = formData.get("post") as string;
+  const photoUrls = [];
+  if (photos && photos.length > 0) {
+    // await Promise.all(
+    //   photos.map(async (photo) => {
+    //     const name = photo.name;
+    //     const file = photo;
+    //     if (photo.size! === 0) {
+    //       const blob = await put(name, file, {
+    //         access: "public",
+    //         addRandomSuffix: true,
+    //       });
 
-  let breiffileUrl;
+    //       const photoUrl = blob.url;
+    //       photoUrls.push(photoUrl);
+    //     }
+    //   })
+    // );
+    for (const photo in photos) {
+      const name = photos[photo].name;
+      const file = photos[photo];
 
-  if (invalidateFields.breif_photo?.size !== 0) {
-    const blob = await put(
-      invalidateFields.breif_photo?.name,
-      invalidateFields.breif_photo,
-      {
-        access: "public",
-      }
+      try {
+        const blob = await put(name, file, {
+          access: "public",
+          addRandomSuffix: true,
+        });
+
+        const photoUrl = blob.url;
+        photoUrls.push(photoUrl);
+      } catch {}
+    }
+  }
+
+  try {
+    const InsertedPost =
+      await sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', '7df4d265-83f8-4ea0-86a2-0e8e7088f9a5', ${post}) ON CONFLICT (postid) DO NOTHING;
+      `;
+
+    const posts = await sql`SELECT * FROM uposts`;
+
+    const postId = posts.rows[posts.rows.length - 1].postid;
+    await Promise.all(
+      photoUrls.map((url) => {
+        return sql`INSERT INTO uphotos (postid, photo) VALUES (${postId}, ${url}) ON CONFLICT (photoid) DO NOTHING`;
+      })
     );
 
-    breiffileUrl = blob.url;
-  }
-  try {
-    await sql`INSERT INTO posts () ON CONFLICT (post_id) DO NOTHING;
-      `;
-    console.log("not posted");
-    revalidatePath("/home");
+    console.log("INSERTED POST", InsertedPost);
+
+    console.log("✅POSTED");
+    revalidatePath("/");
+    return {
+      isSuccessfull: true,
+      post: {
+        post: {},
+        photos: [],
+      },
+    };
   } catch (error) {
     console.error("Error while trying to upload a file\n", error);
+    return {
+      isSuccessfull: true,
+      post: {
+        post: {},
+        photos: [],
+      },
+    };
   }
 }
 

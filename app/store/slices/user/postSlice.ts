@@ -1,4 +1,4 @@
-import { postOption } from "@/app/types/db/user";
+import { postOption, SubmittedPostType } from "@/app/types/db/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
@@ -8,6 +8,7 @@ interface StoryState {
   postOption: postOption;
   rows: number;
   marginTop: number;
+  submittedPost: SubmittedPostType | undefined;
 }
 
 // Define the initial state using that type
@@ -17,6 +18,18 @@ const initialState: StoryState = {
   postOption: "textonly",
   rows: 1,
   marginTop: 6,
+  submittedPost: {
+    isSuccessfull: false,
+    post: {
+      post: {
+        post: "",
+        postid: "",
+        posttype: "",
+        userid: "",
+      },
+      photos: [],
+    },
+  },
 };
 
 export const userPostSlice = createSlice({
@@ -43,13 +56,25 @@ export const userPostSlice = createSlice({
     setMarginTop: (state, action: PayloadAction<number>) => {
       state.marginTop = action.payload;
     },
+    setSubmittedPost: (
+      state,
+      action: PayloadAction<SubmittedPostType | undefined>
+    ) => {
+      state.submittedPost = action.payload;
+    },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
   },
 });
 
-export const { showPostBox, setPost, setPostOption, setRows, setMarginTop } =
-  userPostSlice.actions;
+export const {
+  showPostBox,
+  setPost,
+  setPostOption,
+  setSubmittedPost,
+  setRows,
+  setMarginTop,
+} = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 

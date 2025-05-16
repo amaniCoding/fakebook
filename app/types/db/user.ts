@@ -5,7 +5,7 @@ export type Story = {
   profilepic: string;
 };
 
-export type postOption = "textonly" | "textwithphoto";
+export type postOption = "textonly" | "textwithphoto" | "showphoto";
 
 export type StoryPhoto = {
   photo: string;
@@ -28,4 +28,24 @@ export type Post = {
   lname: string;
   profilepic: string;
   post: string;
+};
+
+export type SubmittedPost = {
+  postid: string;
+  posttype: string;
+  userid: string;
+  post: string;
+};
+
+export type SubmittedPhoto = {
+  postid: string;
+  photo: string;
+};
+
+export type SubmittedPostType = {
+  isSuccessfull: boolean;
+  post: {
+    post: SubmittedPost;
+    photos: SubmittedPhoto[];
+  };
 };
