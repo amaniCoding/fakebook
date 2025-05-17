@@ -41,8 +41,9 @@ export default function PostBox(props: { onClose: () => void }) {
 
   const marginTop = useAppSelector((state) => state.userPost.marginTop);
   const [postFromPostBox, setpostFromPostBox] = useState<string>(post);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [state, formAction] = useActionState(createPost, initialState);
+
+  const [state, formAction, pending] = useActionState(createPost, initialState);
+  const isSuccessfull = state.isSuccessfull;
 
   const [postOptionFromPostBox, setpostOptionFromPostBox] =
     useState<postOption>(postOption);
@@ -173,6 +174,15 @@ export default function PostBox(props: { onClose: () => void }) {
     }
   }, [postFromPostBox]);
 
+  useEffect(() => {
+    if (isSuccessfull) {
+      props.onClose();
+      setpostFromPostBox("");
+      setFilesToView([]);
+      dispatch(setPost(""));
+    }
+  }, [dispatch, isSuccessfull, props]);
+
   return (
     <>
       <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -181,6 +191,12 @@ export default function PostBox(props: { onClose: () => void }) {
             `}
           style={getClassName()}
         >
+          {pending && (
+            <div className="absolute bg-white/75 top-0 bottom-0 left-0 right-0 flex items-center justify-center">
+              <p className="text-2xl">Posting ...</p>
+            </div>
+          )}
+
           <div className="p-3 border-b pb-2 border-b-gray-200 flex items-center justify-between">
             <p className=""></p>
             <p className="font-bold text-xl">Create Post</p>

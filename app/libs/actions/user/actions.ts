@@ -52,21 +52,18 @@ export async function createPost(
 
   try {
     const InsertedPost =
-      await sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', '7df4d265-83f8-4ea0-86a2-0e8e7088f9a5', ${post}) ON CONFLICT (postid) DO NOTHING;
+      await sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', '7df4d265-83f8-4ea0-86a2-0e8e7088f9a5', ${post}) ON CONFLICT (postid) DO NOTHING RETURNING *;
       `;
 
-    const posts = await sql`SELECT * FROM uposts`;
+    const postId = InsertedPost.rows[0].postid;
+    if (photoUrls && photoUrls.length > 0) {
+      await Promise.all(
+        photoUrls.map((url) => {
+          return sql`INSERT INTO uphotos (postid, photo) VALUES (${postId}, ${url}) ON CONFLICT (photoid) DO NOTHING`;
+        })
+      );
+    }
 
-    const postId = posts.rows[posts.rows.length - 1].postid;
-    await Promise.all(
-      photoUrls.map((url) => {
-        return sql`INSERT INTO uphotos (postid, photo) VALUES (${postId}, ${url}) ON CONFLICT (photoid) DO NOTHING`;
-      })
-    );
-
-    console.log("INSERTED POST", InsertedPost);
-
-    console.log("✅POSTED");
     revalidatePath("/");
     return {
       isSuccessfull: true,
