@@ -192,7 +192,7 @@ export default function PostBox(props: { onClose: () => void }) {
           style={getClassName()}
         >
           {pending && (
-            <div className="absolute bg-white/75 top-0 bottom-0 left-0 right-0 flex items-center justify-center">
+            <div className="absolute bg-white/75 z-[400] top-0 bottom-0 left-0 right-0 flex items-center justify-center">
               <p className="text-2xl">Posting ...</p>
             </div>
           )}
