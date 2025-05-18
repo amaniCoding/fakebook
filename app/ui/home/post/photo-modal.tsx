@@ -75,6 +75,7 @@ export default function PhotoModal(props: {
           )}
 
           <Image
+            unoptimized
             alt="Amanuel Ferede"
             src={showExactPhoto()}
             width={0}
