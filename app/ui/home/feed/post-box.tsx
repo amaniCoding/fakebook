@@ -211,7 +211,11 @@ export default function PostBox(props: { onClose: () => void }) {
               <textarea
                 ref={textAreaForText}
                 placeholder="What's in your mind, Amanuel"
-                className="placeholder:text-gray-500 h-auto py-2 placeholder:text-2xl text-3xl outline-none pl-3 block resize-none border-none outline-0 w-full overflow-y-hidden"
+                className={`placeholder:text-gray-500 h-auto py-2 ${
+                  postOptionFromPostBox === "textonly"
+                    ? "placeholder:text-2xl text-3xl"
+                    : "placeholder:text-xl text-xl"
+                } outline-none pl-3 block resize-none border-none outline-0 w-full overflow-y-hidden`}
                 value={postFromPostBox}
                 onChange={onChangePost}
                 name="post"
