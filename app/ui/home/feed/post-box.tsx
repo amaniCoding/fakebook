@@ -10,12 +10,11 @@ import { IoIosMore } from "react-icons/io";
 import {
   setMarginTop,
   setPost,
+  setPostBoxHeight,
   setPostOption,
-  setRows,
 } from "@/app/store/slices/user/postSlice";
 import React, {
   ChangeEvent,
-  KeyboardEvent,
   useActionState,
   useEffect,
   useRef,
@@ -37,26 +36,25 @@ export default function PostBox(props: { onClose: () => void }) {
   };
   const post = useAppSelector((state) => state.userPost.post);
   const postOption = useAppSelector((state) => state.userPost.postOption);
-  const rows = useAppSelector((state) => state.userPost.rows);
 
-  const marginTop = useAppSelector((state) => state.userPost.marginTop);
   const [postFromPostBox, setpostFromPostBox] = useState<string>(post);
 
+  const text = useAppSelector((state) => state.userPost.postBoxHeights.text);
   const [state, formAction, pending] = useActionState(createPost, initialState);
   const isSuccessfull = state.isSuccessfull;
 
   const [postOptionFromPostBox, setpostOptionFromPostBox] =
     useState<postOption>(postOption);
 
-  const [rowsFromPostBox, setrowsFromPostBox] = useState<number>(rows);
-  const [marginTopFromPostBox, setmarginTopFromPostBox] =
-    useState<number>(marginTop);
-
   const [filesToView, setFilesToView] = useState<string[]>([]);
 
   const [postButtonEnabled, setpostButtonEnabled] = useState<boolean>(false);
 
   const input = useRef<HTMLInputElement>(null);
+
+  const textAreaForText = useRef<HTMLTextAreaElement>(null);
+  const [textScrollHeightFromPostBox, settextScrollHeightFromPostBox] =
+    useState<string | undefined>(text);
 
   const showDialog = () => {
     input.current?.click();
@@ -93,33 +91,29 @@ export default function PostBox(props: { onClose: () => void }) {
     }
   };
 
-  useEffect(() => {
-    console.log("FILES TO VIEW", filesToView.length);
-  }, [filesToView]);
-
   const onChangePost = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
+    // if (postOptionFromPostBox === "textonly") {
+    //   if (marginTopFromPostBox <= 3.5) {
+    //   } else {
+    //     setmarginTopFromPostBox(marginTopFromPostBox - 1);
+    //   }
+    // }
+    const scrollHeight = textAreaForText.current?.scrollHeight;
+
+    textAreaForText.current!.style.height = `${scrollHeight}px`;
+
+    settextScrollHeightFromPostBox(textAreaForText.current?.style.height);
+
     setpostFromPostBox(e.target.value);
     dispatch(setPost(e.target.value));
-  };
-
-  const onKeyDownPost = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
-      setrowsFromPostBox(rowsFromPostBox + 1);
-    } else if (e.key === "Backspace") {
-      if (rowsFromPostBox <= 1) {
-      } else {
-        setrowsFromPostBox(rowsFromPostBox - 1);
-      }
-      //even if the rows is greater than one, it should only minus one from rows
-    }
   };
 
   const getClassName = () => {
     if (postOptionFromPostBox === "textonly") {
       return {
-        marginTop: `${marginTopFromPostBox}rem`,
+        marginTop: `${6}rem`,
       };
     } else {
       return {
@@ -127,48 +121,14 @@ export default function PostBox(props: { onClose: () => void }) {
       };
     }
   };
-  const onKeyDownPostText = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
-      setrowsFromPostBox(rowsFromPostBox + 1);
 
-      if (marginTopFromPostBox <= 3.5) {
-      } else {
-        setmarginTopFromPostBox(marginTopFromPostBox - 1);
-      }
-    } else if (e.key === "Backspace") {
-      if (rowsFromPostBox <= 1) {
-      } else {
-        setrowsFromPostBox(rowsFromPostBox - 1);
-      }
-
-      if (marginTopFromPostBox >= 6) {
-      } else {
-        /**
-         * The height of postBox will be pushed when the it's height becomes less
-         * than it's maximum height (when the scroll-bar invisible)
-         *
-         *
-         * But when the postBox height increases passing it's maximum height
-         * depending on rows of textarea, as backspace pressed it's
-         * margin pushes it down, that should not happen.
-         *
-         * updating it's marginTop should have effect when  it's height
-         * is less than it's maximum height ! How exactly i know, it's
-         * maximum height reached, well, by row count ...
-         *
-         *
-         * then it's marginTop and height will be adjusted together.
-         */
-        if (rowsFromPostBox <= 7) {
-          setmarginTopFromPostBox(marginTopFromPostBox + 1);
-        }
-      }
-    }
-  };
+  useEffect(() => {
+    textAreaForText.current!.style.height = textScrollHeightFromPostBox!;
+  }, [textScrollHeightFromPostBox]);
 
   useEffect(() => {
     if (!postFromPostBox) {
-      setrowsFromPostBox(1);
+      textAreaForText.current!.style.height = `auto`;
     } else {
       setpostButtonEnabled(true);
     }
@@ -203,11 +163,16 @@ export default function PostBox(props: { onClose: () => void }) {
             <FaXmark
               className="w-10 h-10 p-2 hover:bg-gray-50 bg-gray-100 rounded-full cursor-pointer"
               onClick={() => {
-                dispatch(setRows(rowsFromPostBox));
-                dispatch(setMarginTop(marginTopFromPostBox));
+                dispatch(setMarginTop(3.5));
                 dispatch(setPostOption("textwithphoto"));
                 dispatch(setPost(postFromPostBox));
+                dispatch(
+                  setPostBoxHeight({
+                    text: textScrollHeightFromPostBox,
+                  })
+                );
                 setpostButtonEnabled(false);
+
                 props.onClose();
               }}
             />
@@ -235,7 +200,7 @@ export default function PostBox(props: { onClose: () => void }) {
             <div
               className={`${
                 postOptionFromPostBox === "textonly"
-                  ? "max-h-[20.5rem]"
+                  ? "max-h-[17.5rem]"
                   : "max-h-80"
               } overflow-y-auto`}
             >
@@ -243,28 +208,25 @@ export default function PostBox(props: { onClose: () => void }) {
                 <FileViewer files={filesToView} />
               )}
 
-              <div
-                className={`${
-                  postOptionFromPostBox === "textonly" ? "block" : "hidden"
-                }`}
-              >
-                <textarea
-                  placeholder="What's in your mind, Amanuel"
-                  className="placeholder:text-gray-500 py-2  placeholder:text-2xl text-3xl outline-none pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
-                  value={postFromPostBox}
-                  onChange={onChangePost}
-                  name="post"
-                  onKeyDown={onKeyDownPostText}
-                  rows={rowsFromPostBox}
-                ></textarea>
-                <div className={`flex items-center justify-between my-4 px-3 `}>
-                  <div
-                    className={`w-8 h-8 bg-gradient-to-bl rounded-lg  from-yellow-400 to-green-500 ${
-                      rowsFromPostBox <= 3 ? "visible" : "invisible"
-                    }`}
-                  ></div>
-                  <BsEmojiAstonished className="w-7 h-7 fill-gray-600 " />
-                </div>
+              <textarea
+                ref={textAreaForText}
+                placeholder="What's in your mind, Amanuel"
+                className="placeholder:text-gray-500 h-auto py-2 placeholder:text-2xl text-3xl outline-none pl-3 block resize-none border-none outline-0 w-full overflow-y-hidden"
+                value={postFromPostBox}
+                onChange={onChangePost}
+                name="post"
+              ></textarea>
+
+              <div className={`flex items-center justify-between my-4 px-3 `}>
+                <div
+                  className={`w-8 h-8 bg-gradient-to-bl rounded-lg  from-yellow-400 to-green-500 ${
+                    postOptionFromPostBox === "textonly" &&
+                    postFromPostBox.split("\n").length <= 3
+                      ? "visible"
+                      : "invisible"
+                  }`}
+                ></div>
+                <BsEmojiAstonished className="w-7 h-7 fill-gray-600 " />
               </div>
 
               <div
@@ -272,15 +234,6 @@ export default function PostBox(props: { onClose: () => void }) {
                   postOptionFromPostBox === "textwithphoto" ? "block" : "hidden"
                 }`}
               >
-                <textarea
-                  className="pl-3 resize-none overflow-y-hidden border-none outline-0 w-full"
-                  placeholder="What is in your mind, Amanuel"
-                  value={postFromPostBox}
-                  name="post"
-                  onChange={onChangePost}
-                  onKeyDown={onKeyDownPost}
-                  rows={rowsFromPostBox}
-                ></textarea>
                 <input
                   ref={input}
                   name="photos"

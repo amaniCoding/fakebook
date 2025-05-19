@@ -14,7 +14,7 @@ export default function NavBar() {
     <nav className="py-1.5 px-4 fixed top-0 left-0 right-0 z-50 bg-white w-full shadow-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Link href={"/home"}>
+          <Link href={"/"}>
             <Image
               alt="Amanuel Ferede"
               src={"/feeds/logoc.png"}

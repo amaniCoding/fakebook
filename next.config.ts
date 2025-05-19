@@ -5,14 +5,13 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "my-blob-store.public.blob.vercel-storage.com",
+        hostname: "7gqxz60aa5shpy47.public.blob.vercel-storage.com",
         port: "",
+        pathname: "/**",
       },
     ],
   },
 };
-
-/** @type {import('next').NextConfig} */
 
 module.exports = {
   experimental: {

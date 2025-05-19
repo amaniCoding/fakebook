@@ -167,7 +167,7 @@ export default async function FeedItem({
                     <Link
                       href={`/photo/${postId}/${photos[fileIndex].photoid}`}
                       key={file.photoid}
-                      className="block w-full h-[15.5rem] bg-blue-600"
+                      className="block w-full h-[15.5rem]"
                     >
                       <div
                         className="w-full h-full"

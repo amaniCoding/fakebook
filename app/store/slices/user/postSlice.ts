@@ -6,9 +6,12 @@ interface StoryState {
   isPostBoxShown: boolean;
   post: string;
   postOption: postOption;
-  rows: number;
+  rows: number | undefined;
   marginTop: number;
   submittedPost: SubmittedPostType | undefined;
+  postBoxHeights: {
+    text: string | undefined;
+  };
 }
 
 // Define the initial state using that type
@@ -30,6 +33,10 @@ const initialState: StoryState = {
       photos: [],
     },
   },
+
+  postBoxHeights: {
+    text: "auto",
+  },
 };
 
 export const userPostSlice = createSlice({
@@ -49,7 +56,7 @@ export const userPostSlice = createSlice({
       state.postOption = action.payload;
     },
 
-    setRows: (state, action: PayloadAction<number>) => {
+    setRows: (state, action: PayloadAction<number | undefined>) => {
       state.rows = action.payload;
     },
 
@@ -63,6 +70,15 @@ export const userPostSlice = createSlice({
       state.submittedPost = action.payload;
     },
 
+    setPostBoxHeight: (
+      state,
+      action: PayloadAction<{
+        text: string | undefined;
+      }>
+    ) => {
+      state.postBoxHeights = action.payload;
+    },
+
     // Use the PayloadAction type to declare the contents of `action.payload`
   },
 });
@@ -74,6 +90,7 @@ export const {
   setSubmittedPost,
   setRows,
   setMarginTop,
+  setPostBoxHeight,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

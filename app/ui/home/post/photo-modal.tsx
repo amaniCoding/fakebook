@@ -51,14 +51,14 @@ export default function PhotoModal(props: {
   };
   return (
     <div className="grid grid-cols-12 gap-3 h-screen">
-      <div className="lg:col-span-9 col-span-12 relative">
-        <div className="w-full h-screen lg:sticky lg:left-0 lg:right-0 lg:bottom-3 lg:top-0 lg:z-20 px-4 bg-black">
+      <div className="lg:col-span-9 col-span-12">
+        <div className="w-full h-screen lg:z-20 px-4 bg-black relative">
           <Link
             href={"/"}
             scroll={false}
-            className=" cursor-pointer absolute left-6 top-3"
+            className=" cursor-pointer absolute left-6 top-20"
           >
-            <FaXmark className="w-9 h-9 fill-white" />
+            <FaXmark className="w-11 h-11 bg-white rounded-full p-2" />
           </Link>
           {props.photos.length > 1 && (
             <GrPrevious
@@ -75,16 +75,17 @@ export default function PhotoModal(props: {
           )}
 
           <Image
+            unoptimized
             alt="Amanuel Ferede"
             src={showExactPhoto()}
             width={0}
             height={0}
             sizes="100vh"
-            className="w-full h-full object-scale-down"
+            className="w-full h-full pt-14 object-scale-down"
           />
         </div>
       </div>
-      <div className="lg:col-span-3 col-span-12 mt-16 overflow-y-scroll socrollabar">
+      <div className="lg:col-span-3 pt-16 h-full col-span-12 overflow-y-scroll">
         <div className="flex items-center justify-between py-3 mb-3 pr-3 border-b border-gray-200">
           <p className="text-sm">This is photo is from a post</p>
           <p className="text-sm">View Post</p>
