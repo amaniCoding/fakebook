@@ -1,3 +1,4 @@
+/** @type {import('next').NextConfig} */
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -13,6 +14,11 @@ const nextConfig: NextConfig = {
   },
 };
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 48ad4c71c2cca7c6484818da1925c4c2ab176060
 module.exports = {
   experimental: {
     serverActions: {
