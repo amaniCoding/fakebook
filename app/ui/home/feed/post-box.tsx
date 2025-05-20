@@ -7,11 +7,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { PiGifFill } from "react-icons/pi";
 import { IoIosMore } from "react-icons/io";
-import {
-  setMarginTop,
-  setPost,
-  setPostOption,
-} from "@/app/store/slices/user/postSlice";
+import { setPost, setPostOption } from "@/app/store/slices/user/postSlice";
 import React, {
   ChangeEvent,
   useActionState,
@@ -158,11 +154,9 @@ export default function PostBox(props: { onClose: () => void }) {
             <FaXmark
               className="w-10 h-10 p-2 hover:bg-gray-50 bg-gray-100 rounded-full cursor-pointer"
               onClick={() => {
-                dispatch(setMarginTop(3.5));
-                dispatch(setPostOption("textwithphoto"));
+                dispatch(setPostOption(postOptionFromPostBox));
                 dispatch(setPost(postFromPostBox));
                 setpostButtonEnabled(false);
-
                 props.onClose();
               }}
             />
@@ -268,7 +262,7 @@ export default function PostBox(props: { onClose: () => void }) {
             </div>
             <button
               type="submit"
-              disabled={!postFromPostBox || postButtonEnabled === false}
+              disabled={!postFromPostBox || !postButtonEnabled}
               className={`w-full text-center  py-2 cursor-pointer text-white rounded-md ${
                 postButtonEnabled || postFromPostBox
                   ? "bg-blue-600"
