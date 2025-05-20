@@ -10,7 +10,6 @@ import { IoIosMore } from "react-icons/io";
 import {
   setMarginTop,
   setPost,
-  setPostBoxHeight,
   setPostOption,
 } from "@/app/store/slices/user/postSlice";
 import React, {
@@ -39,7 +38,8 @@ export default function PostBox(props: { onClose: () => void }) {
 
   const [postFromPostBox, setpostFromPostBox] = useState<string>(post);
 
-  const text = useAppSelector((state) => state.userPost.postBoxHeights.text);
+  const [clientHeight, setClientHeight] = useState<number | undefined>(0);
+  const [scrollHeight, setScrollHeight] = useState<number | undefined>(0);
   const [state, formAction, pending] = useActionState(createPost, initialState);
   const isSuccessfull = state.isSuccessfull;
 
@@ -53,8 +53,6 @@ export default function PostBox(props: { onClose: () => void }) {
   const input = useRef<HTMLInputElement>(null);
 
   const textAreaForText = useRef<HTMLTextAreaElement>(null);
-  const [textScrollHeightFromPostBox, settextScrollHeightFromPostBox] =
-    useState<string | undefined>(text);
 
   const showDialog = () => {
     input.current?.click();
@@ -100,11 +98,12 @@ export default function PostBox(props: { onClose: () => void }) {
     //     setmarginTopFromPostBox(marginTopFromPostBox - 1);
     //   }
     // }
-    const scrollHeight = textAreaForText.current?.scrollHeight;
 
-    textAreaForText.current!.style.height = `${scrollHeight}px`;
+    setClientHeight(textAreaForText.current?.textContent?.split("\n").length);
+    setScrollHeight(textAreaForText.current?.scrollHeight);
 
-    settextScrollHeightFromPostBox(textAreaForText.current?.style.height);
+    console.log("clientHeight", clientHeight);
+    console.log("scrollHeight", scrollHeight);
 
     setpostFromPostBox(e.target.value);
     dispatch(setPost(e.target.value));
@@ -123,12 +122,8 @@ export default function PostBox(props: { onClose: () => void }) {
   };
 
   useEffect(() => {
-    textAreaForText.current!.style.height = textScrollHeightFromPostBox!;
-  }, [textScrollHeightFromPostBox]);
-
-  useEffect(() => {
     if (!postFromPostBox) {
-      textAreaForText.current!.style.height = `auto`;
+      setpostButtonEnabled(false);
     } else {
       setpostButtonEnabled(true);
     }
@@ -166,18 +161,13 @@ export default function PostBox(props: { onClose: () => void }) {
                 dispatch(setMarginTop(3.5));
                 dispatch(setPostOption("textwithphoto"));
                 dispatch(setPost(postFromPostBox));
-                dispatch(
-                  setPostBoxHeight({
-                    text: textScrollHeightFromPostBox,
-                  })
-                );
                 setpostButtonEnabled(false);
 
                 props.onClose();
               }}
             />
           </div>
-          <form className="p-3" action={formAction}>
+          <form className="p-3 flex flex-col w-full" action={formAction}>
             <div className="flex space-x-3">
               <Image
                 alt="Amanuel Ferede"
@@ -211,21 +201,18 @@ export default function PostBox(props: { onClose: () => void }) {
               <textarea
                 ref={textAreaForText}
                 placeholder="What's in your mind, Amanuel"
-                className={`placeholder:text-gray-500 h-auto py-2 ${
-                  postOptionFromPostBox === "textonly"
-                    ? "placeholder:text-2xl text-3xl"
-                    : "placeholder:text-xl text-xl"
-                } outline-none pl-3 block resize-none border-none outline-0 w-full overflow-y-hidden`}
+                className={`placeholder:text-gray-500 auto pb-2 text-wrap resize-none
+                outline-none pl-3 block field-sizing-content min-h-auto border-none outline-0 w-full overflow-y-auto`}
                 value={postFromPostBox}
                 onChange={onChangePost}
                 name="post"
               ></textarea>
 
-              <div className={`flex items-center justify-between my-4 px-3 `}>
+              <div className={` flex items-center justify-between my-2 px-3 `}>
                 <div
                   className={`w-8 h-8 bg-gradient-to-bl rounded-lg  from-yellow-400 to-green-500 ${
                     postOptionFromPostBox === "textonly" &&
-                    postFromPostBox.split("\n").length <= 3
+                    postFromPostBox.length >= 100
                       ? "visible"
                       : "invisible"
                   }`}
