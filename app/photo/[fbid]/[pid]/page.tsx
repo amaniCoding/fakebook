@@ -1,6 +1,6 @@
 import { fetchAPhoto, fetchPhotos } from "@/app/libs/data/user";
-import NavBar from "@/app/ui/home/sections/nav-bar";
 import PhotoModal from "@/app/ui/home/post/photo-modal";
+import NavBar2 from "@/app/ui/home/sections/nav-bar2";
 export default async function Page(props: {
   params: Promise<{ fbid: string; pid: string }>;
 }) {
@@ -12,7 +12,7 @@ export default async function Page(props: {
   const photos = await fetchPhotos(fbid);
   return (
     <>
-      <NavBar />
+      <NavBar2 />
       <PhotoModal photo={photo} photos={photos} />
     </>
   );

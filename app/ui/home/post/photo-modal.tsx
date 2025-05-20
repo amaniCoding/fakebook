@@ -50,16 +50,25 @@ export default function PhotoModal(props: {
     }
   };
   return (
-    <div className="grid grid-cols-12 gap-3 h-screen">
+    <div className="grid grid-cols-12 gap-3 h-screen fixed top-0 bottom-0 left-0 z-50">
       <div className="lg:col-span-9 col-span-12">
         <div className="w-full h-screen lg:z-20 px-4 bg-black relative">
-          <Link
-            href={"/"}
-            scroll={false}
-            className=" cursor-pointer absolute left-6 top-20"
-          >
-            <FaXmark className="w-11 h-11 bg-white rounded-full p-2" />
-          </Link>
+          <div className="absolute top-2 left-2 flex items-center">
+            <Link href={"/"} scroll={false} className=" cursor-pointer">
+              <FaXmark className="w-14 h-14 text-white rounded-full p-2" />
+            </Link>
+
+            <Link href={"/"} scroll={false} className=" cursor-pointer">
+              <Image
+                width={0}
+                height={0}
+                sizes="100vh"
+                src={"/feeds/logoc.png"}
+                alt="Logo"
+                className="w-14 h-14 text-white rounded-full p-2"
+              />
+            </Link>
+          </div>
           {props.photos.length > 1 && (
             <GrPrevious
               onClick={showPreviousPhoto}
@@ -81,11 +90,11 @@ export default function PhotoModal(props: {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-full h-full pt-14 object-scale-down"
+            className="w-full h-full object-scale-down"
           />
         </div>
       </div>
-      <div className="lg:col-span-3 pt-16 h-full col-span-12 overflow-y-scroll">
+      <div className="lg:col-span-3 h-full mt-16 pb-16 col-span-12 overflow-y-scroll">
         <div className="flex items-center justify-between py-3 mb-3 pr-3 border-b border-gray-200">
           <p className="text-sm">This is photo is from a post</p>
           <p className="text-sm">View Post</p>
