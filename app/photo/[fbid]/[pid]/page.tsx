@@ -7,9 +7,11 @@ export default async function Page(props: {
   const params = await props.params;
   const fbid = params.fbid;
   const pid = params.pid;
-  const photo = await fetchAPhoto(fbid, pid);
-  console.log(photo);
-  const photos = await fetchPhotos(fbid);
+
+  const [photo, photos] = await Promise.all([
+    fetchAPhoto(fbid, pid),
+    fetchPhotos(fbid),
+  ]);
   return (
     <>
       <NavBar2 />

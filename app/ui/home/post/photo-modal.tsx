@@ -1,6 +1,6 @@
 "use client";
 
-import { QueryResultRow } from "@vercel/postgres";
+import { Media } from "@/app/types/db/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -11,12 +11,9 @@ import { IoMdMore, IoMdThumbsUp } from "react-icons/io";
 import { IoHeartCircle } from "react-icons/io5";
 
 import { PiShareFat, PiThumbsUp } from "react-icons/pi";
-export default function PhotoModal(props: {
-  photo: QueryResultRow;
-  photos: QueryResultRow[];
-}) {
+export default function PhotoModal(props: { photo: Media[]; photos: Media[] }) {
   const currentPhotoIndexFromProp = props.photos.findIndex((photo) => {
-    return photo.photoid === props.photo[0].photoid;
+    return photo.mediaid === props.photo[0].mediaid;
   });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
     currentPhotoIndexFromProp
@@ -42,11 +39,11 @@ export default function PhotoModal(props: {
 
   const showExactPhoto = () => {
     if (currentPhotoIndex > props.photos.length - 1) {
-      return props.photos[0].photo;
+      return props.photos[0].media;
     } else if (currentPhotoIndex < 0) {
-      return props.photos[props.photos.length - 1].photo;
+      return props.photos[props.photos.length - 1].media;
     } else {
-      return props.photos[currentPhotoIndex].photo;
+      return props.photos[currentPhotoIndex].media;
     }
   };
   return (

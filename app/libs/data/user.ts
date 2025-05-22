@@ -40,7 +40,7 @@ export async function fetchAllStories() {
 export async function fetchPhotos(postId: string) {
   try {
     const data =
-      await sql`SELECT umedias.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
+      await sql<Media>`SELECT umedias.mediaid, umedias.type, umedias.media FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -48,10 +48,10 @@ export async function fetchPhotos(postId: string) {
   }
 }
 
-export async function fetchAPhoto(postId: string, photoId: string) {
+export async function fetchAPhoto(postId: string, mediaId: string) {
   try {
     const data =
-      await sql`SELECT umedias.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} AND photoid = ${photoId}`;
+      await sql<Media>`SELECT umedias.mediaid, umedias.type, umedias.media FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId}`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
