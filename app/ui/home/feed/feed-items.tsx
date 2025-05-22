@@ -14,7 +14,7 @@ export default async function Feeds() {
             lname={post.lname}
             profilepic={post.profilepic}
             post={post.post}
-            photos={post.photos}
+            medias={post.medias}
             key={post.postId}
           />
         );

@@ -224,25 +224,17 @@ async function seedReplyReactions() {
   return insertedReplyReactions;
 }
 
-async function seedPhotos() {
+async function seeMedias() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
-    CREATE TABLE IF NOT EXISTS uphotos(
-      photoid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS umedias(
+      mediaid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       postid UUID NOT NULL,
-      photo TEXT,
+      media TEXT,
+      type: TEXT,
       date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
   `;
-
-  const insertedPhotos = await Promise.all(
-    photoDummyData.map(async (reaction) => {
-      return client.sql`INSERT INTO uphotos (postid, photo) VALUES (${reaction.postId}, ${reaction.photo}) ON CONFLICT (photoid) DO NOTHING;
-      `;
-    })
-  );
-
-  return insertedPhotos;
 }
 
 async function seedStoryPhotos() {
@@ -274,7 +266,7 @@ export async function GET() {
     // await seedUser();
 
     // await seedPost();
-    //seedPhotos();
+    //seeMedias();
     //seedStories();
     //seedStoryPhotos();
 

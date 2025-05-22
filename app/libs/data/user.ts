@@ -1,25 +1,25 @@
-import { Photo, Story, StoryPhoto, Post } from "@/app/types/db/user";
+import { Story, StoryPhoto, Post, Media } from "@/app/types/db/user";
 import { sql } from "@vercel/postgres";
 
 export async function fetchPosts() {
   try {
     const posts =
       await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
-    const getPhotos = Promise.all(
+    const getMedias = Promise.all(
       posts.rows.map(async (row) => {
-        const photos =
-          await sql<Photo>`SELECT uphotos.photo, uphotos.photoid FROM uposts JOIN users ON uposts.userid = users.userid JOIN uphotos ON uposts.postid = uphotos.postid WHERE uposts.postid = ${row.postid} ORDER BY uphotos.date DESC`;
+        const medias =
+          await sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${row.postid} ORDER BY umedias.date DESC`;
         return {
           postId: row.postid,
           fname: row.fname,
           lname: row.lname,
           profilepic: row.profilepic,
           post: row.post,
-          photos: photos.rows,
+          medias: medias.rows,
         };
       })
     );
-    return getPhotos;
+    return getMedias;
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch dev data");
@@ -40,7 +40,7 @@ export async function fetchAllStories() {
 export async function fetchPhotos(postId: string) {
   try {
     const data =
-      await sql`SELECT uphotos.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN uphotos ON uposts.postid = uphotos.postid WHERE uposts.postid = ${postId} ORDER BY uphotos.date DESC`;
+      await sql`SELECT umedias.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -51,7 +51,7 @@ export async function fetchPhotos(postId: string) {
 export async function fetchAPhoto(postId: string, photoId: string) {
   try {
     const data =
-      await sql`SELECT uphotos.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN uphotos ON uposts.postid = uphotos.postid WHERE uposts.postid = ${postId} AND photoid = ${photoId}`;
+      await sql`SELECT umedias.* FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} AND photoid = ${photoId}`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);

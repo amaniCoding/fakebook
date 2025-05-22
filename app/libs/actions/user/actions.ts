@@ -15,10 +15,10 @@ export async function createPost(
   prevState: State | undefined,
   formData: FormData
 ) {
-  const photos: File[] = formData.getAll("photos") as File[];
+  const medias: File[] = formData.getAll("photos") as File[];
   const post = formData.get("post") as string;
   const photoUrls = [];
-  if (photos && photos.length > 0) {
+  if (medias && medias.length > 0) {
     // await Promise.all(
     //   photos.map(async (photo) => {
     //     const name = photo.name;
@@ -34,9 +34,10 @@ export async function createPost(
     //     }
     //   })
     // );
-    for (const photo in photos) {
-      const name = photos[photo].name;
-      const file = photos[photo];
+    for (const meida in medias) {
+      const name = medias[meida].name;
+      const file = medias[meida];
+      const type = medias[meida].type;
 
       try {
         const blob = await put(name, file, {
@@ -45,7 +46,11 @@ export async function createPost(
         });
 
         const photoUrl = blob.url;
-        photoUrls.push(photoUrl);
+        const mediaData = {
+          url: photoUrl,
+          type: type,
+        };
+        photoUrls.push(mediaData);
       } catch {}
     }
   }
@@ -59,7 +64,7 @@ export async function createPost(
     if (photoUrls && photoUrls.length > 0) {
       await Promise.all(
         photoUrls.map((url) => {
-          return sql`INSERT INTO uphotos (postid, photo) VALUES (${postId}, ${url}) ON CONFLICT (photoid) DO NOTHING`;
+          return sql`INSERT INTO umedias (postid, media, type) VALUES (${postId}, ${url.url}, ${url.type}) ON CONFLICT (mediaid) DO NOTHING`;
         })
       );
     }

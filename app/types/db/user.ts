@@ -18,9 +18,10 @@ export type CurrentStoryPhotos = {
   loading: boolean;
   currentStoryPhotos: StoryPhoto[];
 };
-export type Photo = {
-  photo: string;
-  photoid: string;
+export type Media = {
+  type: string;
+  mediaid: string;
+  media: string;
 };
 export type Post = {
   postid: string;

@@ -138,13 +138,13 @@ export default function PostBox(props: { onClose: () => void }) {
     <>
       <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
         <div
-          className={`max-w-[517px] mx-auto shadow-gray-400 shadow-lg rounded-xl bg-white 
+          className={`max-w-[517px] mx-auto relative shadow-lg rounded-xl bg-white 
             `}
           style={getClassName()}
         >
           {pending && (
-            <div className="absolute bg-white/75 z-[400] top-0 bottom-0 left-0 right-0 flex items-center justify-center">
-              <p className="text-2xl">Posting ...</p>
+            <div className="absolute bg-gray-100 opacity-60 z-[400] top-0 bottom-0 left-0 right-0 flex items-center justify-center">
+              <p className="text-2xl font-medium">Posting ...</p>
             </div>
           )}
 
@@ -196,7 +196,9 @@ export default function PostBox(props: { onClose: () => void }) {
                 ref={textAreaForText}
                 placeholder="What's in your mind, Amanuel"
                 className={`placeholder:text-gray-500 auto pb-2 text-wrap resize-none
-                outline-none pl-3 block field-sizing-content min-h-auto border-none outline-0 w-full overflow-y-auto`}
+                outline-none pl-3 block field-sizing-content min-h-auto border-none outline-0 w-full overflow-y-auto ${
+                  postOptionFromPostBox !== "showphoto" ? "block" : "hidden"
+                }`}
                 value={postFromPostBox}
                 onChange={onChangePost}
                 name="post"

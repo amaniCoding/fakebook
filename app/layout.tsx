@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="  md:pt-[73px] pt-[55px]">
         <AppProvider>{children}</AppProvider>
       </body>
     </html>
