@@ -3,7 +3,7 @@ import { QueryResultRow, sql } from "@vercel/postgres";
 
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
-import { StoryPhoto } from "@/app/types/db/user";
+import { StoryMedia } from "@/app/types/db/user";
 export type State = {
   isSuccessfull: boolean;
   post: {
@@ -92,7 +92,7 @@ export async function createPost(
 export async function fetchStoryPhotos(storyId: string | undefined) {
   try {
     const data =
-      await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryMedia>`SELECT ustorymedias.media, ustorymedias.type, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustorymedias ON ustories.storyid = ustorymedias.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustorymedias.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);

@@ -214,7 +214,7 @@ export default function StoryViewer() {
             <Image
               alt="Amanuel Ferede"
               src={
-                currentStoryPhotos.currentStoryPhotos[currentPhotoIndex]?.photo
+                currentStoryPhotos.currentStoryPhotos[currentPhotoIndex]?.media
               }
               width={0}
               height={0}

@@ -1,4 +1,4 @@
-import { CurrentStoryPhotos, Story, StoryPhoto } from "@/app/types/db/user";
+import { CurrentStoryPhotos, Story, StoryMedia } from "@/app/types/db/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
@@ -7,9 +7,9 @@ interface StoryState {
   currentStory: Story | undefined;
   currentStoryPhotos: {
     loading: boolean;
-    currentStoryPhotos: StoryPhoto[];
+    currentStoryPhotos: StoryMedia[];
   };
-  allStoryWithPhotos: StoryPhoto[];
+  allStoryWithPhotos: StoryMedia[];
 }
 
 // Define the initial state using that type
@@ -48,7 +48,7 @@ export const userStorySlice = createSlice({
       state.currentStoryPhotos = action.payload;
     },
 
-    setAllStoriesWithPhotos: (state, action: PayloadAction<StoryPhoto[]>) => {
+    setAllStoriesWithPhotos: (state, action: PayloadAction<StoryMedia[]>) => {
       state.allStoryWithPhotos = action.payload;
     },
   },

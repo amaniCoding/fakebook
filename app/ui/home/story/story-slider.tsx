@@ -8,6 +8,7 @@ import { useRef } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import Link from "next/link";
 import { BsPlus } from "react-icons/bs";
+import { SimpleMedia } from "@/app/types/db/user";
 
 export default function StorySlider(props: {
   stories: {
@@ -15,7 +16,7 @@ export default function StorySlider(props: {
     fname: string;
     lname: string;
     profilepic: string;
-    photo: string;
+    medias: SimpleMedia;
   }[];
 }) {
   const sliderRef = useRef<Slider>(null);
@@ -77,7 +78,7 @@ export default function StorySlider(props: {
               fname={story.fname}
               lname={story.lname}
               profilepic={story.profilepic}
-              photo={story.photo}
+              medias={story.medias}
             />
           );
         })}

@@ -7,8 +7,13 @@ export type Story = {
 
 export type postOption = "textonly" | "textwithphoto" | "showphoto";
 
-export type StoryPhoto = {
-  photo: string;
+export type SimpleMedia = {
+  media: string;
+  type: string;
+};
+export type StoryMedia = {
+  media: string;
+  type: string;
   fname: string;
   lname: string;
   profilepic: string;
@@ -16,7 +21,7 @@ export type StoryPhoto = {
 
 export type CurrentStoryPhotos = {
   loading: boolean;
-  currentStoryPhotos: StoryPhoto[];
+  currentStoryPhotos: StoryMedia[];
 };
 export type Media = {
   type: string;

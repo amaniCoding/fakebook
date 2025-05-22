@@ -1,4 +1,5 @@
 "use client";
+import { SimpleMedia } from "@/app/types/db/user";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,14 +8,14 @@ type StoryItem = {
   fname: string;
   lname: string;
   profilepic: string;
-  photo: string;
+  medias: SimpleMedia;
 };
 export default function StorySliderItem({
   storyid,
   fname,
   lname,
   profilepic,
-  photo,
+  medias,
 }: StoryItem) {
   return (
     <div className="group overflow-hidden rounded-xl">
@@ -22,7 +23,7 @@ export default function StorySliderItem({
         <div className="relative">
           <Image
             alt="Amanuel Ferede"
-            src={photo}
+            src={medias.media}
             width={0}
             height={0}
             sizes="100vh"

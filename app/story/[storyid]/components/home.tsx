@@ -11,7 +11,7 @@ import {
   setStories,
 } from "@/app/store/slices/user/storySlice";
 import Link from "next/link";
-import { Story, StoryPhoto } from "@/app/types/db/user";
+import { Story, StoryMedia } from "@/app/types/db/user";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 import { useAppDispatch } from "@/app/store/hooks";
 
@@ -19,8 +19,8 @@ export default function Home(props: {
   allStories: Story[];
   storyid: string;
   currentStory: Story[];
-  currentStoryPhotos: StoryPhoto[];
-  allStoriesWithPhotos: StoryPhoto[];
+  currentStoryPhotos: StoryMedia[];
+  allStoriesWithPhotos: StoryMedia[];
 }) {
   const dispatch = useAppDispatch();
 

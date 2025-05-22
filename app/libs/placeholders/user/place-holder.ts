@@ -803,137 +803,169 @@ export const photoDummyData = [
 export const storyphotoDummyData = [
   {
     storyId: "8ae784a8-d949-4dca-a42a-11414e0ceb8f",
-    photo: "/feeds/3.jpg",
+    type: "image/jpeg",
+    media: "/feeds/3.jpg",
   },
   {
     storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
-    photo: "/feeds/5.jpg",
+    type: "image/jpeg",
+    media: "/feeds/5.jpg",
   },
   {
     storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
-    photo: "/feeds/6.jpg",
+    type: "image/jpeg",
+    media: "/feeds/6.jpg",
   },
   {
     storyId: "ab1c9c6c-3cb5-44aa-bc0e-537a7cd706b6",
-    photo: "/feeds/10.jpg",
+    type: "image/jpeg",
+    media: "/feeds/10.jpg",
   },
   {
     storyId: "f652ff84-0ba4-4881-9356-a8b5c1b4a56b",
-    photo: "/feeds/11.jpg",
+    type: "image/jpeg",
+    media: "/feeds/11.jpg",
   },
   {
     storyId: "f652ff84-0ba4-4881-9356-a8b5c1b4a56b",
-    photo: "/feeds/20.jpg",
+    type: "image/jpeg",
+    media: "/feeds/20.jpg",
   },
   {
     storyId: "c4297c98-2e73-4dd6-b794-160076a0b86d",
-    photo: "/feeds/15.jpg",
+    type: "image/jpeg",
+    media: "/feeds/15.jpg",
   },
   {
     storyId: "619c7f9b-8164-4419-b410-167a573ee301",
-    photo: "/feeds/19.jpg",
+    type: "image/jpeg",
+    media: "/feeds/19.jpg",
   },
   {
     storyId: "1df9e6be-1fb2-45cd-8274-28ed33791386",
-    photo: "/feeds/1.jpg",
+    type: "image/jpeg",
+    media: "/feeds/1.jpg",
   },
   {
     storyId: "d2bca30d-a40b-4a3b-a645-d455a5b519cb",
-    photo: "/feeds/2.jpg",
+    type: "image/jpeg",
+    media: "/feeds/2.jpg",
   },
   {
     storyId: "47867e52-5a79-4dc5-80ae-7796d02cb845",
-    photo: "/feeds/3.jpg",
+    type: "image/jpeg",
+    media: "/feeds/3.jpg",
   },
   {
     storyId: "ed61bb2a-95ac-46c9-9938-e9ee47487dba",
-    photo: "/feeds/4.jpg",
+    type: "image/jpeg",
+    media: "/feeds/4.jpg",
   },
   {
     storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
-    photo: "/feeds/16.jpg",
+    type: "image/jpeg",
+    media: "/feeds/16.jpg",
   },
   {
     storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
-    photo: "/feeds/14.jpg",
+    type: "image/jpeg",
+    media: "/feeds/14.jpg",
   },
   {
     storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
-    photo: "/feeds/10.jpg",
+    type: "image/jpeg",
+    media: "/feeds/10.jpg",
   },
   {
     storyId: "1964ba55-3c7e-4960-b51a-84d8bb1abcb6",
-    photo: "/feeds/11.jpg",
+    type: "image/jpeg",
+    media: "/feeds/11.jpg",
   },
   {
     storyId: "ea67d847-fb5e-4f28-af33-f9e2ef770e30",
-    photo: "/feeds/20.jpg",
+    type: "image/jpeg",
+    media: "/feeds/20.jpg",
   },
   {
     storyId: "a822d98a-75dc-4f31-b6ca-cbd345d5553e",
-    photo: "/feeds/13.jpg",
+    type: "image/jpeg",
+    media: "/feeds/13.jpg",
   },
   {
     storyId: "8d9f65b3-c2ef-4b4f-a2a1-c3c5e50b00a2",
-    photo: "/feeds/18.jpg",
+    type: "image/jpeg",
+    media: "/feeds/18.jpg",
   },
   {
     storyId: "87fe35cc-18ba-49fe-8014-2caef7901e7a",
-    photo: "/feeds/14.jpg",
+    type: "image/jpeg",
+    media: "/feeds/14.jpg",
   },
   {
     storyId: "76507f4d-3040-4d07-8870-b87b607a65fa",
-    photo: "/feeds/28.jpg",
+    type: "image/jpeg",
+    media: "/feeds/28.jpg",
   },
 
   {
     storyId: "de1e72e7-c1ee-45a7-a4af-2ff178157768",
-    photo: "/feeds/5.jpg",
+    type: "image/jpeg",
+    media: "/feeds/5.jpg",
   },
   {
     storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/22.jpg",
-  },
-
-  {
-    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/4.jpg",
+    type: "image/jpeg",
+    media: "/feeds/22.jpg",
   },
 
   {
     storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/14.jpg",
+    type: "image/jpeg",
+    media: "/feeds/4.jpg",
   },
 
   {
     storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/2.jpg",
+    type: "image/jpeg",
+    media: "/feeds/14.jpg",
   },
 
   {
     storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/5.jpg",
+    type: "image/jpeg",
+    media: "/feeds/2.jpg",
   },
 
   {
     storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
-    photo: "/feeds/6.jpg",
+    type: "image/jpeg",
+    media: "/feeds/5.jpg",
+  },
+
+  {
+    storyId: "7a225670-7da1-492d-8076-6ce1d7a1d748",
+    type: "image/jpeg",
+    media: "/feeds/6.jpg",
   },
 
   {
     storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
-    photo: "/feeds/8.jpg",
+    type: "image/jpeg",
+    media: "/feeds/8.jpg",
   },
   {
     storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
-    photo: "/feeds/3.jpg",
+    type: "image/jpeg",
+    media: "/feeds/3.jpg",
   },
   {
     storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
-    photo: "/feeds/17.jpg",
+    type: "image/jpeg",
+    media: "/feeds/17.jpg",
   },
   {
     storyId: "1001195f-5868-4bef-93c0-919c40c62a9c",
-    photo: "/feeds/9.jpg",
+    type: "image/jpeg",
+    media: "/feeds/9.jpg",
   },
 ];

@@ -1,7 +1,7 @@
 import {
   fetchAStory,
   fetchAllStories,
-  fetchCurrentStoryPhotos,
+  fetchCurrentStoryMedias,
   fetchAllStoriesWithPhotos,
 } from "@/app/libs/data/user";
 import Home from "./components/home";
@@ -15,7 +15,7 @@ export default async function Page(props: {
     await Promise.all([
       fetchAllStories(),
       fetchAStory(storyid),
-      fetchCurrentStoryPhotos(storyid),
+      fetchCurrentStoryMedias(storyid),
       fetchAllStoriesWithPhotos(),
     ]);
 

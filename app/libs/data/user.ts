@@ -1,4 +1,4 @@
-import { Story, StoryPhoto, Post, Media } from "@/app/types/db/user";
+import { Story, StoryMedia, Post, Media } from "@/app/types/db/user";
 import { sql } from "@vercel/postgres";
 
 export async function fetchPosts() {
@@ -80,10 +80,10 @@ export async function fetchAPost(postId: string) {
   }
 }
 
-export async function fetchCurrentStoryPhotos(storyId: string) {
+export async function fetchCurrentStoryMedias(storyId: string) {
   try {
     const data =
-      await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryMedia>`SELECT ustorymedias.media, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustorymedias ON ustories.storyid = ustorymedias.storyid WHERE ustories.storyid = ${storyId} ORDER BY ustorymedias.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -94,7 +94,7 @@ export async function fetchCurrentStoryPhotos(storyId: string) {
 export async function fetchAllStoriesWithPhotos() {
   try {
     const data =
-      await sql<StoryPhoto>`SELECT ustoryphotos.photo FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid ORDER BY ustoryphotos.date DESC`;
+      await sql<StoryMedia>`SELECT ustorymedias.media FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustorymedias ON ustories.storyid = ustorymedias.storyid ORDER BY ustorymedias.date DESC`;
     return data.rows;
   } catch (error) {
     console.log("Database error", error);
@@ -120,14 +120,17 @@ export async function fetchStoriesForSlider() {
 
     const story = await Promise.all(
       users.rows.map(async (row) => {
-        const photo =
-          await sql<StoryPhoto>`SELECT ustoryphotos.photo, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustoryphotos ON ustories.storyid = ustoryphotos.storyid WHERE ustories.storyid = ${row.storyid} ORDER BY ustoryphotos.date DESC`;
+        const medias =
+          await sql<StoryMedia>`SELECT ustorymedias.media, ustorymedias.type, users.fname, users.lname, users.profilepic FROM ustories JOIN users ON ustories.userid = users.userid JOIN ustorymedias ON ustories.storyid = ustorymedias.storyid WHERE ustories.storyid = ${row.storyid} ORDER BY ustorymedias.date DESC`;
         return {
           storyid: row.storyid,
           fname: row.fname,
           lname: row.lname,
           profilepic: row.profilepic,
-          photo: photo.rows[0].photo,
+          medias: {
+            media: medias.rows[0].media,
+            type: medias.rows[0].type,
+          },
         };
       })
     );
