@@ -1,3 +1,35 @@
+export type User = {
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+};
+export type Media = {
+  type: string;
+  mediaid: string;
+  media: string;
+};
+
+export type Post = {
+  postId: string;
+  post: string;
+  date: string;
+};
+
+export type ReactionGroup = {
+  reactiontype: string;
+  count: number;
+};
+
+export type Posts = {
+  post: Post;
+  medias: Media[];
+  user: User;
+  comments: number;
+  reactions: number;
+  reactionGroup: ReactionGroup[];
+};
+
 export type Story = {
   storyid: string;
   fname: string;
@@ -30,25 +62,6 @@ export type Comment = {
 
 export type Reaction = {
   reactions: number;
-};
-
-export type ReactionGroup = {
-  reactiontype: string;
-  count: number;
-};
-export type Media = {
-  type: string;
-  mediaid: string;
-  media: string;
-};
-export type Post = {
-  userid: string;
-  postid: string;
-  fname: string;
-  lname: string;
-  profilepic: string;
-  post: string;
-  date: string;
 };
 
 export type SubmittedPost = {

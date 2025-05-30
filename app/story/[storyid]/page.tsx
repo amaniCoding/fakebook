@@ -3,7 +3,7 @@ import {
   fetchAllStories,
   fetchCurrentStoryMedias,
   fetchAllStoriesWithPhotos,
-} from "@/app/libs/data/user";
+} from "@/app/libs/data/user/user";
 import Home from "./components/home";
 
 export default async function Page(props: {

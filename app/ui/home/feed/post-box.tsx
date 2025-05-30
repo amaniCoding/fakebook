@@ -18,16 +18,13 @@ import React, {
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { postOption } from "@/app/types/db/user";
 import FileViewer from "./file-viewer";
-import { createPost, State } from "@/app/libs/actions/user/actions";
+import { createPost } from "@/app/libs/actions/user/actions";
+import { AddPostState } from "@/app/libs/actions/user/types";
 // import { createPost, State } from "@/app/libs/actions"
 export default function PostBox(props: { onClose: () => void }) {
   const dispatch = useAppDispatch();
-  const initialState: State = {
+  const initialState: AddPostState = {
     isSuccessfull: false,
-    post: {
-      post: {},
-      photos: [],
-    },
   };
   const post = useAppSelector((state) => state.userPost.post);
   const postOption = useAppSelector((state) => state.userPost.postOption);

@@ -614,18 +614,377 @@ export const storyDummyData = [
 ];
 
 export const commentDummyData = [
+  /** first post 4 comments */
   {
-    postId: "",
-    userId: "",
-    comment: "",
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "7df4d265-83f8-4ea0-86a2-0e8e7088f9a5",
+    comment: "It is good",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "2abca4c9-476e-4cde-84eb-db862db2da72",
+    comment:
+      "wow, in the first video you didn't seem to understand anything,,,🙈 but the donkey is really Santa Claus,,, 😄🤞thanks for the positivity dear Bart 😘❣️",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "70f8ee37-ec0a-4ced-af8f-a476ee0a6538",
+    comment: "I love it how the first 2 girls are embracing their curves!!",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "a8d894c5-eded-4f2b-95bf-e7fa05bc58af",
+    mment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+
+  /** second post */
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "b6ec4441-6d82-413c-97e0-0526b04a867d",
+    mment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "24adf7f5-6969-4078-889e-77cfdd15875c",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "c3cbb697-c18d-4710-9b2f-fd41c4984b3a",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "f803e17f-ef00-4fab-9055-2104faef398d",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "fd671154-fb06-4075-83aa-5dddd0d63105",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "acd0b129-ee77-42e2-8813-5aed3e86bba7",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+
+  /** third post */
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "a36fb64f-6a06-4f83-9570-c590d7c7688c",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "f4ce5f76-40b0-4d2b-9b98-90e104fbb558",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "3430f909-7972-4b4d-be93-9fc6a13ca911",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+
+  /** forth post */
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "aa88e562-94b8-497d-9858-24b1094d8f76",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "02a772d9-f7f2-4c1a-b329-4c6833d0ce80",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "eaf07af0-fb23-4020-bbef-9c2826cd4621",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "b7183f73-4fb9-496c-ae03-418a2e68f201",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "39615465-6b8d-4a21-b559-895771dfef79",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "44f5d785-3824-4528-8dc4-02d6896fe7f2",
+    userId: "39615465-6b8d-4a21-b559-895771dfef79	",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
+  },
+  {
+    postId: "98979033-c3c6-48b8-999d-619d8b9a0984",
+    userId: "39615465-6b8d-4a21-b559-895771dfef79	",
+    comment:
+      "Good morning handsome. Such a pleasant site to see first thing. Where are you from?y’all have a great day",
   },
 ];
 
 export const postReactionDummyData = [
+  /** first post */
   {
-    postId: "",
-    userId: "",
-    reactionType: "",
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "7df4d265-83f8-4ea0-86a2-0e8e7088f9a5",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "2abca4c9-476e-4cde-84eb-db862db2da72",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "70f8ee37-ec0a-4ced-af8f-a476ee0a6538",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "a8d894c5-eded-4f2b-95bf-e7fa05bc58af",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "b6ec4441-6d82-413c-97e0-0526b04a867d",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "24adf7f5-6969-4078-889e-77cfdd15875c",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "c3cbb697-c18d-4710-9b2f-fd41c4984b3a",
+    reactionType: "like",
+  },
+  {
+    postId: "ef4537a4-2b98-4b54-aeab-b7dd54c563ec",
+    userId: "f803e17f-ef00-4fab-9055-2104faef398d",
+    reactionType: "like",
+  },
+
+  /** second post */
+
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "fd671154-fb06-4075-83aa-5dddd0d63105",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "acd0b129-ee77-42e2-8813-5aed3e86bba7",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "a36fb64f-6a06-4f83-9570-c590d7c7688c",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "f4ce5f76-40b0-4d2b-9b98-90e104fbb558",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "3430f909-7972-4b4d-be93-9fc6a13ca911",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "aa88e562-94b8-497d-9858-24b1094d8f76",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "02a772d9-f7f2-4c1a-b329-4c6833d0ce80",
+    reactionType: "like",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "eaf07af0-fb23-4020-bbef-9c2826cd4621",
+    reactionType: "love",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "b7183f73-4fb9-496c-ae03-418a2e68f201",
+    reactionType: "love",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "39615465-6b8d-4a21-b559-895771dfef79",
+    reactionType: "love",
+  },
+  {
+    postId: "f2982866-b732-48ca-8ec9-031f80b3ed08",
+    userId: "44f5d785-3824-4528-8dc4-02d6896fe7f2",
+    reactionType: "love",
+  },
+
+  /** third post */
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "98979033-c3c6-48b8-999d-619d8b9a0984",
+    reactionType: "like",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "7df4d265-83f8-4ea0-86a2-0e8e7088f9a5	",
+    reactionType: "love",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "2abca4c9-476e-4cde-84eb-db862db2da72",
+    reactionType: "care",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "70f8ee37-ec0a-4ced-af8f-a476ee0a6538",
+    reactionType: "care",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "a8d894c5-eded-4f2b-95bf-e7fa05bc58af",
+    reactionType: "care",
+  },
+  {
+    postId: "73282d03-d141-41d0-8e84-586deebcb338",
+    userId: "b6ec4441-6d82-413c-97e0-0526b04a867d",
+    reactionType: "care",
+  },
+
+  /** forth post */
+
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "24adf7f5-6969-4078-889e-77cfdd15875c",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "c3cbb697-c18d-4710-9b2f-fd41c4984b3a",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "f803e17f-ef00-4fab-9055-2104faef398d",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "fd671154-fb06-4075-83aa-5dddd0d63105",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "acd0b129-ee77-42e2-8813-5aed3e86bba7",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "a36fb64f-6a06-4f83-9570-c590d7c7688c",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "f4ce5f76-40b0-4d2b-9b98-90e104fbb558",
+    reactionType: "love",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "3430f909-7972-4b4d-be93-9fc6a13ca911",
+    reactionType: "love",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "aa88e562-94b8-497d-9858-24b1094d8f76",
+    reactionType: "love",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "02a772d9-f7f2-4c1a-b329-4c6833d0ce80",
+    reactionType: "love",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "eaf07af0-fb23-4020-bbef-9c2826cd4621",
+    reactionType: "care",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "b7183f73-4fb9-496c-ae03-418a2e68f201",
+    reactionType: "care",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "39615465-6b8d-4a21-b559-895771dfef79",
+    reactionType: "care",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "44f5d785-3824-4528-8dc4-02d6896fe7f2",
+    reactionType: "care",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "98979033-c3c6-48b8-999d-619d8b9a0984",
+    reactionType: "care",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "98979033-c3c6-48b8-999d-619d8b9a0984",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "2abca4c9-476e-4cde-84eb-db862db2da72",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "70f8ee37-ec0a-4ced-af8f-a476ee0a6538",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "a8d894c5-eded-4f2b-95bf-e7fa05bc58af",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "b6ec4441-6d82-413c-97e0-0526b04a867d",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "24adf7f5-6969-4078-889e-77cfdd15875c",
+    reactionType: "like",
+  },
+  {
+    postId: "a533d9ef-4674-40dd-99b5-933ff3b65126",
+    userId: "f803e17f-ef00-4fab-9055-2104faef398d",
+    reactionType: "like",
   },
 ];
 

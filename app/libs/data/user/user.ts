@@ -1,25 +1,45 @@
-import { Story, StoryMedia, Post, Media } from "@/app/types/db/user";
 import { sql } from "@vercel/postgres";
+import {
+  Posts,
+  Story,
+  StoryMedia,
+  Media,
+  Comment,
+  Reaction,
+  ReactionGroup,
+} from "./types";
 
 export async function fetchPosts() {
   try {
     const posts =
-      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
-    const getMedias = Promise.all(
+      await sql<Posts>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
+    const allPosts = await Promise.all(
       posts.rows.map(async (row) => {
-        const medias =
-          await sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${row.postid} ORDER BY umedias.date DESC`;
+        const medias = sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${row.post.postId} ORDER BY umedias.date DESC`;
+        const comments = sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${row.post.postId} ORDER BY ucomments.date DESC`;
+        const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.post.postId} ORDER BY ureactions.date DESC`;
+        const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.post.postId} GROUP BY ureactions.reactiontype ORDER BY ureactions.date DESC`;
         return {
-          postId: row.postid,
-          fname: row.fname,
-          lname: row.lname,
-          profilepic: row.profilepic,
-          post: row.post,
-          medias: medias.rows,
+          post: {
+            postId: row.post.postId,
+            post: row.post.post,
+            date: row.post.date,
+          },
+          medias: (await medias).rows,
+          user: {
+            userid: row.user.userid,
+            fname: row.user.fname,
+            lname: row.user.lname,
+            profilepic: row.user.profilepic,
+          },
+
+          comments: (await comments).rows[0].comments,
+          reactions: (await reactions).rows[0].reactions,
+          reactionGroup: (await reactionGroup).rows,
         };
       })
     );
-    return getMedias;
+    return allPosts;
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch dev data");

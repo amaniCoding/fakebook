@@ -120,7 +120,7 @@ async function seedComments() {
 
   const insertedComments = await Promise.all(
     commentDummyData.map(async (comment) => {
-      return client.sql`INSERT INTO ucomments (userpostid, userid, userpostcomment) VALUES (${comment.postId}, ${comment.userId}, ${comment.comment}) ON CONFLICT (commentid) DO NOTHING;
+      return client.sql`INSERT INTO ucomments (postid, userid, comment) VALUES (${comment.postId}, ${comment.userId}, ${comment.comment}) ON CONFLICT (commentid) DO NOTHING
       `;
     })
   );
@@ -154,7 +154,7 @@ async function seedReplies() {
 async function seedPostReactions() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
-    CREATE TABLE IF NOT EXISTS upreactions (
+    CREATE TABLE IF NOT EXISTS ureactions (
       reactionid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       postid UUID NOT NULL,
       userid UUID NOT NULL,
@@ -165,7 +165,7 @@ async function seedPostReactions() {
 
   const insertedPostReactions = await Promise.all(
     postReactionDummyData.map(async (reaction) => {
-      return client.sql`INSERT INTO upreactions (postid, userid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.reactionType}) ON CONFLICT (reactionid) DO NOTHING;
+      return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.reactionType}) ON CONFLICT (reactionid) DO NOTHING
       `;
     })
   );
@@ -271,16 +271,13 @@ export async function GET() {
     //seedStories();
     //seedStoryPhotos();
 
-    /* 
-
-    await seedComments();
-    await seedReplies();
-    await seedCommentReactions();
+    //await seedComments();
+    // await seedReplies();
+    // await seedCommentReactions();
     await seedPostReactions();
-    await seedReplyReactions(); 
-    
-    */
-    await seedStoryMedias();
+    // await seedReplyReactions();
+
+    // await seedStoryMedias();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {

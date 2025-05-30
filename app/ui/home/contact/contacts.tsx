@@ -1,4 +1,4 @@
-import { fetchUsers } from "@/app/libs/data/user";
+import { fetchUsers } from "@/app/libs/data/user/user";
 import Image from "next/image";
 export default async function Contacts() {
   const users = await fetchUsers();
