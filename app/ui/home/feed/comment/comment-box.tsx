@@ -77,11 +77,11 @@ export default function CommentBox({
           post.post.postId,
           comment
         );
+        setComment(" ");
         setInsertCommentState({
           loading: false,
           comment: insertedComment.comment,
         });
-        setComment("");
       } catch (error) {
         console.error(`error ${error}`);
         setInsertCommentState({
@@ -457,15 +457,17 @@ export default function CommentBox({
               <div className="flex flex-row mb-3 space-x-3 pb-2">
                 <div className="relative group flex-none">
                   <Link href={"/profile"}>
-                    <Image
-                      unoptimized
-                      alt="Amanuel Ferede"
-                      src={insertCommentState.comment.user.profilepic}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                    />
+                    {insertCommentState.comment.user.profilepic ? (
+                      <Image
+                        unoptimized
+                        alt="Amanuel Ferede"
+                        src={insertCommentState.comment.user.profilepic}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                      />
+                    ) : null}
                   </Link>
                   <div
                     className={
@@ -473,15 +475,17 @@ export default function CommentBox({
                     }
                   >
                     <div className="flex space-x-3">
-                      <Image
-                        unoptimized
-                        className="w-20 h-20 rounded-full  object-cover"
-                        alt="Amanuel Ferede"
-                        src={insertCommentState.comment.user.profilepic}
-                        width={0}
-                        height={0}
-                        sizes="100vh"
-                      />
+                      {insertCommentState.comment.user.profilepic ? (
+                        <Image
+                          unoptimized
+                          className="w-20 h-20 rounded-full  object-cover"
+                          alt="Amanuel Ferede"
+                          src={insertCommentState.comment.user.profilepic}
+                          width={0}
+                          height={0}
+                          sizes="100vh"
+                        />
+                      ) : null}
 
                       <div className=" flex-col space-y-2 flex-1 mt-3">
                         <p className="text-lg font-bold">Amanuel Ferede</p>
@@ -618,6 +622,7 @@ export default function CommentBox({
             onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
               insertCommentAction(e, comment);
             }}
+            value={comment}
             type="text"
             className="p-3 block grow focus:outline-none bg-slate-50 rounded-xl"
             placeholder="Write a comment ..."
