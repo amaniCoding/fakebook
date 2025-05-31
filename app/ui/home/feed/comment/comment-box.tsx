@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { Posts } from "@/app/libs/data/user/types";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import {
   commentAction,
   fetchCommentsAction,
@@ -24,6 +24,10 @@ export default function CommentBox({
   post: Posts;
   onClose: () => void;
 }) {
+  const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
+    loading: false,
+    comments: [],
+  });
   const insertCommentState: CommentStateAction = {
     loading: true,
     comment: {
@@ -38,34 +42,27 @@ export default function CommentBox({
     },
   };
 
-  const commentsInitialState: getCommentsStateAction = {
-    loading: true,
-    comments: [],
-  };
-
   const commentActionWith = commentAction.bind(
     null,
     post.user,
     post.post.postId
   );
 
-  const fetchCommentsWithPostId = fetchCommentsAction.bind(
-    null,
-    post.post.postId
-  );
-
-  const [commentsState, fetchComments] = useActionState(
-    fetchCommentsWithPostId,
-    commentsInitialState
-  );
   const [insertCommentsState, InsertComment] = useActionState(
     commentActionWith,
     insertCommentState
   );
 
   useEffect(() => {
-    fetchComments();
-  }, []);
+    const fetchCommentsForUseEffect = async () => {
+      const commdata = await fetchCommentsAction(post.post.postId);
+      setCommentsData(commdata);
+    };
+
+    fetchCommentsForUseEffect();
+  }, [post.post.postId]);
+
+  console.log(commentsData.comments);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -431,7 +428,7 @@ export default function CommentBox({
                       <div className=" flex-col space-y-2 flex-1 mt-3">
                         <p className="text-lg font-bold">Amanuel Ferede</p>
                         <p className="">Lives in AddisAbaba Ethiopia </p>
-                        <p>Studid Vivil Engineering at BahirDar University</p>
+                        <p>Studid Civil Engineering at BahirDar University</p>
                       </div>
                     </div>
 
@@ -466,11 +463,11 @@ export default function CommentBox({
                 </div>
               </div>
             )}
-            {commentsState.loading ? (
+            {commentsData.loading ? (
               <CommentsSkeleton />
             ) : (
               <>
-                {commentsState.comments.map((comment) => {
+                {commentsData.comments.map((comment) => {
                   return (
                     <div
                       className="flex flex-row mb-3 space-x-3 pb-2"
@@ -481,7 +478,7 @@ export default function CommentBox({
                           <Image
                             unoptimized
                             alt="Amanuel Ferede"
-                            src={comment.user.profilepic}
+                            src={comment.user.profilePic}
                             width={0}
                             height={0}
                             sizes="100vh"
@@ -498,7 +495,7 @@ export default function CommentBox({
                               unoptimized
                               className="w-20 h-20 rounded-full  object-cover"
                               alt="Amanuel Ferede"
-                              src={comment.user.profilepic}
+                              src={comment.user.profilePic}
                               width={0}
                               height={0}
                               sizes="100vh"
@@ -510,7 +507,7 @@ export default function CommentBox({
                               </p>
                               <p className="">Lives in AddisAbaba Ethiopia </p>
                               <p>
-                                Studid Vivil Engineering at BahirDar University
+                                Studid Civil Engineering at BahirDar University
                               </p>
                             </div>
                           </div>
@@ -537,7 +534,7 @@ export default function CommentBox({
                         </div>
 
                         <div className="flex space-x-4 pl-3">
-                          <span className="text-sm">{comment.date}</span>
+                          <span className="text-sm"></span>
                           <span className="text-sm">Like</span>
                           <span className="text-sm">Reply</span>
                         </div>

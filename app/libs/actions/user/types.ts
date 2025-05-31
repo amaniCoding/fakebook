@@ -28,7 +28,10 @@ export type Comments = {
   commentid: string;
   comment: string;
   date: string;
-  user: User;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
 };
 
 export type CommentStateAction = {
@@ -37,7 +40,19 @@ export type CommentStateAction = {
   comment: Comment;
 };
 
+export type CommentData = {
+  commentid: string;
+  comment: string;
+  date: string;
+  user: {
+    fname: string;
+    lname: string;
+    userid: string;
+    profilePic: string;
+  };
+};
+
 export type getCommentsStateAction = {
   loading: boolean;
-  comments: Comments[];
+  comments: CommentData[];
 };

@@ -1,6 +1,6 @@
 import { sql } from "@vercel/postgres";
 import {
-  Posts,
+  PostDB,
   Story,
   StoryMedia,
   Media,
@@ -12,25 +12,25 @@ import {
 export async function fetchPosts() {
   try {
     const posts =
-      await sql<Posts>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
+      await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
     const allPosts = await Promise.all(
       posts.rows.map(async (row) => {
-        const medias = sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${row.post.postId} ORDER BY umedias.date DESC`;
-        const comments = sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${row.post.postId} ORDER BY ucomments.date DESC`;
-        const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.post.postId} ORDER BY ureactions.date DESC`;
-        const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.post.postId} GROUP BY ureactions.reactiontype ORDER BY ureactions.date DESC`;
+        const medias = sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${row.postid} ORDER BY umedias.date DESC`;
+        const comments = sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${row.postid}`;
+        const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid}`;
+        const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid} GROUP BY ureactions.reactiontype`;
         return {
           post: {
-            postId: row.post.postId,
-            post: row.post.post,
-            date: row.post.date,
+            postId: row.postid,
+            post: row.post,
+            date: row.date,
           },
           medias: (await medias).rows,
           user: {
-            userid: row.user.userid,
-            fname: row.user.fname,
-            lname: row.user.lname,
-            profilepic: row.user.profilepic,
+            userid: row.userid,
+            fname: row.fname,
+            lname: row.lname,
+            profilepic: row.profilepic,
           },
 
           comments: (await comments).rows[0].comments,

@@ -15,6 +15,7 @@ export default async function FeedItem({ post }: FeedItemType) {
           <div className="flex-col space-y-0.5 relative group">
             <Link href={"/profile"}>
               <Image
+                unoptimized
                 alt="Amanuel Ferede"
                 src={post.user.profilepic}
                 width={0}
@@ -31,6 +32,7 @@ export default async function FeedItem({ post }: FeedItemType) {
             >
               <div className="flex space-x-3">
                 <Image
+                  unoptimized
                   className="w-20 h-20 rounded-full  object-cover"
                   alt="Amanuel Ferede"
                   src={post.user.profilepic}
@@ -44,7 +46,7 @@ export default async function FeedItem({ post }: FeedItemType) {
                     {post.user.fname} {post.user.lname}
                   </p>
                   <p className="">Lives in AddisAbaba Ethiopia </p>
-                  <p>Studid Vivil Engineering at BahirDar University</p>
+                  <p>Studid Civil Engineering at BahirDar University</p>
                 </div>
               </div>
 
@@ -77,6 +79,7 @@ export default async function FeedItem({ post }: FeedItemType) {
               >
                 <div className="flex space-x-3">
                   <Image
+                    unoptimized
                     className="w-20 h-20 rounded-full  object-cover"
                     alt="Amanuel Ferede"
                     src={post.user.profilepic}
@@ -90,7 +93,7 @@ export default async function FeedItem({ post }: FeedItemType) {
                       {post.user.fname} {post.user.lname}
                     </p>
                     <p className="">Lives in AddisAbaba Ethiopia </p>
-                    <p>Studid Vivil Engineering at BahirDar University</p>
+                    <p>Studid Civil Engineering at BahirDar University</p>
                   </div>
                 </div>
 

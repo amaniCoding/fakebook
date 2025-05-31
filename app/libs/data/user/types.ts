@@ -10,15 +10,25 @@ export type Media = {
   media: string;
 };
 
-export type Post = {
-  postId: string;
+export type PostDB = {
+  postid: string;
   post: string;
   date: string;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
 };
 
 export type ReactionGroup = {
   reactiontype: string;
   count: number;
+};
+
+export type Post = {
+  postId: string;
+  post: string;
+  date: string;
 };
 
 export type Posts = {

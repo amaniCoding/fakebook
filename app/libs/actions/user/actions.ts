@@ -11,21 +11,28 @@ import {
   LikeActionState,
   LikeCount,
   Comments,
-  getCommentsStateAction,
 } from "./types";
 import { User } from "../../data/user/types";
 
-export async function fetchCommentsAction(
-  postId: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _prevState: getCommentsStateAction | undefined
-) {
+export async function fetchCommentsAction(postId: string) {
   try {
     const comments =
-      await sql<Comments>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE postid = ${postId} ORDER BY ucomments.date DESC`;
+      await sql<Comments>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC`;
     return {
       loading: false,
-      comments: comments.rows,
+      comments: comments.rows.map((comment) => {
+        return {
+          commentid: comment.commentid,
+          comment: comment.comment,
+          date: comment.date,
+          user: {
+            fname: comment.fname,
+            lname: comment.lname,
+            userid: comment.userid,
+            profilePic: comment.profilepic,
+          },
+        };
+      }),
     };
   } catch (error) {
     console.error(`error fetching comments ${error}`);
