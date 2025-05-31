@@ -16,6 +16,7 @@ import {
   insertCommentStateAction,
 } from "@/app/libs/actions/user/types";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 
 export default function CommentBox({
   post,
@@ -72,7 +73,7 @@ export default function CommentBox({
           },
         });
         const insertedComment = await commentAction(
-          post.user,
+          LoggedInUser,
           post.post.postId,
           comment
         );
@@ -80,6 +81,7 @@ export default function CommentBox({
           loading: false,
           comment: insertedComment.comment,
         });
+        setComment("");
       } catch (error) {
         console.error(`error ${error}`);
         setInsertCommentState({
@@ -510,9 +512,7 @@ export default function CommentBox({
                   </div>
 
                   <div className="flex space-x-4 pl-3">
-                    <span className="text-sm">
-                      {insertCommentState.comment.date}
-                    </span>
+                    <span className="text-sm"></span>
                     <span className="text-sm">Like</span>
                     <span className="text-sm">Reply</span>
                   </div>
