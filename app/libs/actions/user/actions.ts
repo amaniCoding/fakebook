@@ -4,14 +4,7 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { StoryMedia } from "@/app/types/db/user";
-import {
-  AddPostState,
-  CommentStateAction,
-  Comment,
-  LikeActionState,
-  LikeCount,
-  Comments,
-} from "./types";
+import { AddPostState, Comment, LikeCount, Comments } from "./types";
 import { User } from "../../data/user/types";
 
 export async function fetchCommentsAction(postId: string) {
@@ -29,7 +22,7 @@ export async function fetchCommentsAction(postId: string) {
             fname: comment.fname,
             lname: comment.lname,
             userid: comment.userid,
-            profilePic: comment.profilepic,
+            profilepic: comment.profilepic,
           },
         };
       }),
@@ -46,11 +39,9 @@ export async function fetchCommentsAction(postId: string) {
 export async function commentAction(
   user: User,
   postId: string,
-  _prevState: CommentStateAction | undefined,
-  formData: FormData
+  comment: string
 ) {
   try {
-    const comment = formData.get("comment") as string;
     const insertComments =
       await sql<Comment>`INSERT INTO ucomments (postid, userid, comment) VALUES (${postId}, ${user.userid}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
@@ -59,6 +50,7 @@ export async function commentAction(
       loading: false,
       comment: {
         comment: insertComments.rows[0].comment,
+        commentid: insertComments.rows[0].commentid,
         date: insertComments.rows[0].date,
         user: user,
       },
@@ -68,6 +60,7 @@ export async function commentAction(
     return {
       loading: false,
       comment: {
+        commentid: "",
         comment: "",
         date: "",
         user: user,
@@ -76,10 +69,7 @@ export async function commentAction(
   }
 }
 
-export async function LikeAction(
-  _prevState: LikeActionState | undefined,
-  postId: string
-) {
+export async function LikeAction(postId: string) {
   try {
     const likeCountForApost = await sql<LikeCount>`
   SELECT COUNT(postid) as likes FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId}
@@ -91,22 +81,19 @@ export async function LikeAction(
   `;
       reactionid = LikeApost.rows[0].reactionid;
       return {
-        loading: false,
-        isLiked: true,
+        isReacted: true,
       };
     } else {
       await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId}
   `;
       return {
-        loading: false,
-        isLiked: false,
+        isReacted: false,
       };
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
     return {
-      loading: false,
-      isLiked: false,
+      isReacted: false,
     };
   }
 }

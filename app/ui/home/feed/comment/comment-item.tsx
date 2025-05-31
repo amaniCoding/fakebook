@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { FaComment } from "react-icons/fa6";
 import CommentBox from "./comment-box";
 import { FaRegComment } from "react-icons/fa";
@@ -13,12 +13,12 @@ import { showCommentBox } from "@/app/store/slices/user/commentSlice";
 
 export default function CommentItem({ post }: { post: Posts }) {
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
-  const initialState: LikeActionState = {
-    isLiked: false,
-    loading: true,
-  };
-  const [state, likeAction] = useActionState(LikeAction, initialState);
-  const likeActionWithId = likeAction.bind(null, post.post.postId);
+  const [reactionActionState, setReactionActionState] =
+    useState<LikeActionState>({
+      isReacted: post.reactionInfo.isReacted,
+      loading: false,
+    });
+
   const dispatch = useDispatch();
   const handelShowCommentBox = () => {
     setToShowCommentBox(true);
@@ -30,6 +30,26 @@ export default function CommentItem({ post }: { post: Posts }) {
     dispatch(showCommentBox(false));
   };
 
+  const handelLike = async () => {
+    try {
+      setReactionActionState({
+        loading: true,
+        isReacted: false,
+      });
+      const reactionInfo = await LikeAction(post.post.postId);
+      setReactionActionState({
+        loading: false,
+        isReacted: reactionInfo.isReacted,
+      });
+    } catch (error) {
+      console.error(`error ${error}`);
+      setReactionActionState({
+        loading: false,
+        isReacted: false,
+      });
+    }
+  };
+
   return (
     <>
       {toShowCommentBox && (
@@ -38,7 +58,7 @@ export default function CommentItem({ post }: { post: Posts }) {
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
         <div className="flex items-center space-x">
-          <div className="flex -space-x-1">
+          <div className="flex space-x-0">
             {post.reactionGroup.map((gr, index) => {
               return (
                 <ReactionIcons key={index} reactiontype={gr.reactiontype} />
@@ -46,7 +66,11 @@ export default function CommentItem({ post }: { post: Posts }) {
             })}
           </div>
           <p>
-            {state.loading ? null : post.reactions > 0 ? "You and" : "You"}{" "}
+            {reactionActionState.loading
+              ? null
+              : post.reactions > 0
+              ? "You and"
+              : "You"}{" "}
             {post.reactions > 0 ? post.reactions : null}
           </p>
         </div>
@@ -66,12 +90,12 @@ export default function CommentItem({ post }: { post: Posts }) {
       <div className="flex items-center justify-between px-2 py-1">
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={likeActionWithId}
+          onClick={handelLike}
         >
           <PiThumbsUp
-            className={`w-6 h-6 ${state.loading ? "bg-gray-300" : "bg-white"} ${
-              state.isLiked ? "bg-blue-600" : "bg-white"
-            }`}
+            className={`w-6 h-6 ${
+              reactionActionState.loading ? "bg-gray-300" : "bg-white"
+            } ${reactionActionState.isReacted ? "bg-blue-600" : "bg-white"}`}
           />
           <span>Like</span>
         </div>

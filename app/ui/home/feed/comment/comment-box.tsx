@@ -6,14 +6,14 @@ import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { Posts } from "@/app/libs/data/user/types";
-import { useActionState, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import {
   commentAction,
   fetchCommentsAction,
 } from "@/app/libs/actions/user/actions";
 import {
-  CommentStateAction,
   getCommentsStateAction,
+  insertCommentStateAction,
 } from "@/app/libs/actions/user/types";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 
@@ -25,44 +25,100 @@ export default function CommentBox({
   onClose: () => void;
 }) {
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
-    loading: false,
+    loading: true,
     comments: [],
   });
-  const insertCommentState: CommentStateAction = {
-    loading: true,
-    comment: {
-      comment: "",
-      date: "",
-      user: {
-        userid: "",
-        fname: "",
-        lname: "",
-        profilepic: "",
+
+  const [comment, setComment] = useState<string>("");
+
+  const [insertCommentState, setInsertCommentState] =
+    useState<insertCommentStateAction>({
+      loading: false,
+      comment: {
+        comment: "",
+        commentid: "",
+        date: "",
+        user: {
+          fname: "",
+          lname: "",
+          profilepic: "",
+          userid: "",
+        },
       },
-    },
+    });
+
+  const onChangeComment = (e: ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
   };
 
-  const commentActionWith = commentAction.bind(
-    null,
-    post.user,
-    post.post.postId
-  );
-
-  const [insertCommentsState, InsertComment] = useActionState(
-    commentActionWith,
-    insertCommentState
-  );
+  const insertCommentAction = async (
+    e: KeyboardEvent<HTMLInputElement>,
+    comment: string
+  ) => {
+    if (e.key === "Enter") {
+      try {
+        setInsertCommentState({
+          loading: true,
+          comment: {
+            comment: "",
+            commentid: "",
+            date: "",
+            user: {
+              fname: "",
+              lname: "",
+              profilepic: "",
+              userid: "",
+            },
+          },
+        });
+        const insertedComment = await commentAction(
+          post.user,
+          post.post.postId,
+          comment
+        );
+        setInsertCommentState({
+          loading: false,
+          comment: insertedComment.comment,
+        });
+      } catch (error) {
+        console.error(`error ${error}`);
+        setInsertCommentState({
+          loading: false,
+          comment: {
+            comment: "",
+            commentid: "",
+            date: "",
+            user: {
+              fname: "",
+              lname: "",
+              profilepic: "",
+              userid: "",
+            },
+          },
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchCommentsForUseEffect = async () => {
-      const commdata = await fetchCommentsAction(post.post.postId);
-      setCommentsData(commdata);
+      try {
+        const commdata = await fetchCommentsAction(post.post.postId);
+        setCommentsData({
+          loading: false,
+          comments: commdata.comments,
+        });
+      } catch (error) {
+        console.error(`error ${error}`);
+        setCommentsData({
+          loading: false,
+          comments: [],
+        });
+      }
     };
 
     fetchCommentsForUseEffect();
   }, [post.post.postId]);
-
-  console.log(commentsData.comments);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -393,7 +449,7 @@ export default function CommentBox({
           </div>
 
           <div className="px-6 py-2 ">
-            {insertCommentsState.loading ? (
+            {insertCommentState.loading ? (
               <CommentsSkeleton />
             ) : (
               <div className="flex flex-row mb-3 space-x-3 pb-2">
@@ -450,12 +506,12 @@ export default function CommentBox({
                 <div className="">
                   <div className="p-3 bg-gray-100 rounded-xl ">
                     <p className="font-semibold">Amanuel Ferede</p>
-                    <p>{insertCommentsState.comment.comment}</p>
+                    <p>{insertCommentState.comment.comment}</p>
                   </div>
 
                   <div className="flex space-x-4 pl-3">
                     <span className="text-sm">
-                      {insertCommentsState.comment.date}
+                      {insertCommentState.comment.date}
                     </span>
                     <span className="text-sm">Like</span>
                     <span className="text-sm">Reply</span>
@@ -478,7 +534,7 @@ export default function CommentBox({
                           <Image
                             unoptimized
                             alt="Amanuel Ferede"
-                            src={comment.user.profilePic}
+                            src={comment.user.profilepic}
                             width={0}
                             height={0}
                             sizes="100vh"
@@ -495,7 +551,7 @@ export default function CommentBox({
                               unoptimized
                               className="w-20 h-20 rounded-full  object-cover"
                               alt="Amanuel Ferede"
-                              src={comment.user.profilePic}
+                              src={comment.user.profilepic}
                               width={0}
                               height={0}
                               sizes="100vh"
@@ -556,13 +612,16 @@ export default function CommentBox({
             sizes="100vh"
             className="w-10 h-10 object-cover rounded-full block flex-none"
           />
-          <form action={InsertComment}>
-            <input
-              type="text"
-              className="p-3 block grow focus:outline-none bg-slate-50 rounded-xl"
-              placeholder="Write a comment ..."
-            ></input>
-          </form>
+
+          <input
+            onChange={onChangeComment}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              insertCommentAction(e, comment);
+            }}
+            type="text"
+            className="p-3 block grow focus:outline-none bg-slate-50 rounded-xl"
+            placeholder="Write a comment ..."
+          ></input>
         </div>
       </div>
     </section>

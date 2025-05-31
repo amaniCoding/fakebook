@@ -4,7 +4,7 @@ export type AddPostState = {
 
 export type LikeActionState = {
   loading: boolean;
-  isLiked: boolean;
+  isReacted: boolean;
 };
 
 export type LikeCount = {
@@ -19,6 +19,7 @@ export type User = {
 };
 
 export type Comment = {
+  commentid: string;
   comment: string;
   date: string;
   user: User;
@@ -48,11 +49,16 @@ export type CommentData = {
     fname: string;
     lname: string;
     userid: string;
-    profilePic: string;
+    profilepic: string;
   };
 };
 
 export type getCommentsStateAction = {
   loading: boolean;
   comments: CommentData[];
+};
+
+export type insertCommentStateAction = {
+  loading: boolean;
+  comment: CommentData;
 };

@@ -31,6 +31,11 @@ export type Post = {
   date: string;
 };
 
+export type ReactionInfo = {
+  isReacted: boolean;
+  reactionType: string;
+};
+
 export type Posts = {
   post: Post;
   medias: Media[];
@@ -38,6 +43,7 @@ export type Posts = {
   comments: number;
   reactions: number;
   reactionGroup: ReactionGroup[];
+  reactionInfo: ReactionInfo;
 };
 
 export type Story = {
@@ -68,6 +74,10 @@ export type CurrentStoryPhotos = {
 
 export type Comment = {
   comments: number;
+};
+
+export type Like = {
+  reactiontype: string;
 };
 
 export type Reaction = {

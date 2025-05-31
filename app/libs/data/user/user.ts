@@ -7,9 +7,11 @@ import {
   Comment,
   Reaction,
   ReactionGroup,
+  Like,
+  User,
 } from "./types";
 
-export async function fetchPosts() {
+export async function fetchPosts(user?: User) {
   try {
     const posts =
       await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
@@ -19,6 +21,7 @@ export async function fetchPosts() {
         const comments = sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${row.postid}`;
         const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid}`;
         const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid} GROUP BY ureactions.reactiontype`;
+        const reactionsInfo = sql<Like>`SELECT ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${row.postid} AND userid = ${user?.userid}`;
         return {
           post: {
             postId: row.postid,
@@ -36,6 +39,10 @@ export async function fetchPosts() {
           comments: (await comments).rows[0].comments,
           reactions: (await reactions).rows[0].reactions,
           reactionGroup: (await reactionGroup).rows,
+          reactionInfo: {
+            isReacted: (await reactionsInfo).rows.length > 0 ? true : false,
+            reactionType: (await reactionsInfo).rows[0].reactiontype,
+          },
         };
       })
     );
