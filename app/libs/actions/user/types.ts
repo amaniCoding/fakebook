@@ -1,14 +1,16 @@
+import { ReactionInfo } from "../../data/user/types";
+
 export type AddPostState = {
   isSuccessfull: boolean;
 };
 
 export type LikeActionState = {
   loading: boolean;
-  isReacted: boolean;
+  reactionInfo: ReactionInfo;
 };
 
-export type LikeCount = {
-  count: number;
+export type ReactionType = {
+  reactiontype: string;
 };
 
 export type User = {

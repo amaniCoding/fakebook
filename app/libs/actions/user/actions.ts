@@ -4,7 +4,7 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { StoryMedia } from "@/app/types/db/user";
-import { AddPostState, Comment, LikeCount, Comments } from "./types";
+import { AddPostState, Comment, Comments, ReactionType } from "./types";
 import { User } from "../../data/user/types";
 
 export async function fetchCommentsAction(postId: string) {
@@ -69,31 +69,38 @@ export async function commentAction(
   }
 }
 
-export async function LikeAction(postId: string) {
+export async function LikeAction(
+  postId: string,
+  userId: string,
+  reactionType: string
+) {
   try {
-    const likeCountForApost = await sql<LikeCount>`
-  SELECT COUNT(postid) as likes FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId}
+    const likeCountForApost = await sql<ReactionType>`
+  SELECT ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}
   `;
     let reactionid;
-    if (likeCountForApost.rows[0].count > 0) {
+    if (likeCountForApost.rows.length === 0) {
       const LikeApost =
-        await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, '24adf7f5-6969-4078-889e-77cfdd15875c', 'like') ON CONFLICT (reactionid) DO NOTHING RETURNING reactionid
+        await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING RETURNING reactionid
   `;
       reactionid = LikeApost.rows[0].reactionid;
       return {
         isReacted: true,
+        reactionType: likeCountForApost.rows[0].reactiontype,
       };
     } else {
-      await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId}
+      await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId} AND userid = ${userId}
   `;
       return {
         isReacted: false,
+        reactionType: "",
       };
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
     return {
       isReacted: false,
+      reactionType: "",
     };
   }
 }
