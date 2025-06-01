@@ -33,7 +33,9 @@ export type Post = {
 
 export type ReactionInfo = {
   isReacted: boolean;
-  reactionType: string;
+  reactionType: string | undefined;
+  reactor: string | undefined;
+  me: number | undefined;
 };
 
 export type Posts = {
@@ -78,6 +80,8 @@ export type Comment = {
 
 export type Like = {
   reactiontype: string;
+  fname: string;
+  lname: string;
 };
 
 export type Reaction = {

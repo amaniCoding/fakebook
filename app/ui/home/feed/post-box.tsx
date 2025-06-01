@@ -115,12 +115,12 @@ export default function PostBox(props: { onClose: () => void }) {
   };
 
   useEffect(() => {
-    if (!postFromPostBox) {
+    if (!postFromPostBox || filesToView.length === 0) {
       setpostButtonEnabled(false);
     } else {
       setpostButtonEnabled(true);
     }
-  }, [postFromPostBox]);
+  }, [filesToView.length, postFromPostBox]);
 
   useEffect(() => {
     if (isSuccessfull) {

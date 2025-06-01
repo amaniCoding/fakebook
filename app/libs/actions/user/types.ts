@@ -11,6 +11,8 @@ export type LikeActionState = {
 
 export type ReactionType = {
   reactiontype: string;
+  fname: string;
+  lname: string;
 };
 
 export type User = {

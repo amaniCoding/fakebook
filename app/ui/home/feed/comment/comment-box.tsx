@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { Posts } from "@/app/libs/data/user/types";
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   commentAction,
   fetchCommentsAction,
@@ -31,6 +31,7 @@ export default function CommentBox({
   });
 
   const [comment, setComment] = useState<string>("");
+  const commentBox = useRef<HTMLDivElement>(null);
 
   const [insertCommentState, setInsertCommentState] =
     useState<insertCommentStateAction>({
@@ -81,6 +82,10 @@ export default function CommentBox({
         setInsertCommentState({
           loading: false,
           comment: insertedComment.comment,
+        });
+        commentBox.current?.scrollTo({
+          behavior: "smooth",
+          top: 400,
         });
       } catch (error) {
         console.error(`error ${error}`);
@@ -137,7 +142,10 @@ export default function CommentBox({
             }}
           />
         </div>
-        <div className="overflow-y-auto socrollabar h-[430px] relative">
+        <div
+          className="overflow-y-auto socrollabar h-[430px] relative"
+          ref={commentBox}
+        >
           <div className="flex justify-between">
             <div className="flex space-x-3 p-2">
               <Image
@@ -453,7 +461,7 @@ export default function CommentBox({
           <div className="px-6 py-2 ">
             {insertCommentState.loading ? (
               <CommentsSkeleton />
-            ) : (
+            ) : insertCommentState.comment.comment !== "" ? (
               <div className="flex flex-row mb-3 space-x-3 pb-2">
                 <div className="relative group flex-none">
                   <Link href={"/profile"}>
@@ -511,7 +519,7 @@ export default function CommentBox({
                 </div>
                 <div className="">
                   <div className="p-3 bg-gray-100 rounded-xl ">
-                    <p className="font-semibold">Amanuel Ferede</p>
+                    <p className="font-semibold">Amanuelll Ferede</p>
                     <p>{insertCommentState.comment.comment}</p>
                   </div>
 
@@ -522,7 +530,7 @@ export default function CommentBox({
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
             {commentsData.loading ? (
               <CommentsSkeleton />
             ) : (

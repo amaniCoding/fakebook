@@ -41,6 +41,8 @@ export default function CommentItem({ post }: { post: Posts }) {
         reactionInfo: {
           isReacted: false,
           reactionType: "",
+          reactor: undefined,
+          me: undefined,
         },
       });
       const reactionInfo = await LikeAction(
@@ -58,7 +60,9 @@ export default function CommentItem({ post }: { post: Posts }) {
         loading: true,
         reactionInfo: {
           isReacted: false,
-          reactionType: "",
+          reactionType: undefined,
+          reactor: undefined,
+          me: undefined,
         },
       });
     }
@@ -120,8 +124,8 @@ export default function CommentItem({ post }: { post: Posts }) {
         />
       );
     } else if (
-      reactionActionState.reactionInfo.isReacted &&
-      reactionActionState.reactionInfo.reactionType === ""
+      !reactionActionState.reactionInfo.isReacted &&
+      reactionActionState.reactionInfo.reactionType === undefined
     ) {
       return (
         <div
@@ -151,12 +155,13 @@ export default function CommentItem({ post }: { post: Posts }) {
             })}
           </div>
           <p>
-            {reactionActionState.loading
-              ? null
-              : post.reactions > 0
-              ? "You and"
-              : "You"}{" "}
-            {post.reactions > 0 ? post.reactions : null}
+            {post.reactions === 1 && post.reactionInfo.me
+              ? "You"
+              : post.reactions > 1 && post.reactionInfo.me
+              ? `You and ${post.reactions} other${
+                  post.reactions === 1 ? "" : "s"
+                }`
+              : post.reactions}
           </p>
         </div>
 

@@ -76,7 +76,7 @@ export async function LikeAction(
 ) {
   try {
     const likeCountForApost = await sql<ReactionType>`
-  SELECT ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}
+  SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}
   `;
     let reactionid;
     if (likeCountForApost.rows.length === 0) {
@@ -87,20 +87,26 @@ export async function LikeAction(
       return {
         isReacted: true,
         reactionType: likeCountForApost.rows[0].reactiontype,
+        reactor: likeCountForApost.rows[0].fname,
+        me: undefined,
       };
     } else {
       await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId} AND userid = ${userId}
   `;
       return {
         isReacted: false,
-        reactionType: "",
+        reactionType: undefined,
+        reactor: undefined,
+        me: undefined,
       };
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
     return {
       isReacted: false,
-      reactionType: "",
+      reactionType: undefined,
+      reactor: undefined,
+      me: undefined,
     };
   }
 }
