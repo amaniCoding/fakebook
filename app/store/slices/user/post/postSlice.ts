@@ -2,6 +2,7 @@ import { Posts } from "@/app/libs/data/user/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   LikeActionState,
+  postOption,
   SubmittedPostType,
   UpdateFeedActionPayload,
 } from "./types";
