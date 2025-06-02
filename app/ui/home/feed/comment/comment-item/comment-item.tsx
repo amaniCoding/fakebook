@@ -109,7 +109,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
     if (feed.reactionInfo.reactions > 1 && feed.reactionInfo.isReacted) {
       return (
         <p>
-          You and {feed.reactionInfo.reactor} Other
+          You and {feed.reactionInfo.reactions} Other
           {feed.reactionInfo.reactions > 2 ? "s" : ""}
         </p>
       );
@@ -131,7 +131,13 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "like"
     ) {
       return (
-        <PiThumbsUp className="w-6 h-6 bg-blue-600" onClick={handelLike} />
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={handelLike}
+        >
+          <PiThumbsUp className="w-6 h-6 bg-blue-600" />
+          <span className="text-blue-600 font-semibold">Like</span>
+        </div>
       );
     }
     if (
@@ -139,7 +145,16 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "love"
     ) {
       return (
-        <IoHeartCircle className="w-6 h-6 fill-pink-500" onClick={handelLike} />
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={handelLike}
+        >
+          <IoHeartCircle
+            className="w-6 h-6 fill-pink-500"
+            onClick={handelLike}
+          />
+          <span className="text-pink-500 font-semibold">Love</span>
+        </div>
       );
     }
     if (
@@ -147,7 +162,13 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "lagh"
     ) {
       return (
-        <FaLaugh className="w-6 h-6 fill-yellow-700" onClick={handelLike} />
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={handelLike}
+        >
+          <FaLaugh className="w-6 h-6 fill-yellow-700" onClick={handelLike} />
+          <span className="text-yellow-700 font-semibold">Haha</span>
+        </div>
       );
     }
     if (
@@ -155,10 +176,16 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "care"
     ) {
       return (
-        <BsHeartPulseFill
-          className="w-6 h-6 fill-orange-500"
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={handelLike}
-        />
+        >
+          <BsHeartPulseFill
+            className="w-6 h-6 fill-orange-500"
+            onClick={handelLike}
+          />
+          <span className="text-orange-500 font-semibold">Care</span>
+        </div>
       );
     }
     if (
@@ -166,7 +193,13 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "angry"
     ) {
       return (
-        <FaAngry className="w-6 h-6 fill-yellow-700" onClick={handelLike} />
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={handelLike}
+        >
+          <FaAngry className="w-6 h-6 fill-yellow-700" onClick={handelLike} />
+          <span className="text-yellow-700 font-semibold">Sad</span>
+        </div>
       );
     }
     if (
@@ -174,10 +207,16 @@ export default function CommentItem({ feed }: CommentItemProps) {
       likeActionState.reactionInfo.reactionType === "wow"
     ) {
       return (
-        <CgSmileMouthOpen
-          className="w-6 h-6 fill-orange-500"
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={handelLike}
-        />
+        >
+          <CgSmileMouthOpen
+            className="w-6 h-6 fill-orange-500"
+            onClick={handelLike}
+          />
+          <span className="text-orange-500 font-semibold">Wow</span>
+        </div>
       );
     }
     if (
