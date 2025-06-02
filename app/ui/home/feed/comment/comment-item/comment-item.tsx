@@ -127,8 +127,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
     }
 
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "like"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "like"
     ) {
       return (
         <div
@@ -141,8 +141,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "love"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "love"
     ) {
       return (
         <div
@@ -158,8 +158,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "lagh"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "lagh"
     ) {
       return (
         <div
@@ -172,8 +172,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "care"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "care"
     ) {
       return (
         <div
@@ -189,8 +189,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "angry"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "angry"
     ) {
       return (
         <div
@@ -203,8 +203,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
     if (
-      likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === "wow"
+      feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === "wow"
     ) {
       return (
         <div
@@ -219,10 +219,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
         </div>
       );
     }
-    if (
-      !likeActionState.reactionInfo.isReacted &&
-      likeActionState.reactionInfo.reactionType === ""
-    ) {
+    if (!feed.reactionInfo.isReacted && feed.reactionInfo.reactionType === "") {
       return (
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
