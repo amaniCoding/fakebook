@@ -1,6 +1,6 @@
-import BirthDays from "../contact/birthdays";
-import Search from "../contact/search";
-import Contacts from "../contact/contacts";
+import BirthDays from "../contact/birthdays/birthdays";
+import Search from "../contact/search/search";
+import Contacts from "../contact/contacts/contacts";
 
 export default function ContactSection() {
   return (

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import AddPost from "../feed/add-post";
+import AddPost from "../feed/add-post/add-post";
 import FeedItemSkeleton from "../../skeletons/feed";
 import Feeds from "../feed/feed-items";
 import StoryItemSkeleton from "../../skeletons/story";

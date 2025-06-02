@@ -3,12 +3,9 @@ import { CgSmileMouthOpen } from "react-icons/cg";
 import { IoMdThumbsUp } from "react-icons/io";
 import { FaAngry, FaLaugh } from "react-icons/fa";
 import { IoHeartCircle } from "react-icons/io5";
+import { ReactionIconsProps } from "./types";
 
-export default function ReactionIcons({
-  reactiontype,
-}: {
-  reactiontype: string;
-}) {
+export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
   if (reactiontype === "like") {
     return <IoMdThumbsUp className="w-6 h-6 fill-blue-500" />;
   }

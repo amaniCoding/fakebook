@@ -5,7 +5,6 @@ import { PiShareFat, PiThumbsUp } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
-import { Posts } from "@/app/libs/data/user/types";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   commentAction,
@@ -17,14 +16,9 @@ import {
 } from "@/app/libs/actions/user/types";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import { LoggedInUser } from "@/app/config/loggedinuser";
+import { CommentBoxProps } from "./types";
 
-export default function CommentBox({
-  post,
-  onClose,
-}: {
-  post: Posts;
-  onClose: () => void;
-}) {
+export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
     comments: [],
@@ -75,7 +69,7 @@ export default function CommentBox({
         });
         const insertedComment = await commentAction(
           LoggedInUser,
-          post.post.postId,
+          post.postId,
           comment
         );
         setComment(" ");
@@ -110,7 +104,7 @@ export default function CommentBox({
   useEffect(() => {
     const fetchCommentsForUseEffect = async () => {
       try {
-        const commdata = await fetchCommentsAction(post.post.postId);
+        const commdata = await fetchCommentsAction(post.postId);
         setCommentsData({
           loading: false,
           comments: commdata.comments,
@@ -125,7 +119,7 @@ export default function CommentBox({
     };
 
     fetchCommentsForUseEffect();
-  }, [post.post.postId]);
+  }, [post.postId]);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -168,7 +162,7 @@ export default function CommentBox({
             <IoMdMore className="w-8 h-8" />
           </div>
           <div className="p-2">
-            <p>{post.post.post ? post.post.post : null}</p>
+            <p>{post.post ? post.post : null}</p>
           </div>
 
           {post.medias.length > 0 && (
@@ -183,7 +177,7 @@ export default function CommentBox({
                       return (
                         <Link
                           className="w-full h-[10.5rem] block"
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                         >
                           <div
@@ -207,7 +201,7 @@ export default function CommentBox({
                       });
                       return (
                         <Link
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                           className="block w-full h-[15.5rem]"
                         >
@@ -224,7 +218,7 @@ export default function CommentBox({
                       );
                     })}
                     <Link
-                      href={`/photo/${post.post.postId}/${post.medias[5].mediaid}`}
+                      href={`/photo/${post.postId}/${post.medias[5].mediaid}`}
                       className="block w-full h-[15.5rem] grow relative"
                     >
                       <div
@@ -257,7 +251,7 @@ export default function CommentBox({
                       return (
                         <Link
                           className="w-full h-[10.5rem]"
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                         >
                           <div
@@ -281,7 +275,7 @@ export default function CommentBox({
                       return (
                         <Link
                           className="w-full h-[15.5rem] grow"
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                         >
                           <div
@@ -308,7 +302,7 @@ export default function CommentBox({
                       });
                       return (
                         <Link
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                           className="w-full h-full"
                         >
@@ -333,7 +327,7 @@ export default function CommentBox({
                       });
                       return (
                         <Link
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                           className="w-full h-full"
                         >
@@ -362,7 +356,7 @@ export default function CommentBox({
                       return (
                         <Link
                           className="block w-full h-[15.5rem]"
-                          href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                           key={file.mediaid}
                         >
                           <div
@@ -379,7 +373,7 @@ export default function CommentBox({
                     })}
                   </div>
                   <Link
-                    href={`/photo/${post.post.postId}/${post.medias[2].mediaid}`}
+                    href={`/photo/${post.postId}/${post.medias[2].mediaid}`}
                     className="w-1/2 h-full"
                   >
                     <div
@@ -405,7 +399,7 @@ export default function CommentBox({
                     return (
                       <Link
                         className="w-full h-full block"
-                        href={`/photo/${post.post.postId}/${post.medias[fileIndex].mediaid}`}
+                        href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
                         key={file.mediaid}
                       >
                         <div
@@ -425,7 +419,7 @@ export default function CommentBox({
 
               {post.medias.length === 1 && (
                 <Link
-                  href={`/photo/${post.post.postId}/${post.medias[0].mediaid}`}
+                  href={`/photo/${post.postId}/${post.medias[0].mediaid}`}
                   className="w-full h-[31rem]"
                 >
                   <div

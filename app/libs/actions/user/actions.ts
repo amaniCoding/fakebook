@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { StoryMedia } from "@/app/types/db/user";
 import { AddPostState, Comment, Comments, ReactionType } from "./types";
-import { User } from "../../data/user/types";
+import { Reaction, ReactionGroup, User } from "../../data/user/types";
 
 export async function fetchCommentsAction(postId: string) {
   try {
@@ -76,37 +76,49 @@ export async function LikeAction(
 ) {
   try {
     const likeCountForApost = await sql<ReactionType>`
-  SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}
-  `;
+  SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
     let reactionid;
+    console.log("Length", likeCountForApost.rows.length);
     if (likeCountForApost.rows.length === 0) {
       const LikeApost =
-        await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING RETURNING reactionid
-  `;
+        await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING RETURNING reactionid`;
+      const updatedReactionCount = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
+      const updatedReactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
+      const updatedReactedBy = sql<ReactionType>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+
       reactionid = LikeApost.rows[0].reactionid;
+      console.log("INSERTED", LikeApost);
       return {
         isReacted: true,
-        reactionType: likeCountForApost.rows[0].reactiontype,
-        reactor: likeCountForApost.rows[0].fname,
-        me: undefined,
+        reactionType: (await updatedReactedBy).rows[0].reactiontype,
+        reactor: `${(await updatedReactedBy).rows[0]?.fname} ${
+          (await updatedReactedBy).rows[0]?.lname
+        }`,
+        reactions: (await updatedReactionCount).rows[0].reactions,
+        reactionGroup: (await updatedReactionGroup).rows,
       };
     } else {
-      await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId} AND userid = ${userId}
-  `;
+      await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId} AND userid = ${userId}`;
+      const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
+      const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
+
+      console.log("DELETED");
       return {
         isReacted: false,
-        reactionType: undefined,
-        reactor: undefined,
-        me: undefined,
+        reactionType: "",
+        reactor: "",
+        reactions: (await reactions).rows[0].reactions,
+        reactionGroup: (await reactionGroup).rows,
       };
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
     return {
       isReacted: false,
-      reactionType: undefined,
-      reactor: undefined,
-      me: undefined,
+      reactionType: "",
+      reactor: "",
+      reactions: 0,
+      reactionGroup: [],
     };
   }
 }

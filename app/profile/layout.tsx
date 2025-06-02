@@ -8,7 +8,7 @@ import {
   MdOutlineAppShortcut,
   MdOutlineLiveTv,
 } from "react-icons/md";
-import AddPost from "../ui/home/feed/add-post";
+import AddPost from "../ui/home/feed/add-post/add-post";
 import Link from "next/link";
 import FeedItems from "../ui/home/feed/feed-items";
 export const metadata: Metadata = {

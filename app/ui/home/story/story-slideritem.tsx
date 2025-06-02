@@ -1,5 +1,5 @@
 "use client";
-import { SimpleMedia } from "@/app/types/db/user";
+import { SimpleMedia } from "@/app/libs/data/user/types";
 import Image from "next/image";
 import Link from "next/link";
 

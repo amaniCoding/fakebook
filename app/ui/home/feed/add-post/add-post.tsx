@@ -1,15 +1,18 @@
 "use client";
 import Image from "next/image";
 
-import PostBox from "./post-box";
+import PostBox from "../post-box/post-box";
 import { useState } from "react";
 import { RiLiveFill } from "react-icons/ri";
 import { MdPhotoLibrary } from "react-icons/md";
 import { FaRegSmile } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { setPostOption, showPostBox } from "@/app/store/slices/user/postSlice";
+import {
+  setPostOption,
+  showPostBox,
+} from "@/app/store/slices/user/post/postSlice";
 import { useAppSelector } from "@/app/store/hooks";
-import { postOption } from "@/app/types/db/user";
+import { postOption } from "./types";
 export default function AddPost() {
   const [isPostBoxShow, setIsPostBoxShown] = useState<boolean>(false);
   const dispatch = useDispatch();

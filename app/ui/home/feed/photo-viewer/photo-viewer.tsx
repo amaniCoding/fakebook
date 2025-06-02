@@ -1,8 +1,8 @@
 "use client";
-interface Props {
-  files: string[];
-}
-export default function FileViewer({ files }: Props) {
+
+import { PhotoViewerProps } from "./types";
+
+export default function FileViewer({ files }: PhotoViewerProps) {
   return (
     <div className="w-full h-auto">
       {files.length}

@@ -7,7 +7,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { PiGifFill } from "react-icons/pi";
 import { IoIosMore } from "react-icons/io";
-import { setPost, setPostOption } from "@/app/store/slices/user/postSlice";
+import { setPost, setPostOption } from "@/app/store/slices/user/post/postSlice";
 import React, {
   ChangeEvent,
   useActionState,
@@ -16,8 +16,8 @@ import React, {
   useState,
 } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
-import { postOption } from "@/app/types/db/user";
-import FileViewer from "./file-viewer";
+import { postOption } from "./types";
+import FileViewer from "../photo-viewer/photo-viewer";
 import { createPost } from "@/app/libs/actions/user/actions";
 import { AddPostState } from "@/app/libs/actions/user/types";
 // import { createPost, State } from "@/app/libs/actions"

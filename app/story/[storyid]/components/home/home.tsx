@@ -1,27 +1,21 @@
 "use client";
 import Image from "next/image";
-import StoryHeader from "./header";
-import Stories from "./stories";
-import StoryViewer from "./story-viewer";
+import StoryHeader from "../header/header";
+import Stories from "../stories/stories";
+import StoryViewer from "../story-viewer/story-viewer";
 import { useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
 import {
   setCurrentStory,
   setCurrentStoryPhotos,
   setStories,
-} from "@/app/store/slices/user/storySlice";
+} from "@/app/store/slices/user/story/storySlice";
 import Link from "next/link";
-import { Story, StoryMedia } from "@/app/types/db/user";
 import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 import { useAppDispatch } from "@/app/store/hooks";
+import { HomeProps, Story } from "./types";
 
-export default function Home(props: {
-  allStories: Story[];
-  storyid: string;
-  currentStory: Story[];
-  currentStoryPhotos: StoryMedia[];
-  allStoriesWithPhotos: StoryMedia[];
-}) {
+export default function Home(props: HomeProps) {
   const dispatch = useAppDispatch();
 
   const _currentStory = props.allStories.find((story) => {

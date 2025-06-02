@@ -1,5 +1,10 @@
-import { postOption, SubmittedPostType } from "@/app/types/db/user";
+import { Posts } from "@/app/libs/data/user/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  LikeActionState,
+  SubmittedPostType,
+  UpdateFeedActionPayload,
+} from "./types";
 
 // Define a type for the slice state
 interface StoryState {
@@ -12,6 +17,9 @@ interface StoryState {
   postBoxHeights: {
     text: string | undefined;
   };
+
+  feeds: Posts[];
+  likeActionState: LikeActionState;
 }
 
 // Define the initial state using that type
@@ -36,6 +44,24 @@ const initialState: StoryState = {
 
   postBoxHeights: {
     text: "auto",
+  },
+
+  feeds: [],
+  likeActionState: {
+    loading: false,
+    error: false,
+    reactionInfo: {
+      isReacted: false,
+      reactionGroup: [
+        {
+          count: 0,
+          reactiontype: "",
+        },
+      ],
+      reactions: 0,
+      reactionType: undefined,
+      reactor: undefined,
+    },
   },
 };
 
@@ -78,6 +104,19 @@ export const userPostSlice = createSlice({
     ) => {
       state.postBoxHeights = action.payload;
     },
+    setFeeds: (state, action: PayloadAction<Posts[]>) => {
+      state.feeds = action.payload;
+    },
+    updateFeeds: (state, action: PayloadAction<UpdateFeedActionPayload>) => {
+      const feed = state.feeds.find((_feed) => {
+        return _feed.postId === action.payload.postId;
+      });
+      feed!.reactionInfo = action.payload.reactionInfo;
+    },
+
+    setLikeStateAction: (state, action: PayloadAction<LikeActionState>) => {
+      state.likeActionState = action.payload;
+    },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
   },
@@ -91,6 +130,9 @@ export const {
   setRows,
   setMarginTop,
   setPostBoxHeight,
+  setFeeds,
+  updateFeeds,
+  setLikeStateAction,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

@@ -1,9 +1,6 @@
-import { Story } from "@/app/types/db/user";
-import StoryItem from "./story-item";
-export default function Stories(props: {
-  allStories: Story[];
-  showStoryPhoto: (story: Story) => void;
-}) {
+import StoryItem from "../story-item/story-item";
+import { StoriesProps } from "./types";
+export default function Stories(props: StoriesProps) {
   return (
     <div className="flex flex-col space-y-1">
       {props.allStories.map((story) => {

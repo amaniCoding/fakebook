@@ -1,6 +1,5 @@
 "use client";
 
-import { Media } from "@/app/types/db/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -11,7 +10,8 @@ import { IoMdMore, IoMdThumbsUp } from "react-icons/io";
 import { IoHeartCircle } from "react-icons/io5";
 
 import { PiShareFat, PiThumbsUp } from "react-icons/pi";
-export default function PhotoModal(props: { photo: Media[]; photos: Media[] }) {
+import { PhotoModalProps } from "./types";
+export default function PhotoModal(props: PhotoModalProps) {
   const currentPhotoIndexFromProp = props.photos.findIndex((photo) => {
     return photo.mediaid === props.photo[0].mediaid;
   });

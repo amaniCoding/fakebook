@@ -4,7 +4,7 @@ import {
   fetchCurrentStoryMedias,
   fetchAllStoriesWithPhotos,
 } from "@/app/libs/data/user/user";
-import Home from "./components/home";
+import Home from "./components/home/home";
 
 export default async function Page(props: {
   params: Promise<{ storyid: string }>;

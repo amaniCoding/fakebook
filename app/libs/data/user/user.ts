@@ -10,7 +10,6 @@ import {
   Like,
   User,
 } from "./types";
-import { LoggedInUser } from "@/app/config/loggedinuser";
 
 export async function fetchPosts(user?: User) {
   try {
@@ -22,14 +21,13 @@ export async function fetchPosts(user?: User) {
         const comments = sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${row.postid}`;
         const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid}`;
         const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${row.postid} GROUP BY ureactions.reactiontype`;
-        const reactionsInfo = sql<Like>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${row.postid} AND users.userid = ${user?.userid}`;
-        const me = sql<Like>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${row.postid} AND users.userid = ${LoggedInUser?.userid}`;
+        const reactedBy = sql<Like>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${row.postid} AND users.userid = ${user?.userid}`;
+        //const isReactedByMe = sql<Like>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${row.postid} AND users.userid = ${user?.userid}`;
         return {
-          post: {
-            postId: row.postid,
-            post: row.post,
-            date: row.date,
-          },
+          postId: row.postid,
+          post: row.post,
+          date: row.date,
+
           medias: (await medias).rows,
           user: {
             userid: row.userid,
@@ -39,13 +37,15 @@ export async function fetchPosts(user?: User) {
           },
 
           comments: (await comments).rows[0].comments,
-          reactions: (await reactions).rows[0].reactions,
-          reactionGroup: (await reactionGroup).rows,
+
           reactionInfo: {
-            me: (await me).rows.length > 0 ? true : false,
-            isReacted: (await reactionsInfo).rows.length > 0 ? true : false,
-            reactionType: (await reactionsInfo).rows[0]?.reactiontype,
-            reactor: (await reactionsInfo).rows[0]?.fname,
+            isReacted: (await reactedBy).rows.length > 0 ? true : false,
+            reactionType: (await reactedBy).rows[0]?.reactiontype,
+            reactor: `${(await reactedBy).rows[0]?.fname} ${
+              (await reactedBy).rows[0]?.lname
+            }`,
+            reactions: (await reactions).rows[0].reactions,
+            reactionGroup: (await reactionGroup).rows,
           },
         };
       })

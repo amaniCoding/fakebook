@@ -1,10 +1,7 @@
 import { useAppSelector } from "@/app/store/hooks";
-import { Story } from "@/app/types/db/user";
 import Image from "next/image";
-export default function StoryItem(props: {
-  story: Story;
-  showStoryPhoto: (story: Story) => void;
-}) {
+import { StoryItemProps } from "./types";
+export default function StoryItem(props: StoryItemProps) {
   const currentStory = useAppSelector((state) => state.userStory.currentStory);
   return (
     <div

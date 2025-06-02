@@ -35,16 +35,17 @@ export type ReactionInfo = {
   isReacted: boolean;
   reactionType: string | undefined;
   reactor: string | undefined;
-  me: number | undefined;
+  reactions: number;
+  reactionGroup: ReactionGroup[];
 };
 
 export type Posts = {
-  post: Post;
+  postId: string;
+  post: string;
+  date: string;
   medias: Media[];
   user: User;
   comments: number;
-  reactions: number;
-  reactionGroup: ReactionGroup[];
   reactionInfo: ReactionInfo;
 };
 
@@ -86,24 +87,4 @@ export type Like = {
 
 export type Reaction = {
   reactions: number;
-};
-
-export type SubmittedPost = {
-  postid: string;
-  posttype: string;
-  userid: string;
-  post: string;
-};
-
-export type SubmittedPhoto = {
-  postid: string;
-  photo: string;
-};
-
-export type SubmittedPostType = {
-  isSuccessfull: boolean;
-  post: {
-    post: SubmittedPost;
-    photos: SubmittedPhoto[];
-  };
 };

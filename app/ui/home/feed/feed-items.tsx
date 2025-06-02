@@ -1,17 +1,11 @@
 import { fetchPosts } from "@/app/libs/data/user/user";
-import FeedItem from "./feed-item";
 import { LoggedInUser } from "@/app/config/loggedinuser";
+import FeedsClient from "./feeds-client/feeds-client";
 
 export default async function Feeds() {
-  const posts = await fetchPosts(LoggedInUser.userid);
+  const feeds = await fetchPosts(LoggedInUser);
 
-  console.log(posts);
+  //console.log(feeds);
 
-  return (
-    <>
-      {posts.map((post) => {
-        return <FeedItem key={post.post.postId} post={post} />;
-      })}
-    </>
-  );
+  return <FeedsClient feeds={feeds} />;
 }
