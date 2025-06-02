@@ -3,9 +3,14 @@ import { sql } from "@vercel/postgres";
 
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
-import { StoryMedia } from "@/app/types/db/user";
+
 import { AddPostState, Comment, Comments, ReactionType } from "./types";
-import { Reaction, ReactionGroup, User } from "../../data/user/types";
+import {
+  Reaction,
+  ReactionGroup,
+  StoryMedia,
+  User,
+} from "../../data/user/types";
 
 export async function fetchCommentsAction(postId: string) {
   try {
