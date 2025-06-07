@@ -9,7 +9,8 @@ export type LikeActionState = {
   reactionInfo: ReactionInfo;
 };
 
-export type ReactionType = {
+export type PostReactionInfo = {
+  reactionid: string;
   reactiontype: string;
   fname: string;
   lname: string;

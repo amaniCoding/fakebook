@@ -1,11 +1,15 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import { FaFacebookMessenger, FaUserFriends } from "react-icons/fa";
 import CommentItem from "../comment/comment-item/comment-item";
 import { FeedItemType } from "./types";
+import { useState } from "react";
 
-export default async function FeedItem({ feed }: FeedItemType) {
+export default function FeedItem({ feed }: FeedItemType) {
+  const [isMore, setIsMore] = useState<boolean>(false);
+
   return (
     <div className="py-2 bg-white rounded-lg mb-4 shadow-md">
       <div className="flex justify-between">
@@ -115,11 +119,39 @@ export default async function FeedItem({ feed }: FeedItemType) {
         </div>
         <IoMdMore className="w-8 h-8" />
       </div>
-      <p className="px-5 mb-3 mt-2">
-        {feed.post.length > 170
-          ? `${feed.post.substring(0, 170)}... See more`
-          : feed.post}
-      </p>
+      <div className="px-5 mb-3 mt-2">
+        {!isMore ? (
+          <p>
+            {feed.post.substring(0, 170)}
+            <span
+              onClick={() => {
+                setIsMore(true);
+              }}
+            >
+              {" "}
+              ...more
+            </span>
+          </p>
+        ) : (
+          <p>{feed.post}</p>
+        )}
+        {feed.post.length > 170 ? (
+          <p>
+            {feed.post.substring(0, 170)}
+            <span
+              className="cursor-pointer"
+              onClick={() => {
+                setIsMore(true);
+              }}
+            >
+              {" "}
+              ...more
+            </span>
+          </p>
+        ) : (
+          <p>{feed.post}</p>
+        )}
+      </div>
       {feed.medias.length > 0 && (
         <div className="w-full h-[31rem]">
           {feed.medias.length > 5 && (
@@ -366,23 +398,6 @@ export default async function FeedItem({ feed }: FeedItemType) {
                 );
               })}
             </div>
-          )}
-
-          {feed.medias.length === 1 && (
-            <Link
-              href={`/photo/${feed.postId}/${feed.medias[0].mediaid}`}
-              className="w-full h-[31rem]"
-            >
-              <div
-                className="w-full h-full"
-                style={{
-                  backgroundImage: "url(" + `${feed.medias[0].media}` + ")",
-                  backgroundPosition: "top center",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                }}
-              ></div>
-            </Link>
           )}
         </div>
       )}

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 import { sql } from "@vercel/postgres";
 
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 
-import { AddPostState, Comment, Comments, ReactionType } from "./types";
+import { AddPostState, Comment, Comments, PostReactionInfo } from "./types";
 import {
   Reaction,
   ReactionGroup,
@@ -74,47 +75,100 @@ export async function commentAction(
   }
 }
 
+async function groupPostReactions(postId: string) {
+  const rows =
+    await sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
+  return rows;
+}
+
+async function totalPostReactions(postId: string) {
+  const rows =
+    await sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
+  return rows;
+}
+
+async function reactionInfo(postId: string, userId: string) {
+  const rows =
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+  return rows;
+}
+
+export async function UpdateReaction(
+  postId: string,
+  userId: string,
+  reactionType: string
+) {
+  try {
+    const isReactedByUser = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+    if (isReactedByUser.rows.length === 0) {
+      await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+    } else {
+      await sql`UPDATE ureactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId}`;
+    }
+    revalidatePath("/");
+  } catch (error) {
+    console.error(`Error in fetching the database ${error}`);
+    return {
+      isReacted: false,
+      reactionType: "",
+      reactor: "",
+      reactions: 0,
+      reactionGroup: [],
+    };
+  }
+}
+
 export async function LikeAction(
   postId: string,
   userId: string,
   reactionType: string
 ) {
   try {
-    const likeCountForApost = await sql<ReactionType>`
-  SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
-    let reactionid;
-    console.log("Length", likeCountForApost.rows.length);
-    if (likeCountForApost.rows.length === 0) {
-      const LikeApost =
-        await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING RETURNING reactionid`;
-      const updatedReactionCount = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
-      const updatedReactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
-      const updatedReactedBy = sql<ReactionType>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+    const isReactedByUser = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+    if (isReactedByUser.rows.length === 0) {
+      await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
 
-      reactionid = LikeApost.rows[0].reactionid;
-      console.log("INSERTED", LikeApost);
+      /** 
+       * 
+       * const [_groupPostReactions, _totalPostReactions, _reactionInfo] =
+        await Promise.all([
+          groupPostReactions(postId),
+          totalPostReactions(postId),
+          reactionInfo(postId, userId),
+        ]);
+
+      reactionid = _reactionInfo.rows[0].reactionid;
+      console.log("INSERTED", reactApost);
       return {
         isReacted: true,
-        reactionType: (await updatedReactedBy).rows[0].reactiontype,
-        reactor: `${(await updatedReactedBy).rows[0]?.fname} ${
-          (await updatedReactedBy).rows[0]?.lname
-        }`,
-        reactions: (await updatedReactionCount).rows[0].reactions,
-        reactionGroup: (await updatedReactionGroup).rows,
+        reactionType: _reactionInfo.rows[0].reactiontype,
+        reactor: `${_reactionInfo.rows[0]?.fname} ${_reactionInfo.rows[0]?.lname}`,
+        reactions: _totalPostReactions.rows[0].reactions,
+        reactionGroup: _groupPostReactions.rows,
       };
+       */
+
+      revalidatePath("/");
     } else {
-      await sql`DELETE FROM ureactions WHERE reactionid = ${reactionid} AND postid = ${postId} AND userid = ${userId}`;
-      const reactionGroup = sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
-      const reactions = sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
+      await sql`DELETE FROM ureactions WHERE postid = ${postId} AND userid = ${userId}`;
+      /**
+       * const [_groupPostReactions, _totalPostReactions] = await Promise.all([
+        groupPostReactions(postId),
+        totalPostReactions(postId),
+      ]);
 
       console.log("DELETED");
       return {
         isReacted: false,
         reactionType: "",
         reactor: "",
-        reactions: (await reactions).rows[0].reactions,
-        reactionGroup: (await reactionGroup).rows,
+        reactions: _totalPostReactions.rows[0].reactions,
+        reactionGroup: _groupPostReactions.rows,
       };
+       */
+      revalidatePath("/");
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
