@@ -270,7 +270,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
         {renderReactionStatus()}
         {toShowReactionBox && (
           <div
-            className="absolute left-1 bottom-2 z-[100] flex items-center py-1 px-1 bg-white shadow-lg space-x-4 rounded-2xl"
+            className="absolute left-0 -bottom-4 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-4 rounded-2xl"
             onMouseLeave={handelMouseOutLike}
           >
             <FaThumbsUp
