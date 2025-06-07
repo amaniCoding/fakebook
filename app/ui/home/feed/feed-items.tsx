@@ -5,7 +5,7 @@ import FeedsClient from "./feeds-client/feeds-client";
 export default async function Feeds() {
   const feeds = await fetchPosts(LoggedInUser);
 
-  console.log(feeds);
+  //console.log(feeds);
 
   return <FeedsClient feeds={feeds} />;
 }

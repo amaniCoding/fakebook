@@ -59,7 +59,7 @@ const initialState: StoryState = {
           reactiontype: "",
         },
       ],
-      reactions: 0,
+      reactions: "",
       reactionType: undefined,
       reactor: undefined,
     },
