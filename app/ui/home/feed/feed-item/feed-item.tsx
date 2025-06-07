@@ -124,28 +124,13 @@ export default function FeedItem({ feed }: FeedItemType) {
           <p>
             {feed.post.substring(0, 170)}
             <span
-              onClick={() => {
-                setIsMore(true);
-              }}
-            >
-              {" "}
-              ...more
-            </span>
-          </p>
-        ) : (
-          <p>{feed.post}</p>
-        )}
-        {feed.post.length > 170 ? (
-          <p>
-            {feed.post.substring(0, 170)}
-            <span
               className="cursor-pointer"
               onClick={() => {
                 setIsMore(true);
               }}
             >
               {" "}
-              ...more
+              {feed.post.length > 170 ? "...more" : ""}
             </span>
           </p>
         ) : (
@@ -397,6 +382,26 @@ export default function FeedItem({ feed }: FeedItemType) {
                   </Link>
                 );
               })}
+            </div>
+          )}
+
+          {feed.medias.length === 1 && (
+            <div className="flex w-full space-x-1 h-full">
+              <Link
+                className="w-full h-full block"
+                href={`/photo/${feed.postId}/${feed.medias[0].mediaid}`}
+                key={feed.medias[0].media}
+              >
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: "url(" + `${feed.medias[0].media}` + ")",
+                    backgroundPosition: "top center",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                ></div>
+              </Link>
             </div>
           )}
         </div>

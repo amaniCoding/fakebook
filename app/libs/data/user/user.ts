@@ -38,7 +38,7 @@ async function groupPostReactions(postId: string) {
 
 async function postReactionInfo(postId: string, userId: string) {
   const rows =
-    await sql<PostReactionInfo>`SELECT ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
   return rows;
 }
 
@@ -54,7 +54,7 @@ export async function fetchPosts(user: User) {
             getPostTotalComments(row.postid),
             getPostTotalReactions(row.postid),
             groupPostReactions(row.postid),
-            postReactionInfo(row.post, user.userid),
+            postReactionInfo(row.postid, user.userid),
           ]);
         return {
           postId: row.postid,

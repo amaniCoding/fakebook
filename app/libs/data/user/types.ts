@@ -35,7 +35,7 @@ export type ReactionInfo = {
   isReacted: boolean;
   reactionType: string | undefined;
   reactor: string | undefined;
-  reactions: number;
+  reactions: string;
   reactionGroup: ReactionGroup[];
 };
 
@@ -86,5 +86,5 @@ export type Like = {
 };
 
 export type Reaction = {
-  reactions: number;
+  reactions: string;
 };

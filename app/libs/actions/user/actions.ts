@@ -100,22 +100,16 @@ export async function UpdateReaction(
 ) {
   try {
     const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
     if (isReactedByUser.rows.length === 0) {
       await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+      revalidatePath("/");
     } else {
       await sql`UPDATE ureactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId}`;
+      revalidatePath("/");
     }
-    revalidatePath("/");
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
-    return {
-      isReacted: false,
-      reactionType: "",
-      reactor: "",
-      reactions: 0,
-      reactionGroup: [],
-    };
   }
 }
 
@@ -126,59 +120,16 @@ export async function LikeAction(
 ) {
   try {
     const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
     if (isReactedByUser.rows.length === 0) {
       await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
-
-      /** 
-       * 
-       * const [_groupPostReactions, _totalPostReactions, _reactionInfo] =
-        await Promise.all([
-          groupPostReactions(postId),
-          totalPostReactions(postId),
-          reactionInfo(postId, userId),
-        ]);
-
-      reactionid = _reactionInfo.rows[0].reactionid;
-      console.log("INSERTED", reactApost);
-      return {
-        isReacted: true,
-        reactionType: _reactionInfo.rows[0].reactiontype,
-        reactor: `${_reactionInfo.rows[0]?.fname} ${_reactionInfo.rows[0]?.lname}`,
-        reactions: _totalPostReactions.rows[0].reactions,
-        reactionGroup: _groupPostReactions.rows,
-      };
-       */
-
       revalidatePath("/");
     } else {
       await sql`DELETE FROM ureactions WHERE postid = ${postId} AND userid = ${userId}`;
-      /**
-       * const [_groupPostReactions, _totalPostReactions] = await Promise.all([
-        groupPostReactions(postId),
-        totalPostReactions(postId),
-      ]);
-
-      console.log("DELETED");
-      return {
-        isReacted: false,
-        reactionType: "",
-        reactor: "",
-        reactions: _totalPostReactions.rows[0].reactions,
-        reactionGroup: _groupPostReactions.rows,
-      };
-       */
       revalidatePath("/");
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
-    return {
-      isReacted: false,
-      reactionType: "",
-      reactor: "",
-      reactions: 0,
-      reactionGroup: [],
-    };
   }
 }
 

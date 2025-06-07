@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FaComment } from "react-icons/fa6";
+import { FaComment, FaThumbsUp } from "react-icons/fa6";
 import CommentBox from "../comment-box/comment-box";
 import { FaAngry, FaLaugh, FaRegComment } from "react-icons/fa";
 import { PiShareFat, PiShareFatFill, PiThumbsUp } from "react-icons/pi";
@@ -21,7 +21,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
-
+  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
   const handelShowCommentBox = () => {
     setToShowCommentBox(true);
     dispatch(showCommentBox(true));
@@ -33,9 +33,10 @@ export default function CommentItem({ feed }: CommentItemProps) {
   };
 
   const handelMouseOverLike = () => {
-    setTimeout(() => {
+    const timeoutid = setTimeout(() => {
       settoShowReactionBox(true);
     }, 1000);
+    setTimeOutId(timeoutid);
   };
 
   const handelMouseOutLike = () => {
@@ -47,10 +48,12 @@ export default function CommentItem({ feed }: CommentItemProps) {
     userId: string,
     reactionType: string
   ) => {
-    await UpdateReaction(postId, userId, reactionType);
     try {
+      settoShowReactionBox(false);
+      await UpdateReaction(postId, userId, reactionType);
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
+      settoShowReactionBox(false);
     }
   };
 
@@ -60,23 +63,27 @@ export default function CommentItem({ feed }: CommentItemProps) {
     reactionType: string
   ) => {
     try {
+      clearTimeout(timeOutId);
       await LikeAction(postId, userId, reactionType);
-      settoShowReactionBox(false);
     } catch (error) {
+      settoShowReactionBox(false);
       console.error(`error ${error}`);
     }
   };
 
   const renderReactionState = () => {
-    if (feed.reactionInfo.reactions === 1) {
+    if (parseInt(feed.reactionInfo.reactions) === 1) {
       return <p>{feed.reactionInfo.reactor}</p>;
     }
 
-    if (feed.reactionInfo.reactions > 1 && feed.reactionInfo.isReacted) {
+    if (
+      parseInt(feed.reactionInfo.reactions) > 1 &&
+      feed.reactionInfo.isReacted
+    ) {
       return (
         <p>
-          You and {feed.reactionInfo.reactions} Other
-          {feed.reactionInfo.reactions > 2 ? "s" : ""}
+          You and {parseInt(feed.reactionInfo.reactions)} Other
+          {parseInt(feed.reactionInfo.reactions) > 2 ? "s" : ""}
         </p>
       );
     }
@@ -98,9 +105,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
           onClick={() => {
             handelReaction(feed.postId, LoggedInUser.userid, "like");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
-          <PiThumbsUp className="w-6 h-6 bg-blue-600" />
+          <PiThumbsUp className="w-6 h-6 fill-blue-600" />
           <span className="text-blue-600 font-semibold">Like</span>
         </div>
       );
@@ -113,9 +120,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "love");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <IoHeartCircle className="w-6 h-6 fill-pink-500" />
           <span className="text-pink-500 font-semibold">Love</span>
@@ -130,9 +137,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "lagh");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <FaLaugh className="w-6 h-6 fill-yellow-700" />
           <span className="text-yellow-700 font-semibold">Haha</span>
@@ -147,9 +154,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "care");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <BsHeartPulseFill className="w-6 h-6 fill-orange-500" />
           <span className="text-orange-500 font-semibold">Care</span>
@@ -164,9 +171,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "angry");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <FaAngry className="w-6 h-6 fill-yellow-700" />
           <span className="text-yellow-700 font-semibold">Angry</span>
@@ -182,9 +189,9 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "sad");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <ImCrying className="w-6 h-6 fill-yellow-700" />
           <span className="text-yellow-700 font-semibold">Sad</span>
@@ -199,25 +206,28 @@ export default function CommentItem({ feed }: CommentItemProps) {
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(feed.postId, LoggedInUser.userid, "like");
+            handelReaction(feed.postId, LoggedInUser.userid, "wow");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
           <CgSmileMouthOpen className="w-6 h-6 fill-orange-500" />
           <span className="text-orange-500 font-semibold">Wow</span>
         </div>
       );
     }
-    if (!feed.reactionInfo.isReacted && feed.reactionInfo.reactionType === "") {
+    if (
+      !feed.reactionInfo.isReacted &&
+      feed.reactionInfo.reactionType === undefined
+    ) {
       return (
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
             handelReaction(feed.postId, LoggedInUser.userid, "like");
           }}
-          onMouseOver={handelMouseOverLike}
+          onMouseEnter={handelMouseOverLike}
         >
-          <PiThumbsUp className="w-6 h-6 bg-white" />
+          <PiThumbsUp className="w-6 h-6 fill-current" />
           <span>Like</span>
         </div>
       );
@@ -231,7 +241,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
       )}
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
-        <div className="flex items-center space-x">
+        <div className="flex items-center space-x-2">
           <div className="flex space-x-0">
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
@@ -256,52 +266,52 @@ export default function CommentItem({ feed }: CommentItemProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between px-2 py-1">
+      <div className="relative flex items-center justify-between px-2 py-1">
         {renderReactionStatus()}
         {toShowReactionBox && (
           <div
-            className="flex items-center py-2 px-3 bg-white space-x-6 rounded-2xl"
-            onMouseOut={handelMouseOutLike}
+            className="absolute left-1 bottom-2 z-[100] flex items-center py-1 px-1 bg-white shadow-lg space-x-4 rounded-2xl"
+            onMouseLeave={handelMouseOutLike}
           >
-            <PiThumbsUp
-              className="w-14 h-14 bg-blue-600 rounded-full"
+            <FaThumbsUp
+              className="w-10 h-10 fill-blue-600 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "like");
               }}
             />
             <IoHeartCircle
-              className="w-14 h-14 fill-pink-500 rounded-full"
+              className="w-10 h-10 fill-pink-500 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "love");
               }}
             />
             <FaLaugh
-              className="w-14 h-14 fill-yellow-700 rounded-full"
+              className="w-10 h-10 fill-yellow-700 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "lagh");
               }}
             />
             <BsHeartPulseFill
-              className="w-14 h-14 fill-orange-500 rounded-full"
+              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "care");
               }}
             />
             <FaAngry
-              className="w-14 h-14 fill-yellow-700 rounded-full"
+              className="w-10 h-10 fill-yellow-700 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "angry");
               }}
             />
             <CgSmileMouthOpen
-              className="w-14 h-14 fill-orange-500 rounded-full"
+              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "wow");
               }}
             />
 
             <ImCrying
-              className="w-14 h-14 fill-orange-500 rounded-full"
+              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "sad");
               }}
