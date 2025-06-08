@@ -546,7 +546,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image
             alt="Amanuel Ferede"
-            src={"/feeds/4.jpg"}
+            src={"/feeds/1.jpg"}
             width={0}
             height={0}
             sizes="100vh"

@@ -1,20 +1,17 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
-import { FaComment, FaThumbsUp } from "react-icons/fa6";
+import { FaComment } from "react-icons/fa6";
 import CommentBox from "../comment-box/comment-box";
-import { FaAngry, FaLaugh, FaRegComment } from "react-icons/fa";
-import { PiShareFat, PiShareFatFill, PiThumbsUp } from "react-icons/pi";
+import { FaRegComment } from "react-icons/fa";
+import { PiShareFat, PiShareFatFill } from "react-icons/pi";
 import ReactionIcons from "../../reaction-icons/reaction-icons";
 import { LikeAction, UpdateReaction } from "@/app/libs/actions/user/actions";
 import { showCommentBox } from "@/app/store/slices/user/comment/commentSlice";
 import { LoggedInUser } from "@/app/config/loggedinuser";
-import { IoHeartCircle } from "react-icons/io5";
-import { BsHeartPulseFill } from "react-icons/bs";
-import { CgSmileMouthOpen } from "react-icons/cg";
 import { useAppDispatch } from "@/app/store/hooks";
 
 import { CommentItemProps } from "./types";
-import { ImCrying } from "react-icons/im";
 
 export default function CommentItem({ feed }: CommentItemProps) {
   const dispatch = useAppDispatch();
@@ -109,7 +106,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <PiThumbsUp className="w-6 h-6 fill-blue-600" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/like.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-blue-600 font-semibold">Like</span>
         </div>
       );
@@ -126,7 +130,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <IoHeartCircle className="w-6 h-6 fill-pink-500" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/love.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-pink-500 font-semibold">Love</span>
         </div>
       );
@@ -143,7 +154,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <FaLaugh className="w-6 h-6 fill-yellow-700" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/haha.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-yellow-700 font-semibold">Haha</span>
         </div>
       );
@@ -160,7 +178,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <BsHeartPulseFill className="w-6 h-6 fill-orange-500" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/care.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-orange-500 font-semibold">Care</span>
         </div>
       );
@@ -177,7 +202,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <FaAngry className="w-6 h-6 fill-yellow-700" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/angry.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-yellow-700 font-semibold">Angry</span>
         </div>
       );
@@ -195,7 +227,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <ImCrying className="w-6 h-6 fill-yellow-700" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/sad.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-yellow-700 font-semibold">Sad</span>
         </div>
       );
@@ -212,7 +251,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <CgSmileMouthOpen className="w-6 h-6 fill-orange-500" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/wow.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span className="text-orange-500 font-semibold">Wow</span>
         </div>
       );
@@ -229,7 +275,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
           }}
           onMouseEnter={handelMouseOverLike}
         >
-          <PiThumbsUp className="w-6 h-6 fill-current" />
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/likew.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-10 h-10 object-cover rounded-full block flex-none"
+          />
           <span>Like</span>
         </div>
       );
@@ -275,48 +328,82 @@ export default function CommentItem({ feed }: CommentItemProps) {
             className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-4 rounded-2xl"
             onMouseLeave={handelMouseOutLike}
           >
-            <FaThumbsUp
-              className="w-10 h-10 fill-blue-600 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "like");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/like.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
-            <IoHeartCircle
-              className="w-10 h-10 fill-pink-500 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "love");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/love.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
-            <FaLaugh
-              className="w-10 h-10 fill-yellow-700 rounded-full cursor-pointer"
-              onClick={() => {
-                handelUpdateLike(feed.postId, LoggedInUser.userid, "lagh");
-              }}
-            />
-            <BsHeartPulseFill
-              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "care");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/care.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
-            <FaAngry
-              className="w-10 h-10 fill-yellow-700 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
-                handelUpdateLike(feed.postId, LoggedInUser.userid, "angry");
+                handelUpdateLike(feed.postId, LoggedInUser.userid, "lagh");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/haha.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
-            <CgSmileMouthOpen
-              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "wow");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/wow.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
-
-            <ImCrying
-              className="w-10 h-10 fill-orange-500 rounded-full cursor-pointer"
+            <Image
               onClick={() => {
                 handelUpdateLike(feed.postId, LoggedInUser.userid, "sad");
               }}
+              alt="Amanuel Ferede"
+              src={"/reactions/sad.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
+            />
+            <Image
+              onClick={() => {
+                handelUpdateLike(feed.postId, LoggedInUser.userid, "angry");
+              }}
+              alt="Amanuel Ferede"
+              src={"/reactions/angry.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-10 h-10 object-cover rounded-full block flex-none"
             />
           </div>
         )}
