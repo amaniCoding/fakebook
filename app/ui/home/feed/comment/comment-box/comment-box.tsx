@@ -80,7 +80,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         setCommentsData({
           ...commentsData,
           loading: false,
-          comments: [...commentsData.comments, insertedComment.comment],
+          comments: [insertedComment.comment, ...commentsData.comments],
         });
         commentBox.current?.scrollTo({
           behavior: "smooth",
