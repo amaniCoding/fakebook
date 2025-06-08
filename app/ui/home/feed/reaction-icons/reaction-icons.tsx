@@ -1,29 +1,93 @@
-import { BsHeartPulseFill } from "react-icons/bs";
-import { CgSmileMouthOpen } from "react-icons/cg";
-import { IoMdThumbsUp } from "react-icons/io";
-import { FaAngry, FaLaugh } from "react-icons/fa";
-import { IoHeartCircle } from "react-icons/io5";
+"use client";
 import { ReactionIconsProps } from "./types";
+import Image from "next/image";
 
 export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
   if (reactiontype === "like") {
-    return <IoMdThumbsUp className="w-6 h-6 fill-blue-500" />;
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/like.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
   }
   if (reactiontype === "love") {
-    return <IoHeartCircle className="w-6 h-6 fill-pink-500" />;
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/love.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
   }
 
   if (reactiontype === "care") {
-    return <BsHeartPulseFill className="w-6 h-6 fill-orange-500" />;
-  }
-  if (reactiontype === "angry") {
-    return <FaAngry className="w-6 h-6 fill-yellow-700" />;
-  }
-  if (reactiontype === "wow") {
-    return <CgSmileMouthOpen className="w-6 h-6 fill-orange-500" />;
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/care.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
   }
   if (reactiontype === "lagh") {
-    return <FaLaugh className="w-6 h-6 fill-yellow-700" />;
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/haha.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
+  }
+  if (reactiontype === "wow") {
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/wow.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
+  }
+  if (reactiontype === "sad") {
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/sad.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
+  }
+
+  if (reactiontype === "angry") {
+    return (
+      <Image
+        alt="Amanuel Ferede"
+        src={"/reactions/angry.png"}
+        width={0}
+        height={0}
+        sizes="100vh"
+        className="w-10 h-10 object-cover rounded-full block flex-none"
+      />
+    );
   }
   return null;
 }

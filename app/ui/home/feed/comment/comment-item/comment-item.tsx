@@ -337,7 +337,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -348,7 +348,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -359,7 +359,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -370,7 +370,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -381,7 +381,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -392,7 +392,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -403,7 +403,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
             />
           </div>
         )}
