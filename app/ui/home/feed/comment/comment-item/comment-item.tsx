@@ -49,11 +49,11 @@ export default function CommentItem({ feed }: CommentItemProps) {
     reactionType: string
   ) => {
     try {
-      settoShowReactionBox(false);
+      clearTimeout(timeOutId);
       await UpdateReaction(postId, userId, reactionType);
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
-      settoShowReactionBox(false);
+      clearTimeout(timeOutId);
     }
   };
 
