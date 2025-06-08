@@ -261,7 +261,6 @@ export default function PostBox(props: { onClose: () => void }) {
             </div>
             <button
               type="submit"
-              disabled={!postFromPostBox || !postButtonEnabled}
               className={`w-full text-center  py-2 cursor-pointer text-white rounded-md ${
                 postButtonEnabled || postFromPostBox
                   ? "bg-blue-600"
