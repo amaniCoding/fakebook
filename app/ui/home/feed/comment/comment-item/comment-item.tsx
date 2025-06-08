@@ -112,7 +112,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-blue-600 font-semibold">Like</span>
         </div>
@@ -136,7 +136,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-pink-500 font-semibold">Love</span>
         </div>
@@ -160,7 +160,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Haha</span>
         </div>
@@ -184,7 +184,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-orange-500 font-semibold">Care</span>
         </div>
@@ -208,7 +208,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Angry</span>
         </div>
@@ -233,7 +233,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Sad</span>
         </div>
@@ -257,7 +257,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span className="text-orange-500 font-semibold">Wow</span>
         </div>
@@ -281,7 +281,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-4 h-4 object-cover rounded-full block flex-none"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
           />
           <span>Like</span>
         </div>

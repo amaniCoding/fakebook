@@ -11,7 +11,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -23,7 +23,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -36,7 +36,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -48,7 +48,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -60,7 +60,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -72,7 +72,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
@@ -85,7 +85,7 @@ export default function ReactionIcons({ reactiontype }: ReactionIconsProps) {
         width={0}
         height={0}
         sizes="100vh"
-        className="w-4 h-4 object-cover rounded-full block flex-none"
+        className="w-6 h-6 object-cover rounded-full block flex-none"
       />
     );
   }
