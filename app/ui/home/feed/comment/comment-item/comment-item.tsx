@@ -112,7 +112,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-blue-600 font-semibold">Like</span>
         </div>
@@ -136,7 +136,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-pink-500 font-semibold">Love</span>
         </div>
@@ -160,7 +160,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Haha</span>
         </div>
@@ -184,7 +184,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-orange-500 font-semibold">Care</span>
         </div>
@@ -208,7 +208,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Angry</span>
         </div>
@@ -233,7 +233,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-yellow-700 font-semibold">Sad</span>
         </div>
@@ -257,7 +257,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span className="text-orange-500 font-semibold">Wow</span>
         </div>
@@ -281,7 +281,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-10 h-10 object-cover rounded-full block flex-none"
+            className="w-4 h-4 object-cover rounded-full block flex-none"
           />
           <span>Like</span>
         </div>
@@ -325,7 +325,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
         {renderReactionStatus()}
         {toShowReactionBox && (
           <div
-            className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-4 rounded-2xl"
+            className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
             onMouseLeave={handelMouseOutLike}
           >
             <Image
@@ -337,7 +337,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -348,7 +348,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -359,7 +359,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -370,7 +370,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -381,7 +381,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -392,7 +392,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
             <Image
               onClick={() => {
@@ -403,7 +403,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
               width={0}
               height={0}
               sizes="100vh"
-              className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+              className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
             />
           </div>
         )}
