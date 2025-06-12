@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useState, KeyboardEvent } from "react";
+import { ChangeEvent, useState, KeyboardEvent, useEffect } from "react";
 
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { GrNext, GrPrevious } from "react-icons/gr";
@@ -18,7 +18,6 @@ import {
 } from "@/app/libs/actions/user/types";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import {
-  LikeAction,
   likeMediaAction,
   MediaCommentAction,
   UpdateMediaReactionAction,
@@ -62,8 +61,23 @@ export default function PhotoModal(props: PhotoModalProps) {
     setTimeOutId(timeoutid);
   };
 
+  const handelOverMouseOutBox = () => {
+    clearTimeout(timeOutId);
+    settoShowReactionBox(true);
+  };
+
+  const handelonMouseLeaveReactionBox = () => {
+    const timeoutid = setTimeout(() => {
+      settoShowReactionBox(false);
+    }, 1000);
+    setTimeOutId(timeoutid);
+  };
+
   const handelMouseOutLike = () => {
-    settoShowReactionBox(false);
+    const timeoutid = setTimeout(() => {
+      settoShowReactionBox(false);
+    }, 1000);
+    setTimeOutId(timeoutid);
   };
 
   const insertCommentAction = async (
@@ -86,38 +100,15 @@ export default function PhotoModal(props: PhotoModalProps) {
             },
           },
         });
-        const insertedComment = await MediaCommentAction(
+        await MediaCommentAction(
           LoggedInUser,
           props.postId,
-          comment,
-          props.postInfo.medias[currentPhotoIndex].mediaid
+          props.postInfo.medias[currentPhotoIndex].mediaid,
+          comment
         );
         setComment(" ");
-        setInsertCommentState({
-          loading: false,
-          comment: insertedComment.comment,
-        });
-        setCommentsData({
-          ...commentsData,
-          loading: false,
-          comments: [...commentsData.comments, insertedComment.comment],
-        });
       } catch (error) {
         console.error(`error ${error}`);
-        setInsertCommentState({
-          loading: false,
-          comment: {
-            comment: "",
-            commentid: "",
-            date: "",
-            user: {
-              fname: "",
-              lname: "",
-              profilepic: "",
-              userid: "",
-            },
-          },
-        });
       }
     }
   };
@@ -212,6 +203,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -238,6 +230,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "love");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -264,6 +257,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "lagh");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -290,6 +284,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "care");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -316,6 +311,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "angry");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -343,6 +339,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "sad");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -369,6 +366,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "wow");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -386,7 +384,7 @@ export default function PhotoModal(props: PhotoModalProps) {
       !props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
         .isReacted &&
       props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
-        .reactionType === undefined
+        .reactionType === ""
     ) {
       return (
         <div
@@ -395,6 +393,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             handelReaction(props.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -429,13 +428,17 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
+  useEffect(() => {
+    console.log(props.postInfo);
+  }, [props.postInfo]);
+
   return (
-    <div className="grid grid-cols-12 gap-3 h-screen fixed top-0 bottom-0 left-0 z-50">
+    <div className="grid grid-cols-12 gap-3 h-screen fixed top-0 bottom-0 left-0 right-0 z-50">
       <div className="lg:col-span-9 col-span-12">
         <div className="w-full h-screen lg:z-20 px-4 bg-black relative">
           <div className="absolute top-2 left-2 flex items-center">
             <Link href={"/"} scroll={false} className=" cursor-pointer">
-              <FaXmark className="w-14 h-14 text-white rounded-full p-2" />
+              <FaXmark className="w-10 h-10 text-white rounded-full p-2" />
             </Link>
 
             <Link href={"/"} scroll={false} className=" cursor-pointer">
@@ -445,7 +448,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 sizes="100vh"
                 src={"/feeds/logoc.png"}
                 alt="Logo"
-                className="w-14 h-14 text-white rounded-full p-2"
+                className="w-10 h-10 text-white rounded-full p-2"
               />
             </Link>
           </div>
@@ -519,12 +522,13 @@ export default function PhotoModal(props: PhotoModalProps) {
 
           <p>{props.postInfo.medias[currentPhotoIndex].mediaComments}</p>
         </div>
-        <div className="flex mb-4 items-center justify-between mt-2 px-2 border-t border-t-gray-300 p-1">
+        <div className="relative flex mb-4 items-center justify-between border-t border-t-gray-300">
           {renderReactionStatus()}
           {toShowReactionBox && (
             <div
               className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
-              onMouseLeave={handelMouseOutLike}
+              onMouseOver={handelOverMouseOutBox}
+              onMouseLeave={handelonMouseLeaveReactionBox}
             >
               <Image
                 onClick={() => {
@@ -535,7 +539,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -546,7 +550,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -557,7 +561,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -568,7 +572,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -579,7 +583,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -590,7 +594,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
               <Image
                 onClick={() => {
@@ -601,7 +605,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
               />
             </div>
           )}
@@ -614,7 +618,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           </div>
         </div>
 
-        <div className="px-3">
+        <div className="px-3 h-full">
           {props.postInfo.medias[currentPhotoIndex].comments.map((comment) => {
             return (
               <div
@@ -692,7 +696,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image
             alt="Amanuel Ferede"
-            src={"/posts/1.jpg"}
+            src={LoggedInUser.profilepic}
             width={0}
             height={0}
             sizes="100vh"

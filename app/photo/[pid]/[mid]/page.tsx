@@ -8,6 +8,7 @@ export default async function Page(props: {
   const postId = params.pid;
   const mediaId = params.mid;
   const postInfo = await fetchPostInfo(postId);
+  console.log(postInfo);
   return (
     <>
       <NavBar2 />

@@ -118,25 +118,33 @@ export async function fetchMediaReactionsInGroup(
 export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
   const data =
     await sql<MediaCommentsCount>`SELECT COUNT(commentid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
-  return data.rows[0].count;
+  if (data.rows.length > 0) {
+    return data.rows[0].count;
+  } else {
+    return "";
+  }
 }
 
 export async function fetchMediaComments(postId: string, mediaId: string) {
   const data =
-    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
   return data.rows;
 }
 
 export async function getMediaReactionCount(postId: string, mediaId: string) {
   const data =
-    await sql<MediaReactionCount>`SELECT COUNT(commentid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+    await sql<MediaReactionCount>`SELECT COUNT(reactionid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
   return data.rows[0].count;
 }
 
 export async function getFirstMediaReactor(postId: string, mediaId: string) {
   const data =
-    await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
-  return `${data.rows[0].fname} ${data.rows[0].lname}`;
+    await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON users.userid = umediareactions.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  if (data.rows.length > 0) {
+    return `${data.rows[0].fname} ${data.rows[0].lname}`;
+  } else {
+    return "";
+  }
 }
 
 export async function isMediaReactedByLoggedInUser(
@@ -146,10 +154,17 @@ export async function isMediaReactedByLoggedInUser(
 ) {
   const data =
     await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid, umediareactions.reactiontype FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND users.userid = ${userId}`;
-  return {
-    isReacted: data.rows.length > 0 ? true : false,
-    reactionType: data.rows[0].reactiontype,
-  };
+  if (data.rows.length > 0) {
+    return {
+      isReacted: data.rows.length > 0 ? true : false,
+      reactionType: data.rows[0].reactiontype,
+    };
+  } else {
+    return {
+      isReacted: false,
+      reactionType: "",
+    };
+  }
 }
 
 export async function getPostMediaInfo(postId: string) {
@@ -194,9 +209,9 @@ export async function getPostMediaInfo(postId: string) {
 }
 
 export async function fetchPost(postId: string) {
-  const rows =
+  const data =
     await sql<PostDBNew>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid WHERE uposts.postid = ${postId}`;
-  return rows;
+  return data.rows;
 }
 
 export async function fetchPostInfo(postId: string) {
@@ -207,14 +222,14 @@ export async function fetchPostInfo(postId: string) {
     ]);
 
     return {
-      postId: post.rows[0].postid,
-      post: post.rows[0].post,
-      date: post.rows[0].date,
+      postId: post[0].postid,
+      post: post[0].post,
+      date: post[0].date,
       user: {
-        userId: post.rows[0].userid,
-        fname: post.rows[0].fname,
-        lname: post.rows[0].lname,
-        profilePic: post.rows[0].profilepic,
+        userId: post[0].userid,
+        fname: post[0].fname,
+        lname: post[0].lname,
+        profilePic: post[0].profilepic,
       },
       medias: medias,
     };

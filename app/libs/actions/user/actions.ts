@@ -79,27 +79,9 @@ export async function MediaCommentAction(
     const insertComments =
       await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${user.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
-
-    return {
-      loading: false,
-      comment: {
-        comment: insertComments.rows[0].comment,
-        commentid: insertComments.rows[0].commentid,
-        date: insertComments.rows[0].date,
-        user: user,
-      },
-    };
+    revalidatePath(`/${postId}/${mediaId}`);
   } catch (error) {
     console.error(`Error inserting comment ${error}`);
-    return {
-      loading: false,
-      comment: {
-        commentid: "",
-        comment: "",
-        date: "",
-        user: user,
-      },
-    };
   }
 }
 
