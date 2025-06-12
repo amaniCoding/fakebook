@@ -169,7 +169,7 @@ export async function isMediaReactedByLoggedInUser(
 
 export async function getPostMediaInfo(postId: string) {
   const medias =
-    await sql<Media>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId}`;
+    await sql<Media>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
   const mediaInfo = await Promise.all(
     medias.rows.map(async (media) => {
       const [

@@ -501,8 +501,8 @@ export default function PhotoModal(props: PhotoModalProps) {
           </div>
           <IoMdMore className="w-7 h-7" />
         </div>
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-0">
+        <div className="flex items-center space-x justify-between px-2">
+          <div className="flex items-center space-x-0 ">
             <div className="flex space-x-0">
               {props.postInfo.medias[currentPhotoIndex]?.reactionGroup.length >
               0
@@ -521,7 +521,12 @@ export default function PhotoModal(props: PhotoModalProps) {
             <p>{renderReactionState()}</p>
           </div>
 
-          <p>{props.postInfo.medias[currentPhotoIndex].mediaComments}</p>
+          <p>
+            {parseInt(props.postInfo.medias[currentPhotoIndex].mediaComments) >
+            0
+              ? props.postInfo.medias[currentPhotoIndex].mediaComments
+              : ""}
+          </p>
         </div>
         <div className="relative flex mb-4 items-center justify-between border-t border-t-gray-300">
           {renderReactionStatus()}

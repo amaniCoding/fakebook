@@ -144,7 +144,7 @@ export async function UpdateMediaReactionAction(
 ) {
   try {
     const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
+  SELECT umediareactions.reactionid, umediareactions.reactiontype, users.fname, users.lname FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND users.userid = ${userId}`;
     if (isReactedByUser.rows.length === 0) {
       await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
       revalidatePath(`/${postId}/${mediaId}`);
@@ -153,7 +153,7 @@ export async function UpdateMediaReactionAction(
       revalidatePath(`/${postId}/${mediaId}`);
     }
   } catch (error) {
-    console.error(`Error in fetching the database ${error}`);
+    console.error(`Error updating media reaction ${error}`);
   }
 }
 
