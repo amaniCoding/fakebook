@@ -86,6 +86,20 @@ async function seedPost() {
   return insertedPosts;
 }
 
+async function seedMediaComments() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS umediacomments (
+      commentid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      postid UUID NOT NULL,
+      userid UUID NOT NULL,
+      mediaid UUID NOT NULL,
+      comment TEXT NOT NULL,
+      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+}
+
 async function seedStories() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -149,6 +163,20 @@ async function seedReplies() {
   );
 
   return insertedReplies;
+}
+
+async function seedMediaReactions() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS umediareactions (
+      reactionid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      postid UUID NOT NULL,
+      userid UUID NOT NULL,
+      mediaid UUID NOT NULL,
+      reactiontype TEXT NOT NULL,
+      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
 }
 
 async function seedPostReactions() {
@@ -274,10 +302,12 @@ export async function GET() {
     //await seedComments();
     // await seedReplies();
     // await seedCommentReactions();
-    await seedPostReactions();
+    //await seedPostReactions();
     // await seedReplyReactions();
 
     // await seedStoryMedias();
+    await seedMediaComments();
+    await seedMediaReactions();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {

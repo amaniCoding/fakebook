@@ -8,9 +8,16 @@ import {
   Reaction,
   ReactionGroup,
   User,
+  PostDBNew,
+  MediaReactionGroup,
+  FirstMediaReactor,
+  MediaCommentsCount,
+  MediaReactionCount,
+  MediaComments,
 } from "./types";
 
 import { PostReactionInfo } from "../../actions/user/types";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 
 async function getPostMedias(postId: string) {
   const rows =
@@ -99,25 +106,121 @@ export async function fetchAllStories() {
   }
 }
 
-export async function fetchPhotos(postId: string) {
+export async function fetchMediaReactionsInGroup(
+  postId: string,
+  mediaId: string
+) {
+  const data =
+    await sql<MediaReactionGroup>`SELECT COUNT(reactionid) as count, umediareactions.reactiontype FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} GROUP BY umediareactions.reactiontype`;
+  return data.rows;
+}
+
+export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaCommentsCount>`SELECT COUNT(commentid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return data.rows[0].count;
+}
+
+export async function fetchMediaComments(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return data.rows;
+}
+
+export async function getMediaReactionCount(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaReactionCount>`SELECT COUNT(commentid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return data.rows[0].count;
+}
+
+export async function getFirstMediaReactor(postId: string, mediaId: string) {
+  const data =
+    await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return `${data.rows[0].fname} ${data.rows[0].lname}`;
+}
+
+export async function isMediaReactedByLoggedInUser(
+  postId: string,
+  mediaId: string,
+  userId: string
+) {
+  const data =
+    await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid, umediareactions.reactiontype FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND users.userid = ${userId}`;
+  return {
+    isReacted: data.rows.length > 0 ? true : false,
+    reactionType: data.rows[0].reactiontype,
+  };
+}
+
+export async function getPostMediaInfo(postId: string) {
+  const medias =
+    await sql<Media>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId}`;
+  const mediaInfo = await Promise.all(
+    medias.rows.map(async (media) => {
+      const [
+        reactionGroup,
+        commentsCount,
+        reactionCount,
+        firstMediaReactor,
+        loggedInUserReactionInfo,
+        mediaComments,
+      ] = await Promise.all([
+        fetchMediaReactionsInGroup(postId, media.mediaid),
+        fetchMediaCommentsCount(postId, media.mediaid),
+        getMediaReactionCount(postId, media.mediaid),
+        getFirstMediaReactor(postId, media.mediaid),
+        isMediaReactedByLoggedInUser(
+          postId,
+          media.mediaid,
+          LoggedInUser.userid
+        ),
+        fetchMediaComments(postId, media.mediaid),
+      ]);
+
+      return {
+        mediaid: media.mediaid,
+        type: media.type,
+        media: media.media,
+        reactionGroup: reactionGroup,
+        commentsCount: commentsCount,
+        reactionCount: reactionCount,
+        firstReactor: firstMediaReactor,
+        loggedInUserReactionInfo: loggedInUserReactionInfo,
+        comments: mediaComments,
+      };
+    })
+  );
+  return mediaInfo;
+}
+
+export async function fetchPost(postId: string) {
+  const rows =
+    await sql<PostDBNew>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid WHERE uposts.postid = ${postId}`;
+  return rows;
+}
+
+export async function fetchPostInfo(postId: string) {
   try {
-    const data =
-      await sql<Media>`SELECT umedias.mediaid, umedias.type, umedias.media FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
-    return data.rows;
+    const [post, medias] = await Promise.all([
+      fetchPost(postId),
+      getPostMediaInfo(postId),
+    ]);
+
+    return {
+      postId: post.rows[0].postid,
+      post: post.rows[0].post,
+      date: post.rows[0].date,
+      user: {
+        userId: post.rows[0].userid,
+        fname: post.rows[0].fname,
+        lname: post.rows[0].lname,
+        profilePic: post.rows[0].profilepic,
+      },
+      medias: medias,
+    };
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch dev data");
-  }
-}
-
-export async function fetchAPhoto(postId: string, mediaId: string) {
-  try {
-    const data =
-      await sql<Media>`SELECT umedias.mediaid, umedias.type, umedias.media FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId}`;
-    return data.rows;
-  } catch (error) {
-    console.log("Database error", error);
-    throw new Error("Faild to fetch a photo");
   }
 }
 

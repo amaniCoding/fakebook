@@ -296,7 +296,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
       )}
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-0">
           <div className="flex space-x-0">
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
@@ -311,7 +311,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
-            <p>{feed.comments > 0 ? feed.comments : null}</p>
+            <p>{parseInt(feed.comments) > 0 ? feed.comments : null}</p>
             <FaComment className="w-5 h-5 fill-gray-500" />
           </div>
 

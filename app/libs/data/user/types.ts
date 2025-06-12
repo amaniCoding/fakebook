@@ -20,9 +20,48 @@ export type PostDB = {
   profilepic: string;
 };
 
+export type PostDBNew = {
+  postid: string;
+  post: string;
+  date: string;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+};
+
+export type MediaReactionGroup = {
+  reactiontype: string;
+  count: string;
+};
+
+export type MediaCommentsCount = {
+  count: string;
+};
+
+export type MediaReactionCount = {
+  count: string;
+};
+
+export type MediaComments = {
+  commentid: string;
+  comment: string;
+  date: string;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+};
+
+export type FirstMediaReactor = {
+  userid: string;
+  fname: string;
+  lname: string;
+  reactiontype: string;
+};
 export type ReactionGroup = {
   reactiontype: string;
-  count: number;
+  count: string;
 };
 
 export type Post = {
@@ -45,7 +84,7 @@ export type Posts = {
   date: string;
   medias: Media[];
   user: User;
-  comments: number;
+  comments: string;
   reactionInfo: ReactionInfo;
 };
 
@@ -76,7 +115,7 @@ export type CurrentStoryPhotos = {
 };
 
 export type Comment = {
-  comments: number;
+  comments: string;
 };
 
 export type Like = {

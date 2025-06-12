@@ -1,47 +1,267 @@
 "use client";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import Image from "next/image";
-import { PiShareFat, PiThumbsUp } from "react-icons/pi";
+import { PiShareFat } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import {
   commentAction,
   fetchCommentsAction,
+  LikeAction,
+  UpdateReaction,
 } from "@/app/libs/actions/user/actions";
-import {
-  getCommentsStateAction,
-  insertCommentStateAction,
-} from "@/app/libs/actions/user/types";
+import { getCommentsStateAction } from "@/app/libs/actions/user/types";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { CommentBoxProps } from "./types";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
+  const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
+  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
     comments: [],
   });
 
   const [comment, setComment] = useState<string>("");
-  const commentBox = useRef<HTMLDivElement>(null);
 
-  const [insertCommentState, setInsertCommentState] =
-    useState<insertCommentStateAction>({
-      loading: false,
-      comment: {
-        comment: "",
-        commentid: "",
-        date: "",
-        user: {
-          fname: "",
-          lname: "",
-          profilepic: "",
-          userid: "",
-        },
-      },
-    });
+  const handelMouseOverLike = () => {
+    const timeoutid = setTimeout(() => {
+      settoShowReactionBox(true);
+    }, 1000);
+    setTimeOutId(timeoutid);
+  };
+
+  const handelUpdateLike = async (
+    postId: string,
+    userId: string,
+    reactionType: string
+  ) => {
+    try {
+      settoShowReactionBox(false);
+      await UpdateReaction(postId, userId, reactionType);
+    } catch (error) {
+      console.error(`error while updating reactions ${error}`);
+      settoShowReactionBox(false);
+    }
+  };
+
+  const handelMouseOutLike = () => {
+    settoShowReactionBox(false);
+  };
+  const handelReaction = async (
+    postId: string,
+    userId: string,
+    reactionType: string
+  ) => {
+    try {
+      clearTimeout(timeOutId);
+      settoShowReactionBox(false);
+      await LikeAction(postId, userId, reactionType);
+    } catch (error) {
+      clearTimeout(timeOutId);
+      settoShowReactionBox(false);
+      console.error(`error ${error}`);
+    }
+  };
+
+  const renderReactionStatus = () => {
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "like"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "like");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/like.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-blue-600 font-semibold">Like</span>
+        </div>
+      );
+    }
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "love"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "love");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/love.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-pink-500 font-semibold">Love</span>
+        </div>
+      );
+    }
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "lagh"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "lagh");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/haha.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Haha</span>
+        </div>
+      );
+    }
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "care"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "care");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/care.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-orange-500 font-semibold">Care</span>
+        </div>
+      );
+    }
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "angry"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "angry");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/angry.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Angry</span>
+        </div>
+      );
+    }
+
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "sad"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "sad");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/sad.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Sad</span>
+        </div>
+      );
+    }
+    if (
+      post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === "wow"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "wow");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/wow.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-orange-500 font-semibold">Wow</span>
+        </div>
+      );
+    }
+    if (
+      !post.reactionInfo.isReacted &&
+      post.reactionInfo.reactionType === undefined
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(post.postId, LoggedInUser.userid, "like");
+          }}
+          onMouseEnter={handelMouseOverLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/likew.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span>Like</span>
+        </div>
+      );
+    }
+  };
 
   const onChangeComment = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
@@ -53,55 +273,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   ) => {
     if (e.key === "Enter") {
       try {
-        setInsertCommentState({
-          loading: true,
-          comment: {
-            comment: "",
-            commentid: "",
-            date: "",
-            user: {
-              fname: "",
-              lname: "",
-              profilepic: "",
-              userid: "",
-            },
-          },
-        });
-        const insertedComment = await commentAction(
-          LoggedInUser,
-          post.postId,
-          comment
-        );
-        setComment(" ");
-        setInsertCommentState({
-          loading: false,
-          comment: insertedComment.comment,
-        });
-        setCommentsData({
-          ...commentsData,
-          loading: false,
-          comments: [insertedComment.comment, ...commentsData.comments],
-        });
-        commentBox.current?.scrollTo({
-          behavior: "smooth",
-          top: 400,
-        });
+        await commentAction(LoggedInUser, post.postId, comment);
       } catch (error) {
         console.error(`error ${error}`);
-        setInsertCommentState({
-          loading: false,
-          comment: {
-            comment: "",
-            commentid: "",
-            date: "",
-            user: {
-              fname: "",
-              lname: "",
-              profilepic: "",
-              userid: "",
-            },
-          },
-        });
       }
     }
   };
@@ -141,10 +315,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             }}
           />
         </div>
-        <div
-          className="overflow-y-auto socrollabar h-[430px] relative"
-          ref={commentBox}
-        >
+        <div className="overflow-y-auto socrollabar h-[430px] relative">
           <div className="flex justify-between">
             <div className="flex space-x-3 p-2">
               <Image
@@ -441,14 +612,98 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             </div>
           )}
 
-          <div className="flex items-center justify-between px-2 mt-2 py-2 border-t border-b border-gray-300">
-            <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
-              <PiThumbsUp className="w-6 h-6" />
-              <span>Like</span>
-            </div>
+          <div className="flex items-center justify-between px-2 mt-2 py-2 border-t border-b border-gray-300 relative">
+            {renderReactionStatus()}
+            {toShowReactionBox && (
+              <div
+                className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
+                onMouseLeave={handelMouseOutLike}
+              >
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "like");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/like.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "love");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/love.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "care");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/care.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "lagh");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/haha.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "wow");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/wow.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "sad");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/sad.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+                <Image
+                  onClick={() => {
+                    handelUpdateLike(post.postId, LoggedInUser.userid, "angry");
+                  }}
+                  alt="Amanuel Ferede"
+                  src={"/reactions/angry.png"}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
+                />
+              </div>
+            )}
             <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
               <FaRegComment className="w-6 h-6" />
-              <span>Comment</span>
+              <span>
+                {post.comments}{" "}
+                {`comment ${parseInt(post.comments) > 1 ? "s" : ""}`}
+              </span>
             </div>
 
             <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
@@ -458,7 +713,6 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           </div>
 
           <div className="px-6 py-2 ">
-            {insertCommentState.loading && <CommentsSkeleton />}
             {commentsData.loading ? (
               <CommentsSkeleton />
             ) : (
@@ -483,7 +737,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                         </Link>
                         <div
                           className={
-                            "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
+                            "absolute group-hover:block hidden w-96 z-[500]  -left-32 rounded-lg  p-4  bg-white shadow-lg"
                           }
                         >
                           <div className="flex space-x-3">
@@ -546,7 +800,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image
             alt="Amanuel Ferede"
-            src={"/feeds/1.jpg"}
+            src={"/posts/1.jpg"}
             width={0}
             height={0}
             sizes="100vh"

@@ -13,6 +13,33 @@ import {
   User,
 } from "../../data/user/types";
 
+export async function fetchPhotoComments(mediaId: string, postId: string) {
+  try {
+    const mediaComments =
+      await sql<Comments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE mediaid = ${mediaId} AND postid = ${postId}`;
+    return {
+      comments: mediaComments.rows.map((comment) => {
+        return {
+          commentid: comment.commentid,
+          comment: comment.comment,
+          date: comment.date,
+          user: {
+            fname: comment.fname,
+            lname: comment.lname,
+            userid: comment.userid,
+            profilepic: comment.profilepic,
+          },
+        };
+      }),
+    };
+  } catch (error) {
+    console.error(`Error while fetch photo comments ${error}`);
+    return {
+      comments: [],
+    };
+  }
+}
+
 export async function fetchCommentsAction(postId: string) {
   try {
     const comments =
@@ -42,6 +69,40 @@ export async function fetchCommentsAction(postId: string) {
   }
 }
 
+export async function MediaCommentAction(
+  user: User,
+  postId: string,
+  mediaId: string,
+  comment: string
+) {
+  try {
+    const insertComments =
+      await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${user.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+`;
+
+    return {
+      loading: false,
+      comment: {
+        comment: insertComments.rows[0].comment,
+        commentid: insertComments.rows[0].commentid,
+        date: insertComments.rows[0].date,
+        user: user,
+      },
+    };
+  } catch (error) {
+    console.error(`Error inserting comment ${error}`);
+    return {
+      loading: false,
+      comment: {
+        commentid: "",
+        comment: "",
+        date: "",
+        user: user,
+      },
+    };
+  }
+}
+
 export async function commentAction(
   user: User,
   postId: string,
@@ -51,7 +112,7 @@ export async function commentAction(
     const insertComments =
       await sql<Comment>`INSERT INTO ucomments (postid, userid, comment) VALUES (${postId}, ${user.userid}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
-
+    revalidatePath("/");
     return {
       loading: false,
       comment: {
@@ -93,6 +154,27 @@ async function reactionInfo(postId: string, userId: string) {
   return rows;
 }
 
+export async function UpdateMediaReactionAction(
+  postId: string,
+  userId: string,
+  reactionType: string,
+  mediaId: string
+) {
+  try {
+    const isReactedByUser = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
+    if (isReactedByUser.rows.length === 0) {
+      await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+      revalidatePath(`/${postId}/${mediaId}`);
+    } else {
+      await sql`UPDATE ureactions SET umediareactions = ${reactionType} WHERE postid = ${postId} AND userid = ${userId} AND mediaid = ${mediaId}`;
+      revalidatePath(`/${postId}/${mediaId}`);
+    }
+  } catch (error) {
+    console.error(`Error in fetching the database ${error}`);
+  }
+}
+
 export async function UpdateReaction(
   postId: string,
   userId: string,
@@ -107,6 +189,27 @@ export async function UpdateReaction(
     } else {
       await sql`UPDATE ureactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId}`;
       revalidatePath("/");
+    }
+  } catch (error) {
+    console.error(`Error in fetching the database ${error}`);
+  }
+}
+
+export async function likeMediaAction(
+  postId: string,
+  userId: string,
+  mediaId: string,
+  reactionType: string
+) {
+  try {
+    const isReactedByUser = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
+    if (isReactedByUser.rows.length === 0) {
+      await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+      revalidatePath(`/${postId}/${mediaId}`);
+    } else {
+      await sql`DELETE FROM ureactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
+      revalidatePath(`/${postId}/${mediaId}`);
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
