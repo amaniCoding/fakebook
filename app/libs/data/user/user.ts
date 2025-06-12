@@ -182,7 +182,7 @@ export async function getPostMediaInfo(postId: string) {
         type: media.type,
         media: media.media,
         reactionGroup: reactionGroup,
-        commentsCount: commentsCount,
+        mediaComments: commentsCount,
         reactionCount: reactionCount,
         firstReactor: firstMediaReactor,
         loggedInUserReactionInfo: loggedInUserReactionInfo,
