@@ -55,7 +55,7 @@ const initialState: StoryState = {
       isReacted: false,
       reactionGroup: [
         {
-          count: 0,
+          count: "",
           reactiontype: "",
         },
       ],
