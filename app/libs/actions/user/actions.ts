@@ -139,8 +139,8 @@ async function reactionInfo(postId: string, userId: string) {
 export async function UpdateMediaReactionAction(
   postId: string,
   userId: string,
-  reactionType: string,
-  mediaId: string
+  mediaId: string,
+  reactionType: string
 ) {
   try {
     const isReactedByUser = await sql<PostReactionInfo>`
@@ -149,7 +149,7 @@ export async function UpdateMediaReactionAction(
       await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
       revalidatePath(`/${postId}/${mediaId}`);
     } else {
-      await sql`UPDATE ureactions SET umediareactions = ${reactionType} WHERE postid = ${postId} AND userid = ${userId} AND mediaid = ${mediaId}`;
+      await sql`UPDATE umediareactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId} AND mediaid = ${mediaId}`;
       revalidatePath(`/${postId}/${mediaId}`);
     }
   } catch (error) {
@@ -190,7 +190,7 @@ export async function likeMediaAction(
       await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
       revalidatePath(`/${postId}/${mediaId}`);
     } else {
-      await sql`DELETE FROM ureactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
+      await sql`DELETE FROM umediareactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
       revalidatePath(`/${postId}/${mediaId}`);
     }
   } catch (error) {

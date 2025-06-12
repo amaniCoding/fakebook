@@ -505,7 +505,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           <div className="flex items-center space-x-0">
             <div className="flex space-x-0">
               {props.postInfo.medias[currentPhotoIndex].reactionGroup.length > 0
-                ? props.postInfo.medias[currentPhotoIndex].reactionGroup.map(
+                ? props.postInfo.medias[currentPhotoIndex]?.reactionGroup.map(
                     (gr, index) => {
                       return (
                         <ReactionIcons
