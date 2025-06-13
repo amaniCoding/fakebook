@@ -23,7 +23,17 @@ import {
   UpdateMediaReactionAction,
 } from "@/app/libs/actions/user/actions";
 import ReactionIcons from "../../feed/reaction-icons/reaction-icons";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import {
+  setPostInfo,
+  updatePostInfo,
+} from "@/app/store/slices/user/post/postSlice";
 export default function PhotoModal(props: PhotoModalProps) {
+  const dispatch = useAppDispatch();
+  const postInfo = useAppSelector((state) => state.userPost.postInfo);
+  useEffect(() => {
+    dispatch(setPostInfo(props.postInfo));
+  }, [dispatch, props.postInfo]);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
@@ -47,7 +57,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         },
       },
     });
-  const currentPhotoIndexFromProp = props.postInfo.medias.findIndex((media) => {
+  const currentPhotoIndexFromProp = postInfo.medias.findIndex((media) => {
     return media.mediaid === props.mediaId;
   });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
@@ -103,7 +113,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         await MediaCommentAction(
           LoggedInUser,
           props.postId,
-          props.postInfo.medias[currentPhotoIndex].mediaid,
+          postInfo.medias[currentPhotoIndex].mediaid,
           comment
         );
         setComment(" ");
@@ -114,7 +124,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   const showNextPhoto = () => {
-    if (currentPhotoIndex > props.postInfo.medias.length - 1) {
+    if (currentPhotoIndex > postInfo.medias.length - 1) {
       setCurrentPhotoIndex(0);
     } else {
       const newIndex = currentPhotoIndex + 1;
@@ -127,7 +137,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
   const showPreviousPhoto = () => {
     if (currentPhotoIndex < 0) {
-      setCurrentPhotoIndex(props.postInfo.medias.length - 1);
+      setCurrentPhotoIndex(postInfo.medias.length - 1);
     } else {
       const newIndex = currentPhotoIndex - 1;
       setCurrentPhotoIndex(newIndex);
@@ -135,33 +145,44 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   const showExactPhoto = () => {
-    if (currentPhotoIndex > props.postInfo.medias.length - 1) {
-      return props.postInfo.medias[0].media;
+    if (currentPhotoIndex > postInfo.medias.length - 1) {
+      return postInfo.medias[0].media;
     } else if (currentPhotoIndex < 0) {
-      return props.postInfo.medias[props.postInfo.medias.length - 1].media;
+      return postInfo.medias[postInfo.medias.length - 1].media;
     } else {
-      return props.postInfo.medias[currentPhotoIndex].media;
+      return postInfo.medias[currentPhotoIndex].media;
     }
   };
 
   const renderReactionState = () => {
     if (
-      parseInt(props.postInfo.medias[currentPhotoIndex].reactionCount) === 1
+      parseInt(
+        postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
+      ) === 1
     ) {
-      return <p>{props.postInfo.medias[currentPhotoIndex].firstReactor}</p>;
+      return (
+        <p>{postInfo.medias[currentPhotoIndex].reactionInfo.firstReactor}</p>
+      );
     }
 
     if (
-      parseInt(props.postInfo.medias[currentPhotoIndex].reactionCount) > 1 &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount) >
+        1 &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted
     ) {
       return (
         <p>
           You and{" "}
-          {parseInt(props.postInfo.medias[currentPhotoIndex].reactionCount)}{" "}
+          {parseInt(
+            postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
+          ) - 1}{" "}
           Other
-          {parseInt(props.postInfo.medias[currentPhotoIndex].reactionCount) > 2
+          {parseInt(
+            postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
+          ) -
+            1 >=
+          1
             ? "s"
             : ""}
         </p>
@@ -180,8 +201,15 @@ export default function PhotoModal(props: PhotoModalProps) {
       const updatedPostMediaReactions = await likeMediaAction(
         postId,
         userId,
-        props.postInfo.medias[currentPhotoIndex].mediaid,
+        postInfo.medias[currentPhotoIndex].mediaid,
         reactionType
+      );
+      dispatch(
+        updatePostInfo({
+          mediaId: props.mediaId,
+          postId: props.postId,
+          reactionInfo: updatedPostMediaReactions,
+        })
       );
     } catch (error) {
       clearTimeout(timeOutId);
@@ -191,9 +219,9 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
   const renderReactionStatus = () => {
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "like"
     ) {
       return (
@@ -218,9 +246,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "love"
     ) {
       return (
@@ -245,9 +273,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "lagh"
     ) {
       return (
@@ -272,9 +300,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "care"
     ) {
       return (
@@ -299,9 +327,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "angry"
     ) {
       return (
@@ -327,9 +355,9 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "sad"
     ) {
       return (
@@ -354,9 +382,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === "wow"
     ) {
       return (
@@ -381,9 +409,9 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      !props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      !postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .isReacted &&
-      props.postInfo.medias[currentPhotoIndex].loggedInUserReactionInfo
+      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
         .reactionType === ""
     ) {
       return (
@@ -419,7 +447,7 @@ export default function PhotoModal(props: PhotoModalProps) {
       await UpdateMediaReactionAction(
         postId,
         userId,
-        props.postInfo.medias[currentPhotoIndex].mediaid,
+        postInfo.medias[currentPhotoIndex].mediaid,
         reactionType
       );
     } catch (error) {
@@ -452,14 +480,14 @@ export default function PhotoModal(props: PhotoModalProps) {
               />
             </Link>
           </div>
-          {props.postInfo.medias.length > 1 && (
+          {postInfo.medias.length > 1 && (
             <GrPrevious
               onClick={showPreviousPhoto}
               className="absolute cursor-pointer top-1/2 p-3 translate-y-1/2 left-8 w-12 h-12 rounded-full bg-white hover:bg-white/70"
             />
           )}
 
-          {props.postInfo.medias.length > 1 && (
+          {postInfo.medias.length > 1 && (
             <GrNext
               onClick={showNextPhoto}
               className="absolute cursor-pointer top-1/2 p-3 translate-y-1/2 right-8 w-12 h-12 rounded-full bg-white hover:bg-white/70"
@@ -504,27 +532,26 @@ export default function PhotoModal(props: PhotoModalProps) {
         <div className="flex items-center space-x justify-between px-2">
           <div className="flex items-center space-x-0 ">
             <div className="flex space-x-0">
-              {props.postInfo.medias[currentPhotoIndex]?.reactionGroup.length >
-              0
-                ? props.postInfo.medias[currentPhotoIndex]?.reactionGroup.map(
-                    (gr, index) => {
-                      return (
-                        <ReactionIcons
-                          key={index}
-                          reactiontype={gr.reactiontype}
-                        />
-                      );
-                    }
-                  )
+              {postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup
+                .length > 0
+                ? postInfo.medias[
+                    currentPhotoIndex
+                  ]?.reactionInfo.reactionGroup.map((gr, index) => {
+                    return (
+                      <ReactionIcons
+                        key={index}
+                        reactiontype={gr.reactiontype}
+                      />
+                    );
+                  })
                 : null}
             </div>
             <p>{renderReactionState()}</p>
           </div>
 
           <p>
-            {parseInt(props.postInfo.medias[currentPhotoIndex].mediaComments) >
-            0
-              ? props.postInfo.medias[currentPhotoIndex].mediaComments
+            {parseInt(postInfo.medias[currentPhotoIndex].commentInfo.count) > 0
+              ? postInfo.medias[currentPhotoIndex].commentInfo.count
               : ""}
           </p>
         </div>
@@ -625,79 +652,81 @@ export default function PhotoModal(props: PhotoModalProps) {
         </div>
 
         <div className="px-3 h-full">
-          {props.postInfo.medias[currentPhotoIndex].comments.map((comment) => {
-            return (
-              <div
-                className="flex flex-row mb-3 space-x-3 pb-2"
-                key={comment.commentid}
-              >
-                <div className="relative group flex-none">
-                  <Link href={"/profile"}>
-                    <Image
-                      unoptimized
-                      alt="Amanuel Ferede"
-                      src={comment.profilepic}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                    />
-                  </Link>
-                  <div
-                    className={
-                      "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
-                    }
-                  >
-                    <div className="flex space-x-3">
+          {postInfo.medias[currentPhotoIndex].commentInfo.comments.map(
+            (comment) => {
+              return (
+                <div
+                  className="flex flex-row mb-3 space-x-3 pb-2"
+                  key={comment.commentid}
+                >
+                  <div className="relative group flex-none">
+                    <Link href={"/profile"}>
                       <Image
                         unoptimized
-                        className="w-20 h-20 rounded-full  object-cover"
                         alt="Amanuel Ferede"
                         src={comment.profilepic}
                         width={0}
                         height={0}
                         sizes="100vh"
+                        className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
                       />
+                    </Link>
+                    <div
+                      className={
+                        "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
+                      }
+                    >
+                      <div className="flex space-x-3">
+                        <Image
+                          unoptimized
+                          className="w-20 h-20 rounded-full  object-cover"
+                          alt="Amanuel Ferede"
+                          src={comment.profilepic}
+                          width={0}
+                          height={0}
+                          sizes="100vh"
+                        />
 
-                      <div className=" flex-col space-y-2 flex-1 mt-3">
-                        <p className="text-lg font-bold">Amanuel Ferede</p>
-                        <p className="">Lives in AddisAbaba Ethiopia </p>
-                        <p>Studid Civil Engineering at BahirDar University</p>
+                        <div className=" flex-col space-y-2 flex-1 mt-3">
+                          <p className="text-lg font-bold">Amanuel Ferede</p>
+                          <p className="">Lives in AddisAbaba Ethiopia </p>
+                          <p>Studid Civil Engineering at BahirDar University</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2 mt-3">
+                        <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                          <FaUserFriends className="w-4 h-4" />
+                          <span>Friends</span>
+                        </button>
+                        <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                          <FaFacebookMessenger className="fill-white w-4 h-4" />
+                          <span>Message</span>
+                        </button>
+                        <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                          <IoIosMore className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
+                  </div>
+                  <div className="">
+                    <div className="p-3 bg-gray-100 rounded-xl ">
+                      <p className="font-semibold">
+                        {comment.fname} {comment.lname}
+                      </p>
+                      <p>{comment.comment}</p>
+                    </div>
 
-                    <div className="flex items-center space-x-2 mt-3">
-                      <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                        <FaUserFriends className="w-4 h-4" />
-                        <span>Friends</span>
-                      </button>
-                      <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                        <FaFacebookMessenger className="fill-white w-4 h-4" />
-                        <span>Message</span>
-                      </button>
-                      <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                        <IoIosMore className="w-4 h-4" />
-                      </button>
+                    <div className="flex space-x-4 pl-3">
+                      <span className="text-sm"></span>
+                      <span className="text-sm">Like</span>
+                      <span className="text-sm">Reply</span>
                     </div>
                   </div>
                 </div>
-                <div className="">
-                  <div className="p-3 bg-gray-100 rounded-xl ">
-                    <p className="font-semibold">
-                      {comment.fname} {comment.lname}
-                    </p>
-                    <p>{comment.comment}</p>
-                  </div>
-
-                  <div className="flex space-x-4 pl-3">
-                    <span className="text-sm"></span>
-                    <span className="text-sm">Like</span>
-                    <span className="text-sm">Reply</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image

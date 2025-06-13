@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaComment } from "react-icons/fa6";
 import CommentBox from "../comment-box/comment-box";
 import { FaRegComment } from "react-icons/fa";
@@ -316,10 +316,6 @@ export default function CommentItem({ feed }: CommentItemProps) {
       );
     }
   };
-
-  useEffect(() => {
-    console.log("updated feed", feed);
-  }, [feed]);
 
   return (
     <>

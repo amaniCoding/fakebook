@@ -309,7 +309,7 @@ export async function UpdateMediaReactionAction(
 ) {
   try {
     if (
-      (await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
+      !(await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
         .isReacted
     ) {
       reactPostMedia(postId, userId, mediaId, reactionType);
@@ -387,7 +387,7 @@ export async function likeMediaAction(
 ) {
   try {
     if (
-      (await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
+      !(await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
         .isReacted
     ) {
       await reactPostMedia(postId, userId, mediaId, reactionType);

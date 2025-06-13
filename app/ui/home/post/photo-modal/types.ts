@@ -1,4 +1,13 @@
-import { MediaReactionGroup } from "@/app/libs/data/user/types";
+export type MediaReactionGroup = {
+  reactiontype: string;
+  count: string;
+};
+
+type FirstMediaReactor = {
+  reactionId: string;
+  reactionType: string;
+  reactor: string;
+};
 export type MediaComments = {
   commentid: string;
   comment: string;
@@ -22,15 +31,17 @@ type postInfo = {
     mediaid: string;
     type: string;
     media: string;
-    reactionGroup: MediaReactionGroup[];
-    mediaComments: string;
-    reactionCount: string;
-    firstReactor: string;
-    loggedInUserReactionInfo: {
+    reactionInfo: {
       isReacted: boolean;
       reactionType: string;
+      firstReactorInfo: FirstMediaReactor;
+      reactions: string;
+      reactionGroup: MediaReactionGroup[];
     };
-    comments: MediaComments[];
+    commentInfo: {
+      count: string;
+      comments: MediaComments[];
+    };
   }[];
 };
 

@@ -6,6 +6,7 @@ import {
   postOption,
   SubmittedPostType,
   UpdateFeedActionPayload,
+  UpdatePostInfoActionPayload,
 } from "./types";
 
 // Define a type for the slice state
@@ -126,12 +127,34 @@ export const userPostSlice = createSlice({
     setFeeds: (state, action: PayloadAction<Posts[]>) => {
       state.feeds = action.payload;
     },
+    setPostInfo: (state, action: PayloadAction<postInfo>) => {
+      state.postInfo = action.payload;
+    },
     updateFeeds: (state, action: PayloadAction<UpdateFeedActionPayload>) => {
       const feed = state.feeds.find((_feed) => {
         return _feed.postId === action.payload.postId;
       });
       if (feed && action.payload.reactionInfo) {
         feed.reactionInfo = action.payload.reactionInfo;
+      }
+    },
+
+    updatePostInfo: (
+      state,
+      action: PayloadAction<UpdatePostInfoActionPayload>
+    ) => {
+      if (action.payload.reactionInfo) {
+        const newMedias = state.postInfo.medias.map((media) => {
+          if (media.mediaid === action.payload.mediaId) {
+            return {
+              ...media,
+              reactionInfo: action.payload.reactionInfo,
+            };
+          } else {
+            return media;
+          }
+        });
+        state.postInfo.medias = newMedias;
       }
     },
 
@@ -152,7 +175,9 @@ export const {
   setMarginTop,
   setPostBoxHeight,
   setFeeds,
+  setPostInfo,
   updateFeeds,
+  updatePostInfo,
   setLikeStateAction,
 } = userPostSlice.actions;
 

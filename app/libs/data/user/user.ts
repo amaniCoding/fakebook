@@ -181,10 +181,18 @@ export async function getMediaReactionCount(postId: string, mediaId: string) {
 export async function getFirstMediaReactor(postId: string, mediaId: string) {
   const data =
     await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON users.userid = umediareactions.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
-  if (data.rows.length > 0) {
-    return `${data.rows[0].fname} ${data.rows[0].lname}`;
+  if (data.rows.length === 1) {
+    return {
+      reactionId: data.rows[0].reactionid,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
   } else {
-    return "";
+    return {
+      reactionId: "",
+      reactionType: "",
+      reactor: "",
+    };
   }
 }
 
@@ -237,12 +245,17 @@ export async function getPostMediaInfo(postId: string) {
         mediaid: media.mediaid,
         type: media.type,
         media: media.media,
-        reactionGroup: reactionGroup,
-        mediaComments: commentsCount,
-        reactionCount: reactionCount,
-        firstReactor: firstMediaReactor,
-        loggedInUserReactionInfo: loggedInUserReactionInfo,
-        comments: mediaComments,
+        reactionInfo: {
+          isReacted: loggedInUserReactionInfo.isReacted,
+          reactionType: loggedInUserReactionInfo.reactionType,
+          firstReactorInfo: firstMediaReactor,
+          reactions: reactionCount,
+          reactionGroup: reactionGroup,
+        },
+        commentInfo: {
+          count: commentsCount,
+          comments: mediaComments,
+        },
       };
     })
   );

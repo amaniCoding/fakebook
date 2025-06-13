@@ -1,8 +1,10 @@
-import {
-  MediaComments,
-  MediaReactionGroup,
-  ReactionInfo,
-} from "@/app/libs/data/user/types";
+import { MediaComments, ReactionInfo } from "@/app/libs/data/user/types";
+
+type FirstMediaReactor = {
+  reactionId: string;
+  reactionType: string;
+  reactor: string;
+};
 export type postInfo = {
   postId: string;
   post: string;
@@ -17,20 +19,46 @@ export type postInfo = {
     mediaid: string;
     type: string;
     media: string;
-    reactionGroup: MediaReactionGroup[];
-    mediaComments: string;
-    reactionCount: string;
-    firstReactor: string;
-    loggedInUserReactionInfo: {
+    reactionInfo: {
       isReacted: boolean;
       reactionType: string;
+      firstReactorInfo: FirstMediaReactor;
+      reactions: string;
+      reactionGroup: MediaReactionGroup[];
     };
-    comments: MediaComments[];
+    commentInfo: {
+      count: string;
+      comments: MediaComments[];
+    };
   }[];
+};
+
+export type MediaReactionGroup = {
+  reactiontype: string;
+  count: string;
+};
+
+export type FirstReactorInfo = {
+  reactionId: string;
+  reactionType: string;
+  reactor: string;
+};
+
+export type ReactionPostInfo = {
+  isReacted: boolean;
+  reactionType: string;
+  firstReactorInfo: FirstMediaReactor;
+  reactions: string;
+  reactionGroup: MediaReactionGroup[];
 };
 export type UpdateFeedActionPayload = {
   postId: string;
   reactionInfo: ReactionInfo | undefined;
+};
+export type UpdatePostInfoActionPayload = {
+  postId: string;
+  reactionInfo: ReactionPostInfo;
+  mediaId: string;
 };
 
 export type LikeActionState = {
