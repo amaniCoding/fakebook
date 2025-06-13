@@ -54,7 +54,7 @@ export type MediaComments = {
 };
 
 export type FirstMediaReactor = {
-  userid: string;
+  reactionid: string;
   fname: string;
   lname: string;
   reactiontype: string;

@@ -7,6 +7,11 @@ import { put } from "@vercel/blob";
 
 import { AddPostState, Comment, Comments, PostReactionInfo } from "./types";
 import {
+  FirstMediaReactor,
+  MediaComments,
+  MediaCommentsCount,
+  MediaReactionCount,
+  MediaReactionGroup,
   Reaction,
   ReactionGroup,
   StoryMedia,
@@ -134,6 +139,55 @@ async function totalPostReactions(postId: string) {
   }
 }
 
+export async function fetchMediaReactionsInGroup(
+  postId: string,
+  mediaId: string
+) {
+  const data =
+    await sql<MediaReactionGroup>`SELECT COUNT(reactionid) as count, umediareactions.reactiontype FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} GROUP BY umediareactions.reactiontype`;
+  return data.rows;
+}
+
+export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaCommentsCount>`SELECT COUNT(commentid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  if (data.rows.length > 0) {
+    return data.rows[0].count;
+  } else {
+    return "";
+  }
+}
+
+export async function fetchMediaComments(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return data.rows;
+}
+
+export async function getMediaReactionCount(postId: string, mediaId: string) {
+  const data =
+    await sql<MediaReactionCount>`SELECT COUNT(reactionid) as count FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return data.rows[0].count;
+}
+
+export async function getFirstMediaReactor(postId: string, mediaId: string) {
+  const data =
+    await sql<FirstMediaReactor>`SELECT users.fname, users.lname, users.userid FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON users.userid = umediareactions.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  if (data.rows.length === 1) {
+    return {
+      reactionId: data.rows[0].reactionid,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      reactionId: "",
+      reactionType: "",
+      reactor: "",
+    };
+  }
+}
+
 async function firstReactorInfo(postId: string) {
   const data =
     await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
@@ -234,15 +288,34 @@ export async function UpdateMediaReactionAction(
   reactionType: string
 ) {
   try {
-    const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT umediareactions.reactionid, umediareactions.reactiontype, users.fname, users.lname FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND users.userid = ${userId}`;
-    if (isReactedByUser.rows.length === 0) {
-      await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
-      revalidatePath(`/${postId}/${mediaId}`);
+    if (
+      (await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
+        .isReacted
+    ) {
+      reactPostMedia(postId, userId, mediaId, reactionType);
     } else {
-      await sql`UPDATE umediareactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId} AND mediaid = ${mediaId}`;
-      revalidatePath(`/${postId}/${mediaId}`);
+      unReactPostMedia(postId, userId, mediaId);
     }
+
+    const [
+      _isPostMediaReactedByLoggedInUser,
+      _totalMediaPostReactions,
+      _groupMediaPostReactions,
+      _firstMeidaReactorInfo,
+    ] = await Promise.all([
+      isPostMediaIsReactedByLoggedUser(postId, userId, mediaId),
+      getMediaReactionCount(postId, mediaId),
+      fetchMediaReactionsInGroup(postId, mediaId),
+      getFirstMediaReactor(postId, mediaId),
+    ]);
+
+    return {
+      isReacted: _isPostMediaReactedByLoggedInUser.isReacted,
+      reactionType: _isPostMediaReactedByLoggedInUser.reactionType,
+      firstReactorInfo: _firstMeidaReactorInfo,
+      reactions: _totalMediaPostReactions,
+      reactionGroup: _groupMediaPostReactions,
+    };
   } catch (error) {
     console.error(`Error updating media reaction ${error}`);
   }
@@ -299,6 +372,26 @@ export async function likeMediaAction(
     } else {
       await unReactPostMedia(postId, userId, mediaId);
     }
+
+    const [
+      _isPostMediaReactedByLoggedInUser,
+      _totalMediaPostReactions,
+      _groupMediaPostReactions,
+      _firstMeidaReactorInfo,
+    ] = await Promise.all([
+      isPostMediaIsReactedByLoggedUser(postId, userId, mediaId),
+      getMediaReactionCount(postId, mediaId),
+      fetchMediaReactionsInGroup(postId, mediaId),
+      getFirstMediaReactor(postId, mediaId),
+    ]);
+
+    return {
+      isReacted: _isPostMediaReactedByLoggedInUser.isReacted,
+      reactionType: _isPostMediaReactedByLoggedInUser.reactionType,
+      firstReactorInfo: _firstMeidaReactorInfo,
+      reactions: _totalMediaPostReactions,
+      reactionGroup: _groupMediaPostReactions,
+    };
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
   }
