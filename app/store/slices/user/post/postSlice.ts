@@ -2,6 +2,7 @@ import { Posts } from "@/app/libs/data/user/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   LikeActionState,
+  postInfo,
   postOption,
   SubmittedPostType,
   UpdateFeedActionPayload,
@@ -21,6 +22,7 @@ interface StoryState {
 
   feeds: Posts[];
   likeActionState: LikeActionState;
+  postInfo: postInfo;
 }
 
 // Define the initial state using that type
@@ -67,6 +69,18 @@ const initialState: StoryState = {
         reactor: "",
       },
     },
+  },
+  postInfo: {
+    postId: "",
+    post: "",
+    date: "",
+    user: {
+      userId: "",
+      fname: "",
+      lname: "",
+      profilePic: "",
+    },
+    medias: [],
   },
 };
 

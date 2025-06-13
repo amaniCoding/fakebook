@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import FeedItem from "../feed-item/feed-item";
 import { FeedsClientProps } from "./types";
 import { setFeeds } from "@/app/store/slices/user/post/postSlice";
-import { useAppSelector } from "@/app/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 
 export default function FeedsClient({ feeds }: FeedsClientProps) {
+  const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
   useEffect(() => {
-    setFeeds(feeds);
-  }, [feeds]);
+    dispatch(setFeeds(feeds));
+  }, [dispatch, feeds]);
   return (
     <>
       {feedsFromRedux.map((feed) => {

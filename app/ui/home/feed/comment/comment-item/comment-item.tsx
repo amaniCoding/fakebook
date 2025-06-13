@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaComment } from "react-icons/fa6";
 import CommentBox from "../comment-box/comment-box";
 import { FaRegComment } from "react-icons/fa";
@@ -50,7 +50,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
   const handelMouseEnterLike = () => {
     clearTimeout(timeOutId);
-    setToShowCommentBox(true);
+    settoShowReactionBox(true);
   };
 
   const handelUpdateLike = async (
@@ -104,8 +104,8 @@ export default function CommentItem({ feed }: CommentItemProps) {
     ) {
       return (
         <p>
-          You and {parseInt(feed.reactionInfo.reactions)} Other
-          {parseInt(feed.reactionInfo.reactions) > 2 ? "s" : ""}
+          You and {parseInt(feed.reactionInfo.reactions) - 1} Other
+          {parseInt(feed.reactionInfo.reactions) - 1 >= 1 ? "s" : ""}
         </p>
       );
     }
@@ -293,10 +293,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
         </div>
       );
     }
-    if (
-      !feed.reactionInfo.isReacted &&
-      feed.reactionInfo.reactionType === undefined
-    ) {
+    if (!feed.reactionInfo.isReacted && feed.reactionInfo.reactionType === "") {
       return (
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
@@ -320,6 +317,10 @@ export default function CommentItem({ feed }: CommentItemProps) {
     }
   };
 
+  useEffect(() => {
+    console.log("updated feed", feed);
+  }, [feed]);
+
   return (
     <>
       {toShowCommentBox && (
@@ -328,7 +329,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
         <div className="flex items-center space-x-0">
-          <div className="flex space-x-0">
+          <div className="flex -space-x-1.5">
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
                   return (

@@ -188,9 +188,29 @@ export async function getFirstMediaReactor(postId: string, mediaId: string) {
   }
 }
 
+async function postReactionInfo(postId: string) {
+  const data =
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
+  if (data.rows.length > 0) {
+    return {
+      isReacted: true,
+      reactionId: data.rows[0].reactionid,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      isReacted: false,
+      reactionId: "",
+      reactionType: "",
+      reactor: "",
+    };
+  }
+}
+
 async function firstReactorInfo(postId: string) {
   const data =
-    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
   if (data.rows.length === 1) {
     return {
       reactionId: data.rows[0].reactionid,
@@ -327,7 +347,7 @@ export async function UpdateReaction(
   reactionType: string
 ) {
   try {
-    if (await isPostReactedByLoggedInUser(postId, userId)) {
+    if (!(await isPostReactedByLoggedInUser(postId, userId)).isReacted) {
       await insertPostReactions(postId, userId, reactionType);
     } else {
       await updatePostReactions(postId, userId, reactionType);
@@ -338,11 +358,13 @@ export async function UpdateReaction(
       _totalPostReactions,
       _groupPostReactions,
       _firstReactorInfo,
+      _postReactionInfo,
     ] = await Promise.all([
       isPostReactedByLoggedInUser(postId, userId),
       totalPostReactions(postId),
       groupPostReactions(postId),
       firstReactorInfo(postId),
+      postReactionInfo(postId),
     ]);
 
     return {
@@ -403,7 +425,7 @@ export async function LikeAction(
   reactionType: string
 ) {
   try {
-    if ((await isPostReactedByLoggedInUser(postId, userId)).isReacted) {
+    if (!(await isPostReactedByLoggedInUser(postId, userId)).isReacted) {
       await insertPostReactions(postId, userId, reactionType);
     } else {
       await deletePostReactions(postId, userId);
@@ -413,11 +435,13 @@ export async function LikeAction(
       _totalPostReactions,
       _groupPostReactions,
       _firstReactorInfo,
+      _postReactionInfo,
     ] = await Promise.all([
       isPostReactedByLoggedInUser(postId, userId),
       totalPostReactions(postId),
       groupPostReactions(postId),
       firstReactorInfo(postId),
+      postReactionInfo(postId),
     ]);
 
     return {

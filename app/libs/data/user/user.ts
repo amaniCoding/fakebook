@@ -49,7 +49,7 @@ async function totalPostReactions(postId: string) {
 
 async function firstReactorInfo(postId: string) {
   const data =
-    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
   if (data.rows.length === 1) {
     return {
       reactionId: data.rows[0].reactionid,

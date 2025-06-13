@@ -177,7 +177,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
-      await likeMediaAction(
+      const updatedPostMediaReactions = await likeMediaAction(
         postId,
         userId,
         props.postInfo.medias[currentPhotoIndex].mediaid,
