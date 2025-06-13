@@ -60,8 +60,12 @@ const initialState: StoryState = {
         },
       ],
       reactions: "",
-      reactionType: undefined,
-      reactor: undefined,
+      reactionType: "",
+      firstReactorInfo: {
+        reactionId: "",
+        reactionType: "",
+        reactor: "",
+      },
     },
   },
 };
@@ -112,7 +116,9 @@ export const userPostSlice = createSlice({
       const feed = state.feeds.find((_feed) => {
         return _feed.postId === action.payload.postId;
       });
-      feed!.reactionInfo = action.payload.reactionInfo;
+      if (feed && action.payload.reactionInfo) {
+        feed.reactionInfo = action.payload.reactionInfo;
+      }
     },
 
     setLikeStateAction: (state, action: PayloadAction<LikeActionState>) => {

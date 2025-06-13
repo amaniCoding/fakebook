@@ -12,6 +12,7 @@ import { LoggedInUser } from "@/app/config/loggedinuser";
 import { useAppDispatch } from "@/app/store/hooks";
 
 import { CommentItemProps } from "./types";
+import { updateFeeds } from "@/app/store/slices/user/post/postSlice";
 
 export default function CommentItem({ feed }: CommentItemProps) {
   const dispatch = useAppDispatch();
@@ -36,8 +37,20 @@ export default function CommentItem({ feed }: CommentItemProps) {
     setTimeOutId(timeoutid);
   };
 
+  const handelMouseLeaveLike = () => {
+    const timeoutid = setTimeout(() => {
+      settoShowReactionBox(false);
+    }, 1000);
+    setTimeOutId(timeoutid);
+  };
+
   const handelMouseOutLike = () => {
     settoShowReactionBox(false);
+  };
+
+  const handelMouseEnterLike = () => {
+    clearTimeout(timeOutId);
+    setToShowCommentBox(true);
   };
 
   const handelUpdateLike = async (
@@ -47,7 +60,10 @@ export default function CommentItem({ feed }: CommentItemProps) {
   ) => {
     try {
       settoShowReactionBox(false);
-      await UpdateReaction(postId, userId, reactionType);
+      const reactionInfo = await UpdateReaction(postId, userId, reactionType);
+      dispatch(
+        updateFeeds({ postId: feed.postId, reactionInfo: reactionInfo })
+      );
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
       settoShowReactionBox(false);
@@ -62,7 +78,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
-      await LikeAction(postId, userId, reactionType);
+      const updatedReactionInfo = await LikeAction(
+        postId,
+        userId,
+        reactionType
+      );
+      dispatch(
+        updateFeeds({ postId: feed.postId, reactionInfo: updatedReactionInfo })
+      );
     } catch (error) {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
@@ -72,7 +95,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
   const renderReactionState = () => {
     if (parseInt(feed.reactionInfo.reactions) === 1) {
-      return <p>{feed.reactionInfo.reactor}</p>;
+      return <p>{feed.reactionInfo.firstReactorInfo.reactor}</p>;
     }
 
     if (
@@ -105,6 +128,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -129,6 +153,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "love");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -153,6 +178,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "lagh");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -177,6 +203,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "care");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -201,6 +228,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "angry");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -226,6 +254,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "sad");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -250,6 +279,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "wow");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -274,6 +304,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             handelReaction(feed.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -327,6 +358,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
           <div
             className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
             onMouseLeave={handelMouseOutLike}
+            onMouseEnter={handelMouseEnterLike}
           >
             <Image
               onClick={() => {

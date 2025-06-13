@@ -31,22 +31,56 @@ async function getPostTotalComments(postId: string) {
   return rows;
 }
 
-async function getPostTotalReactions(postId: string) {
-  const rows =
-    await sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
-  return rows;
-}
-
 async function groupPostReactions(postId: string) {
-  const rows =
+  const data =
     await sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
-  return rows;
+  return data.rows;
 }
 
-async function postReactionInfo(postId: string, userId: string) {
-  const rows =
-    await sql<PostReactionInfo>`SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
-  return rows;
+async function totalPostReactions(postId: string) {
+  const data =
+    await sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
+  if (data.rows.length > 0) {
+    return data.rows[0].reactions;
+  } else {
+    return "";
+  }
+}
+
+async function firstReactorInfo(postId: string) {
+  const data =
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
+  if (data.rows.length === 1) {
+    return {
+      reactionId: data.rows[0].reactionid,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      reactionId: "",
+      reactionType: "",
+      reactor: "",
+    };
+  }
+}
+
+async function isPostReactedByLoggedInUser(postId: string, userId: string) {
+  const data = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+  if (data.rows.length > 0) {
+    return {
+      isReacted: true,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      isReacted: false,
+      reactionType: "",
+      reactor: "",
+    };
+  }
 }
 
 export async function fetchPosts(user: User) {
@@ -55,14 +89,21 @@ export async function fetchPosts(user: User) {
       await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
     const allPosts = await Promise.all(
       posts.rows.map(async (row) => {
-        const [medias, comments, reactions, reactionGroup, reactionInfo] =
-          await Promise.all([
-            getPostMedias(row.postid),
-            getPostTotalComments(row.postid),
-            getPostTotalReactions(row.postid),
-            groupPostReactions(row.postid),
-            postReactionInfo(row.postid, user.userid),
-          ]);
+        const [
+          _isPostReactedByLoggedInUser,
+          _totalPostReactions,
+          _groupPostReactions,
+          _firstReactorInfo,
+          medias,
+          comments,
+        ] = await Promise.all([
+          isPostReactedByLoggedInUser(row.postid, user.userid),
+          totalPostReactions(row.postid),
+          groupPostReactions(row.postid),
+          firstReactorInfo(row.postid),
+          getPostMedias(row.postid),
+          getPostTotalComments(row.postid),
+        ]);
         return {
           postId: row.postid,
           post: row.post,
@@ -79,11 +120,11 @@ export async function fetchPosts(user: User) {
           comments: comments.rows[0].comments,
 
           reactionInfo: {
-            isReacted: reactionInfo.rows.length > 0 ? true : false,
-            reactionType: reactionInfo.rows[0]?.reactiontype,
-            reactor: `${reactionInfo.rows[0]?.fname} ${reactionInfo.rows[0]?.lname}`,
-            reactions: reactions.rows[0].reactions,
-            reactionGroup: reactionGroup.rows,
+            isReacted: _isPostReactedByLoggedInUser.isReacted,
+            reactionType: _isPostReactedByLoggedInUser.reactionType,
+            firstReactorInfo: _firstReactorInfo,
+            reactions: _totalPostReactions,
+            reactionGroup: _groupPostReactions,
           },
         };
       })

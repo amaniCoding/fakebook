@@ -2,7 +2,7 @@ import { ReactionInfo } from "@/app/libs/data/user/types";
 
 export type UpdateFeedActionPayload = {
   postId: string;
-  reactionInfo: ReactionInfo;
+  reactionInfo: ReactionInfo | undefined;
 };
 
 export type LikeActionState = {

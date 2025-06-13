@@ -70,10 +70,16 @@ export type Post = {
   date: string;
 };
 
+type FirstReactorInfo = {
+  reactionId: string;
+  reactionType: string;
+  reactor: string;
+};
+
 export type ReactionInfo = {
   isReacted: boolean;
   reactionType: string | undefined;
-  reactor: string | undefined;
+  firstReactorInfo: FirstReactorInfo;
   reactions: string;
   reactionGroup: ReactionGroup[];
 };

@@ -119,21 +119,112 @@ export async function commentAction(
 }
 
 async function groupPostReactions(postId: string) {
-  const rows =
+  const data =
     await sql<ReactionGroup>`SELECT COUNT(uposts.postid) as count, ureactions.reactiontype FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId} GROUP BY ureactions.reactiontype`;
-  return rows;
+  return data.rows;
 }
 
 async function totalPostReactions(postId: string) {
-  const rows =
+  const data =
     await sql<Reaction>`SELECT COUNT(uposts.postid) as reactions FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid WHERE uposts.postid = ${postId}`;
-  return rows;
+  if (data.rows.length > 0) {
+    return data.rows[0].reactions;
+  } else {
+    return "";
+  }
 }
 
-async function reactionInfo(postId: string, userId: string) {
-  const rows =
-    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
-  return rows;
+async function firstReactorInfo(postId: string) {
+  const data =
+    await sql<PostReactionInfo>`SELECT ureactions.reactionid ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON users.userid = ureactions.userid WHERE uposts.postid = ${postId}`;
+  if (data.rows.length === 1) {
+    return {
+      reactionId: data.rows[0].reactionid,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      reactionId: "",
+      reactionType: "",
+      reactor: "",
+    };
+  }
+}
+
+async function updatePostReactions(
+  postId: string,
+  userId: string,
+  reactionType: string
+) {
+  return await sql`UPDATE ureactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId}`;
+}
+
+async function insertPostReactions(
+  postId: string,
+  userId: string,
+  reactionType: string
+) {
+  return await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+}
+async function reactPostMedia(
+  postId: string,
+  userId: string,
+  mediaId: string,
+  reactionType: string
+) {
+  return await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
+}
+async function unReactPostMedia(
+  postId: string,
+  userId: string,
+  mediaId: string
+) {
+  return await sql`DELETE FROM umediareactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
+}
+
+async function isPostMediaIsReactedByLoggedUser(
+  postId: string,
+  userId: string,
+  mediaId: string
+) {
+  const data = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
+  if (data.rows.length > 0) {
+    return {
+      isReacted: true,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      isReacted: false,
+      reactionType: "",
+      reactor: "",
+    };
+  }
+}
+
+async function deletePostReactions(postId: string, userId: string) {
+  return await sql`DELETE FROM ureactions WHERE postid = ${postId} AND userid = ${userId}`;
+}
+
+async function isPostReactedByLoggedInUser(postId: string, userId: string) {
+  const data = await sql<PostReactionInfo>`
+  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
+  if (data.rows.length > 0) {
+    return {
+      isReacted: true,
+      reactionType: data.rows[0].reactiontype,
+      reactor: `${data.rows[0].fname} ${data.rows[0].lname}`,
+    };
+  } else {
+    return {
+      isReacted: false,
+      reactionType: "",
+      reactor: "",
+    };
+  }
 }
 
 export async function UpdateMediaReactionAction(
@@ -163,17 +254,33 @@ export async function UpdateReaction(
   reactionType: string
 ) {
   try {
-    const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
-    if (isReactedByUser.rows.length === 0) {
-      await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
-      revalidatePath("/");
+    if (await isPostReactedByLoggedInUser(postId, userId)) {
+      await insertPostReactions(postId, userId, reactionType);
     } else {
-      await sql`UPDATE ureactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND userid = ${userId}`;
-      revalidatePath("/");
+      await updatePostReactions(postId, userId, reactionType);
     }
+
+    const [
+      _isPostReactedByLoggedInUser,
+      _totalPostReactions,
+      _groupPostReactions,
+      _firstReactorInfo,
+    ] = await Promise.all([
+      isPostReactedByLoggedInUser(postId, userId),
+      totalPostReactions(postId),
+      groupPostReactions(postId),
+      firstReactorInfo(postId),
+    ]);
+
+    return {
+      isReacted: _isPostReactedByLoggedInUser.isReacted,
+      reactionType: _isPostReactedByLoggedInUser.reactionType,
+      firstReactorInfo: _firstReactorInfo,
+      reactions: _totalPostReactions,
+      reactionGroup: _groupPostReactions,
+    };
   } catch (error) {
-    console.error(`Error in fetching the database ${error}`);
+    console.error(`Error in updating post reactions ${error}`);
   }
 }
 
@@ -184,14 +291,13 @@ export async function likeMediaAction(
   reactionType: string
 ) {
   try {
-    const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
-    if (isReactedByUser.rows.length === 0) {
-      await sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${postId}, ${userId}, ${mediaId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
-      revalidatePath(`/${postId}/${mediaId}`);
+    if (
+      (await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
+        .isReacted
+    ) {
+      await reactPostMedia(postId, userId, mediaId, reactionType);
     } else {
-      await sql`DELETE FROM umediareactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
-      revalidatePath(`/${postId}/${mediaId}`);
+      await unReactPostMedia(postId, userId, mediaId);
     }
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
@@ -204,15 +310,30 @@ export async function LikeAction(
   reactionType: string
 ) {
   try {
-    const isReactedByUser = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND users.userid = ${userId}`;
-    if (isReactedByUser.rows.length === 0) {
-      await sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${postId}, ${userId}, ${reactionType}) ON CONFLICT (reactionid) DO NOTHING`;
-      revalidatePath("/");
+    if ((await isPostReactedByLoggedInUser(postId, userId)).isReacted) {
+      await insertPostReactions(postId, userId, reactionType);
     } else {
-      await sql`DELETE FROM ureactions WHERE postid = ${postId} AND userid = ${userId}`;
-      revalidatePath("/");
+      await deletePostReactions(postId, userId);
     }
+    const [
+      _isPostReactedByLoggedInUser,
+      _totalPostReactions,
+      _groupPostReactions,
+      _firstReactorInfo,
+    ] = await Promise.all([
+      isPostReactedByLoggedInUser(postId, userId),
+      totalPostReactions(postId),
+      groupPostReactions(postId),
+      firstReactorInfo(postId),
+    ]);
+
+    return {
+      isReacted: _isPostReactedByLoggedInUser.isReacted,
+      reactionType: _isPostReactedByLoggedInUser.reactionType,
+      firstReactorInfo: _firstReactorInfo,
+      reactions: _totalPostReactions,
+      reactionGroup: _groupPostReactions,
+    };
   } catch (error) {
     console.error(`Error in fetching the database ${error}`);
   }

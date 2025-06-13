@@ -1,11 +1,18 @@
 "use client";
+import { useEffect } from "react";
 import FeedItem from "../feed-item/feed-item";
 import { FeedsClientProps } from "./types";
+import { setFeeds } from "@/app/store/slices/user/post/postSlice";
+import { useAppSelector } from "@/app/store/hooks";
 
 export default function FeedsClient({ feeds }: FeedsClientProps) {
+  const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
+  useEffect(() => {
+    setFeeds(feeds);
+  }, [feeds]);
   return (
     <>
-      {feeds.map((feed) => {
+      {feedsFromRedux.map((feed) => {
         return <FeedItem key={feed.postId} feed={feed} />;
       })}
     </>
