@@ -151,19 +151,21 @@ export default function PhotoModal(props: PhotoModalProps) {
           postInfo.medias[currentPhotoIndex].mediaid,
           comment
         );
-        setComment(" ");
-        setInsertCommentState({
-          loading: false,
-          comment: insertedComment,
-        });
-
-        dispatch(
-          updatePostInfoWithComments({
-            mediaId: props.mediaId,
-            postId: props.postId,
+        if (insertedComment) {
+          setComment(" ");
+          setInsertCommentState({
+            loading: false,
             comment: insertedComment,
-          })
-        );
+          });
+
+          dispatch(
+            updatePostInfoWithComments({
+              mediaId: props.mediaId,
+              postId: props.postId,
+              comment: insertedComment,
+            })
+          );
+        }
       } catch (error) {
         console.error(`error ${error}`);
       }
@@ -356,13 +358,15 @@ export default function PhotoModal(props: PhotoModalProps) {
         reactionType
       );
 
-      dispatch(
-        updatePostInfo({
-          mediaId: props.mediaId,
-          postId: props.postId,
-          reactionInfo: updatedPostMediaReactions,
-        })
-      );
+      if (updatedPostMediaReactions) {
+        dispatch(
+          updatePostInfo({
+            mediaId: props.mediaId,
+            postId: props.postId,
+            reactionInfo: updatedPostMediaReactions,
+          })
+        );
+      }
     } catch (error) {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
@@ -583,16 +587,20 @@ export default function PhotoModal(props: PhotoModalProps) {
     userId: string,
     reactionType: string
   ) => {
+    if (!postInfo) {
+      return;
+    }
     try {
       settoShowReactionBox(false);
-      if (postInfo) {
-        const updatedMediaReactionInfo = await UpdateMediaReactionAction(
-          postId,
-          userId,
-          postInfo.medias[currentPhotoIndex]?.mediaid,
-          reactionType
-        );
 
+      const updatedMediaReactionInfo = await UpdateMediaReactionAction(
+        postId,
+        userId,
+        postInfo.medias[currentPhotoIndex]?.mediaid,
+        reactionType
+      );
+
+      if (updatedMediaReactionInfo) {
         dispatch(
           updatePostInfo({
             mediaId: props.mediaId,

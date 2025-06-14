@@ -157,17 +157,15 @@ export const userPostSlice = createSlice({
       state,
       action: PayloadAction<UpdatePostInfoActionPayload>
     ) => {
-      if (action.payload.reactionInfo) {
-        const media = state.postInfo?.medias.find((media) => {
-          if (media.mediaid === action.payload.mediaId) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-        if (media) {
-          media.reactionInfo = action.payload.reactionInfo;
+      const media = state.postInfo?.medias.find((media) => {
+        if (media.mediaid === action.payload.mediaId) {
+          return true;
+        } else {
+          return false;
         }
+      });
+      if (media) {
+        media.reactionInfo = action.payload.reactionInfo;
       }
     },
 

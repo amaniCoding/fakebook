@@ -111,17 +111,7 @@ export async function MediaCommentAction(
   try {
     return await insertMediaComment(userId, postId, mediaId, comment);
   } catch (error) {
-    return {
-      commentid: "",
-      comment: "",
-      date: "",
-      user: {
-        userid: "",
-        fname: "",
-        lname: "",
-        profilepic: "",
-      },
-    };
+    console.error(`Error while inserting media comment`);
   }
 }
 

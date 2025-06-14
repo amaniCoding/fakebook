@@ -67,7 +67,7 @@ export type CommentPayLoad = {
 };
 export type UpdatePostInfoActionPayload = {
   postId: string;
-  reactionInfo: ReactionPostInfo | undefined;
+  reactionInfo: ReactionPostInfo;
   mediaId: string;
 };
 
