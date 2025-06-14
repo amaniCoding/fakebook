@@ -70,7 +70,7 @@ export type CommentData = {
 
 export type getCommentsStateAction = {
   loading: boolean;
-  comments: CommentData[];
+  comments: CommentData[] | undefined;
 };
 
 export type insertCommentStateAction = {

@@ -37,13 +37,20 @@ export default function PhotoModal(props: PhotoModalProps) {
     dispatch(setPostInfo(props.postInfo));
   }, [dispatch, props.postInfo]);
 
+  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
+    return media.mediaid === props.mediaId;
+  });
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
+    currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
+  );
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
-    comments: [],
+    comments:
+      postInfo && postInfo.medias[currentPhotoIndex].commentInfo.comments,
   });
   const [insertCommentState, setInsertCommentState] =
     useState<insertCommentStateAction>({
@@ -60,14 +67,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         },
       },
     });
-  const currentPhotoIndexFromProp =
-    postInfo &&
-    postInfo.medias.findIndex((media) => {
-      return media.mediaid === props.mediaId;
-    });
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
-    currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
-  );
+
   console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
@@ -174,8 +174,9 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    return postInfo.medias[currentPhotoIndex]?.commentInfo.comments.map(
-      (comment) => {
+    return (
+      commentsData.comments &&
+      commentsData.comments.map((comment) => {
         return (
           <div
             className="flex flex-row mb-3 space-x-3 pb-2"
@@ -183,7 +184,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           >
             <div className="relative group flex-none">
               <Link href={"/profile"}>
-                {comment?.user.profilepic ? (
+                {comment.user.profilepic ? (
                   <Image
                     unoptimized
                     alt="Amanuel Ferede"
@@ -201,11 +202,11 @@ export default function PhotoModal(props: PhotoModalProps) {
                 }
               >
                 <div className="flex space-x-3">
-                  {comment?.user.profilepic ? (
+                  {comment.user.profilepic ? (
                     <Image
                       unoptimized
                       alt="Amanuel Ferede"
-                      src={comment?.user.profilepic}
+                      src={comment.user.profilepic}
                       width={0}
                       height={0}
                       sizes="100vh"
@@ -238,9 +239,9 @@ export default function PhotoModal(props: PhotoModalProps) {
             <div className="">
               <div className="p-3 bg-gray-100 rounded-xl ">
                 <p className="font-semibold">
-                  {comment?.user.fname} {comment?.user.lname}
+                  {comment.user.fname} {comment.user.lname}
                 </p>
-                <p>{comment?.comment}</p>
+                <p>{comment.comment}</p>
               </div>
 
               <div className="flex space-x-4 pl-3">
@@ -251,7 +252,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             </div>
           </div>
         );
-      }
+      })
     );
   };
 
@@ -790,81 +791,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
         <div className="px-3 h-full">
           {renderComments()}
-          {insertCommentState.loading ? (
-            <CommentsSkeleton />
-          ) : (
-            <div className="flex flex-row mb-3 space-x-3 pb-2">
-              <div className="relative group flex-none">
-                <Link href={"/profile"}>
-                  {insertCommentState.comment.user.profilepic ? (
-                    <Image
-                      unoptimized
-                      alt="Amanuel Ferede"
-                      src={insertCommentState.comment?.user.profilepic}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                    />
-                  ) : null}
-                </Link>
-                <div
-                  className={
-                    "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
-                  }
-                >
-                  <div className="flex space-x-3">
-                    {insertCommentState.comment.user.profilepic ? (
-                      <Image
-                        unoptimized
-                        alt="Amanuel Ferede"
-                        src={insertCommentState.comment?.user.profilepic}
-                        width={0}
-                        height={0}
-                        sizes="100vh"
-                        className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                      />
-                    ) : null}
-
-                    <div className=" flex-col space-y-2 flex-1 mt-3">
-                      <p className="text-lg font-bold">Amanuel Ferede</p>
-                      <p className="">Lives in AddisAbaba Ethiopia </p>
-                      <p>Studid Civil Engineering at BahirDar University</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2 mt-3">
-                    <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                      <FaUserFriends className="w-4 h-4" />
-                      <span>Friends</span>
-                    </button>
-                    <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                      <FaFacebookMessenger className="fill-white w-4 h-4" />
-                      <span>Message</span>
-                    </button>
-                    <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                      <IoIosMore className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="">
-                <div className="p-3 bg-gray-100 rounded-xl ">
-                  <p className="font-semibold">
-                    {insertCommentState.comment?.user.fname}{" "}
-                    {insertCommentState.comment?.user.lname}
-                  </p>
-                  <p>{insertCommentState.comment.comment}</p>
-                </div>
-
-                <div className="flex space-x-4 pl-3">
-                  <span className="text-sm"></span>
-                  <span className="text-sm">Like</span>
-                  <span className="text-sm">Reply</span>
-                </div>
-              </div>
-            </div>
-          )}
+          {insertCommentState.loading && <CommentsSkeleton />}
         </div>
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image
