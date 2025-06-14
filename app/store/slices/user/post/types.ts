@@ -57,7 +57,7 @@ export type UpdateFeedActionPayload = {
 };
 export type UpdatePostInfoActionPayload = {
   postId: string;
-  reactionInfo: ReactionPostInfo;
+  reactionInfo: ReactionPostInfo | undefined;
   mediaId: string;
 };
 

@@ -156,31 +156,29 @@ export default function PhotoModal(props: PhotoModalProps) {
 
   const renderReactionState = () => {
     if (
-      parseInt(
-        postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
-      ) === 1
+      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) === 1
     ) {
       return (
-        <p>{postInfo.medias[currentPhotoIndex].reactionInfo.firstReactor}</p>
+        <p>
+          {
+            postInfo.medias[currentPhotoIndex].reactionInfo.firstReactorInfo
+              .reactor
+          }
+        </p>
       );
     }
 
     if (
-      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount) >
-        1 &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted
+      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) > 1 &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted
     ) {
       return (
         <p>
           You and{" "}
-          {parseInt(
-            postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
-          ) - 1}{" "}
+          {parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) -
+            1}{" "}
           Other
-          {parseInt(
-            postInfo.medias[currentPhotoIndex].reactionInfo.reactionCount
-          ) -
+          {parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) -
             1 >=
           1
             ? "s"
@@ -219,10 +217,8 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
   const renderReactionStatus = () => {
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "like"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "like"
     ) {
       return (
         <div
@@ -246,10 +242,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "love"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "love"
     ) {
       return (
         <div
@@ -273,10 +267,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "lagh"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "lagh"
     ) {
       return (
         <div
@@ -300,10 +292,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "care"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "care"
     ) {
       return (
         <div
@@ -327,10 +317,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "angry"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "angry"
     ) {
       return (
         <div
@@ -355,10 +343,8 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "sad"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "sad"
     ) {
       return (
         <div
@@ -382,10 +368,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === "wow"
+      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "wow"
     ) {
       return (
         <div
@@ -409,10 +393,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      !postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.loggedInUserReactionInfo
-        .reactionType === ""
+      !postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === ""
     ) {
       return (
         <div

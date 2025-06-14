@@ -148,7 +148,7 @@ export const userPostSlice = createSlice({
           if (media.mediaid === action.payload.mediaId) {
             return {
               ...media,
-              reactionInfo: action.payload.reactionInfo,
+              reactionInfo: action.payload.reactionInfo!,
             };
           } else {
             return media;
