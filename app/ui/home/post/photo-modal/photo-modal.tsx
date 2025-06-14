@@ -34,6 +34,10 @@ export default function PhotoModal(props: PhotoModalProps) {
   useEffect(() => {
     dispatch(setPostInfo(props.postInfo));
   }, [dispatch, props.postInfo]);
+
+  useEffect(() => {
+    console.log("postInfoFromRedux", postInfo);
+  }, [postInfo]);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
