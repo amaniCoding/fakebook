@@ -53,6 +53,18 @@ export type MediaComments = {
   profilepic: string;
 };
 
+export type CommentData = {
+  commentid: string;
+  comment: string;
+  date: string;
+  user: {
+    fname: string;
+    lname: string;
+    userid: string;
+    profilepic: string;
+  };
+};
+
 export type FirstMediaReactor = {
   reactionid: string;
   fname: string;

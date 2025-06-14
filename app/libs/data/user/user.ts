@@ -13,7 +13,7 @@ import {
   FirstMediaReactor,
   MediaCommentsCount,
   MediaReactionCount,
-  MediaComments,
+  CommentData,
 } from "./types";
 
 import { PostReactionInfo } from "../../actions/user/types";
@@ -168,7 +168,7 @@ export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
 
 export async function fetchMediaComments(postId: string, mediaId: string) {
   const data =
-    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+    await sql<CommentData>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
   return data.rows;
 }
 
@@ -288,8 +288,7 @@ export async function fetchPostInfo(postId: string) {
       medias: medias,
     };
   } catch (error) {
-    console.log("Database error", error);
-    throw new Error("Faild to fetch dev data");
+    console.log("Failed to fetch postinfo", error);
   }
 }
 

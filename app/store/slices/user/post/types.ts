@@ -1,4 +1,4 @@
-import { MediaComments, ReactionInfo } from "@/app/libs/data/user/types";
+import { ReactionInfo } from "@/app/libs/data/user/types";
 
 type FirstMediaReactor = {
   reactionId: string;
@@ -28,7 +28,7 @@ export type postInfo = {
     };
     commentInfo: {
       count: string;
-      comments: MediaComments[];
+      comments: CommentData[];
     };
   }[];
 };
@@ -58,6 +58,24 @@ export type UpdateFeedActionPayload = {
 export type UpdatePostInfoActionPayload = {
   postId: string;
   reactionInfo: ReactionPostInfo | undefined;
+  mediaId: string;
+};
+
+export type CommentData = {
+  commentid: string;
+  comment: string;
+  date: string;
+  user: {
+    fname: string;
+    lname: string;
+    userid: string;
+    profilepic: string;
+  };
+};
+
+export type PostInfoCommentPayload = {
+  postId: string;
+  comment: CommentData;
   mediaId: string;
 };
 

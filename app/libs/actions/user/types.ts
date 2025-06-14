@@ -46,6 +46,16 @@ export type CommentStateAction = {
   comment: Comment;
 };
 
+export type MediaComments = {
+  commentid: string;
+  comment: string;
+  date: string;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+};
+
 export type CommentData = {
   commentid: string;
   comment: string;

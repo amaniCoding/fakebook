@@ -8,14 +8,16 @@ type FirstMediaReactor = {
   reactionType: string;
   reactor: string;
 };
-export type MediaComments = {
+export type CommentData = {
   commentid: string;
   comment: string;
   date: string;
-  userid: string;
-  fname: string;
-  lname: string;
-  profilepic: string;
+  user: {
+    fname: string;
+    lname: string;
+    userid: string;
+    profilepic: string;
+  };
 };
 type postInfo = {
   postId: string;
@@ -40,13 +42,13 @@ type postInfo = {
     };
     commentInfo: {
       count: string;
-      comments: MediaComments[];
+      comments: CommentData[];
     };
   }[];
 };
 
 export type PhotoModalProps = {
-  postInfo: postInfo;
+  postInfo: postInfo | undefined;
   postId: string;
   mediaId: string;
 };

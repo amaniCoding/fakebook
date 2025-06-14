@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   LikeActionState,
   postInfo,
+  PostInfoCommentPayload,
   postOption,
   SubmittedPostType,
   UpdateFeedActionPayload,
@@ -23,7 +24,7 @@ interface StoryState {
 
   feeds: Posts[];
   likeActionState: LikeActionState;
-  postInfo: postInfo;
+  postInfo: postInfo | undefined;
 }
 
 // Define the initial state using that type
@@ -127,7 +128,7 @@ export const userPostSlice = createSlice({
     setFeeds: (state, action: PayloadAction<Posts[]>) => {
       state.feeds = action.payload;
     },
-    setPostInfo: (state, action: PayloadAction<postInfo>) => {
+    setPostInfo: (state, action: PayloadAction<postInfo | undefined>) => {
       state.postInfo = action.payload;
     },
     updateFeeds: (state, action: PayloadAction<UpdateFeedActionPayload>) => {
@@ -144,17 +145,34 @@ export const userPostSlice = createSlice({
       action: PayloadAction<UpdatePostInfoActionPayload>
     ) => {
       if (action.payload.reactionInfo) {
-        const newMedias = state.postInfo.medias.map((media) => {
+        const media = state.postInfo?.medias.find((media) => {
           if (media.mediaid === action.payload.mediaId) {
-            return {
-              ...media,
-              reactionInfo: action.payload.reactionInfo!,
-            };
+            return true;
           } else {
-            return media;
+            return false;
           }
         });
-        state.postInfo.medias = newMedias;
+        if (media) {
+          media.reactionInfo = action.payload.reactionInfo;
+        }
+      }
+    },
+
+    updatePostInfoWithComments: (
+      state,
+      action: PayloadAction<PostInfoCommentPayload>
+    ) => {
+      if (action.payload.comment) {
+        const media = state.postInfo?.medias.find((media) => {
+          if (media.mediaid === action.payload.mediaId) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        if (media) {
+          media.commentInfo.comments.push(action.payload.comment);
+        }
       }
     },
 
@@ -178,6 +196,7 @@ export const {
   setPostInfo,
   updateFeeds,
   updatePostInfo,
+  updatePostInfoWithComments,
   setLikeStateAction,
 } = userPostSlice.actions;
 

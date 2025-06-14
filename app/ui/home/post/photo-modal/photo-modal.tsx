@@ -27,7 +27,11 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import {
   setPostInfo,
   updatePostInfo,
+  updatePostInfoWithComments,
 } from "@/app/store/slices/user/post/postSlice";
+import Loading from "@/app/story/[storyid]/loading";
+import CommentsSkeleton from "@/app/ui/skeletons/comments";
+import { Underdog } from "next/font/google";
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.postInfo);
@@ -35,9 +39,6 @@ export default function PhotoModal(props: PhotoModalProps) {
     dispatch(setPostInfo(props.postInfo));
   }, [dispatch, props.postInfo]);
 
-  useEffect(() => {
-    console.log("postInfoFromRedux", postInfo);
-  }, [postInfo]);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
@@ -61,13 +62,24 @@ export default function PhotoModal(props: PhotoModalProps) {
         },
       },
     });
-  const currentPhotoIndexFromProp = postInfo.medias.findIndex((media) => {
+  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaid === props.mediaId;
   });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
-    currentPhotoIndexFromProp
+    currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
   );
-  console.log(currentPhotoIndex);
+
+  const renderCommentCount = () => {
+    if (!postInfo) {
+      return;
+    }
+    if (parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) > 0) {
+      return postInfo.medias[currentPhotoIndex]?.commentInfo.count;
+    } else {
+      return "";
+    }
+  };
+
   const handelMouseOverLike = () => {
     const timeoutid = setTimeout(() => {
       settoShowReactionBox(true);
@@ -87,6 +99,21 @@ export default function PhotoModal(props: PhotoModalProps) {
     setTimeOutId(timeoutid);
   };
 
+  const renderReactionGroupIcons = () => {
+    if (!postInfo) {
+      return;
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.length > 0
+    ) {
+      return postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.map(
+        (gr, index) => {
+          return <ReactionIcons key={index} reactiontype={gr.reactiontype} />;
+        }
+      );
+    }
+  };
+
   const handelMouseOutLike = () => {
     const timeoutid = setTimeout(() => {
       settoShowReactionBox(false);
@@ -98,6 +125,9 @@ export default function PhotoModal(props: PhotoModalProps) {
     e: KeyboardEvent<HTMLInputElement>,
     comment: string
   ) => {
+    if (!postInfo) {
+      return;
+    }
     if (e.key === "Enter") {
       try {
         setInsertCommentState({
@@ -114,20 +144,120 @@ export default function PhotoModal(props: PhotoModalProps) {
             },
           },
         });
-        await MediaCommentAction(
-          LoggedInUser,
+        const insertedComment = await MediaCommentAction(
+          LoggedInUser.userid,
           props.postId,
           postInfo.medias[currentPhotoIndex].mediaid,
           comment
         );
         setComment(" ");
+        setInsertCommentState({
+          loading: false,
+          comment: insertedComment,
+        });
+
+        dispatch(
+          updatePostInfoWithComments({
+            mediaId: props.mediaId,
+            postId: props.postId,
+            comment: insertedComment,
+          })
+        );
       } catch (error) {
         console.error(`error ${error}`);
       }
     }
   };
 
+  const renderComments = () => {
+    if (!postInfo) {
+      return;
+    }
+    return postInfo.medias[currentPhotoIndex]?.commentInfo.comments.map(
+      (comment) => {
+        return (
+          <div
+            className="flex flex-row mb-3 space-x-3 pb-2"
+            key={comment.commentid}
+          >
+            <div className="relative group flex-none">
+              <Link href={"/profile"}>
+                {comment?.user.profilepic ? (
+                  <Image
+                    unoptimized
+                    alt="Amanuel Ferede"
+                    src={comment?.user.profilepic}
+                    width={0}
+                    height={0}
+                    sizes="100vh"
+                    className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                  />
+                ) : null}
+              </Link>
+              <div
+                className={
+                  "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
+                }
+              >
+                <div className="flex space-x-3">
+                  {comment?.user.profilepic ? (
+                    <Image
+                      unoptimized
+                      alt="Amanuel Ferede"
+                      src={comment?.user.profilepic}
+                      width={0}
+                      height={0}
+                      sizes="100vh"
+                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                    />
+                  ) : null}
+
+                  <div className=" flex-col space-y-2 flex-1 mt-3">
+                    <p className="text-lg font-bold">Amanuel Ferede</p>
+                    <p className="">Lives in AddisAbaba Ethiopia </p>
+                    <p>Studid Civil Engineering at BahirDar University</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 mt-3">
+                  <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                    <FaUserFriends className="w-4 h-4" />
+                    <span>Friends</span>
+                  </button>
+                  <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                    <FaFacebookMessenger className="fill-white w-4 h-4" />
+                    <span>Message</span>
+                  </button>
+                  <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                    <IoIosMore className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <div className="p-3 bg-gray-100 rounded-xl ">
+                <p className="font-semibold">
+                  {comment?.user.fname} {comment?.user.lname}
+                </p>
+                <p>{comment?.comment}</p>
+              </div>
+
+              <div className="flex space-x-4 pl-3">
+                <span className="text-sm"></span>
+                <span className="text-sm">Like</span>
+                <span className="text-sm">Reply</span>
+              </div>
+            </div>
+          </div>
+        );
+      }
+    );
+  };
+
   const showNextPhoto = () => {
+    if (!postInfo) {
+      return;
+    }
     if (currentPhotoIndex > postInfo.medias.length - 1) {
       setCurrentPhotoIndex(0);
     } else {
@@ -140,6 +270,9 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   const showPreviousPhoto = () => {
+    if (!postInfo) {
+      return;
+    }
     if (currentPhotoIndex < 0) {
       setCurrentPhotoIndex(postInfo.medias.length - 1);
     } else {
@@ -149,23 +282,30 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   const showExactPhoto = () => {
+    if (!postInfo) {
+      return;
+    }
+
     if (currentPhotoIndex > postInfo.medias.length - 1) {
-      return postInfo.medias[0].media;
+      return postInfo.medias[0]?.media;
     } else if (currentPhotoIndex < 0) {
-      return postInfo.medias[postInfo.medias.length - 1].media;
+      return postInfo.medias[postInfo.medias.length - 1]?.media;
     } else {
-      return postInfo.medias[currentPhotoIndex].media;
+      return postInfo.medias[currentPhotoIndex]?.media;
     }
   };
 
   const renderReactionState = () => {
+    if (!postInfo) {
+      return;
+    }
     if (
-      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) === 1
+      parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions) === 1
     ) {
       return (
         <p>
           {
-            postInfo.medias[currentPhotoIndex].reactionInfo.firstReactorInfo
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.firstReactorInfo
               .reactor
           }
         </p>
@@ -173,16 +313,20 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     if (
-      parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) > 1 &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted
+      parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions) >
+        1 &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted
     ) {
       return (
         <p>
           You and{" "}
-          {parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) -
-            1}{" "}
+          {parseInt(
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions
+          ) - 1}{" "}
           Other
-          {parseInt(postInfo.medias[currentPhotoIndex].reactionInfo.reactions) -
+          {parseInt(
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions
+          ) -
             1 >=
           1
             ? "s"
@@ -190,22 +334,26 @@ export default function PhotoModal(props: PhotoModalProps) {
         </p>
       );
     }
-    return null;
   };
   const handelReaction = async (
     postId: string,
     userId: string,
     reactionType: string
   ) => {
+    if (!postInfo) {
+      return;
+    }
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
+
       const updatedPostMediaReactions = await likeMediaAction(
         postId,
         userId,
         postInfo.medias[currentPhotoIndex].mediaid,
         reactionType
       );
+
       dispatch(
         updatePostInfo({
           mediaId: props.mediaId,
@@ -220,206 +368,213 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
   const renderReactionStatus = () => {
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "like"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "like");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/like.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-blue-600 font-semibold">Like</span>
-        </div>
-      );
-    }
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "love"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "love");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/love.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-pink-500 font-semibold">Love</span>
-        </div>
-      );
-    }
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "lagh"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "lagh");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/haha.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Haha</span>
-        </div>
-      );
-    }
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "care"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "care");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/care.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-orange-500 font-semibold">Care</span>
-        </div>
-      );
-    }
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "angry"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "angry");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/angry.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Angry</span>
-        </div>
-      );
-    }
+    if (postInfo) {
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "like"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "like");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/like.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-blue-600 font-semibold">Like</span>
+          </div>
+        );
+      }
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "love"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "love");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/love.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-pink-500 font-semibold">Love</span>
+          </div>
+        );
+      }
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "lagh"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "lagh");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/haha.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-yellow-700 font-semibold">Haha</span>
+          </div>
+        );
+      }
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "care"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "care");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/care.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-orange-500 font-semibold">Care</span>
+          </div>
+        );
+      }
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
+          "angry"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "angry");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/angry.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-yellow-700 font-semibold">Angry</span>
+          </div>
+        );
+      }
 
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "sad"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "sad");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/sad.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Sad</span>
-        </div>
-      );
-    }
-    if (
-      postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === "wow"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "wow");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/wow.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-orange-500 font-semibold">Wow</span>
-        </div>
-      );
-    }
-    if (
-      !postInfo.medias[currentPhotoIndex].reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex].reactionInfo.reactionType === ""
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "like");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseOutLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/likew.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span>Like</span>
-        </div>
-      );
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "sad"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "sad");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/sad.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-yellow-700 font-semibold">Sad</span>
+          </div>
+        );
+      }
+      if (
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "wow"
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "wow");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/wow.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span className="text-orange-500 font-semibold">Wow</span>
+          </div>
+        );
+      }
+      if (
+        (!postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+          postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
+            undefined) ||
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === ""
+      ) {
+        return (
+          <div
+            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+            onClick={() => {
+              handelReaction(props.postId, LoggedInUser.userid, "like");
+            }}
+            onMouseEnter={handelMouseOverLike}
+            onMouseLeave={handelMouseOutLike}
+          >
+            <Image
+              alt="Amanuel Ferede"
+              src={"/reactions/likew.png"}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-6 h-6 object-cover rounded-full block flex-none"
+            />
+            <span>Like</span>
+          </div>
+        );
+      }
+    } else {
+      return null;
     }
   };
 
@@ -430,12 +585,22 @@ export default function PhotoModal(props: PhotoModalProps) {
   ) => {
     try {
       settoShowReactionBox(false);
-      await UpdateMediaReactionAction(
-        postId,
-        userId,
-        postInfo.medias[currentPhotoIndex].mediaid,
-        reactionType
-      );
+      if (postInfo) {
+        const updatedMediaReactionInfo = await UpdateMediaReactionAction(
+          postId,
+          userId,
+          postInfo.medias[currentPhotoIndex].mediaid,
+          reactionType
+        );
+
+        dispatch(
+          updatePostInfo({
+            mediaId: props.mediaId,
+            postId: props.postId,
+            reactionInfo: updatedMediaReactionInfo,
+          })
+        );
+      }
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
       settoShowReactionBox(false);
@@ -466,29 +631,31 @@ export default function PhotoModal(props: PhotoModalProps) {
               />
             </Link>
           </div>
-          {postInfo.medias.length > 1 && (
+          {postInfo && postInfo.medias.length > 1 && (
             <GrPrevious
               onClick={showPreviousPhoto}
               className="absolute cursor-pointer top-1/2 p-3 translate-y-1/2 left-8 w-12 h-12 rounded-full bg-white hover:bg-white/70"
             />
           )}
 
-          {postInfo.medias.length > 1 && (
+          {postInfo && postInfo.medias.length > 1 && (
             <GrNext
               onClick={showNextPhoto}
               className="absolute cursor-pointer top-1/2 p-3 translate-y-1/2 right-8 w-12 h-12 rounded-full bg-white hover:bg-white/70"
             />
           )}
 
-          <Image
-            unoptimized
-            alt="Amanuel Ferede"
-            src={showExactPhoto()}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-full h-full object-scale-down"
-          />
+          {postInfo && (
+            <Image
+              unoptimized
+              alt="Amanuel Ferede"
+              src={showExactPhoto()!}
+              width={0}
+              height={0}
+              sizes="100vh"
+              className="w-full h-full object-scale-down"
+            />
+          )}
         </div>
       </div>
       <div className="lg:col-span-3 h-full mt-16 pb-16 col-span-12 overflow-y-scroll">
@@ -508,7 +675,8 @@ export default function PhotoModal(props: PhotoModalProps) {
             />
             <div className="flex flex-col">
               <p>
-                {props.postInfo.user.fname} {props.postInfo.user.fname}
+                {postInfo && postInfo.user.fname}{" "}
+                {postInfo && postInfo.user.lname}
               </p>
               <p>March 27 at 3:34 pm</p>
             </div>
@@ -517,29 +685,11 @@ export default function PhotoModal(props: PhotoModalProps) {
         </div>
         <div className="flex items-center space-x justify-between px-2">
           <div className="flex items-center space-x-0 ">
-            <div className="flex space-x-0">
-              {postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup
-                .length > 0
-                ? postInfo.medias[
-                    currentPhotoIndex
-                  ]?.reactionInfo.reactionGroup.map((gr, index) => {
-                    return (
-                      <ReactionIcons
-                        key={index}
-                        reactiontype={gr.reactiontype}
-                      />
-                    );
-                  })
-                : null}
-            </div>
+            <div className="flex space-x-0">{renderReactionGroupIcons()}</div>
             <p>{renderReactionState()}</p>
           </div>
 
-          <p>
-            {parseInt(postInfo.medias[currentPhotoIndex].commentInfo.count) > 0
-              ? postInfo.medias[currentPhotoIndex].commentInfo.count
-              : ""}
-          </p>
+          <p>{renderCommentCount()}</p>
         </div>
         <div className="relative flex mb-4 items-center justify-between border-t border-t-gray-300">
           {renderReactionStatus()}
@@ -638,80 +788,81 @@ export default function PhotoModal(props: PhotoModalProps) {
         </div>
 
         <div className="px-3 h-full">
-          {postInfo.medias[currentPhotoIndex].commentInfo.comments.map(
-            (comment) => {
-              return (
+          {renderComments()}
+          {insertCommentState.loading ? (
+            <CommentsSkeleton />
+          ) : (
+            <div className="flex flex-row mb-3 space-x-3 pb-2">
+              <div className="relative group flex-none">
+                <Link href={"/profile"}>
+                  {insertCommentState.comment.user.profilepic ? (
+                    <Image
+                      unoptimized
+                      alt="Amanuel Ferede"
+                      src={insertCommentState.comment?.user.profilepic}
+                      width={0}
+                      height={0}
+                      sizes="100vh"
+                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                    />
+                  ) : null}
+                </Link>
                 <div
-                  className="flex flex-row mb-3 space-x-3 pb-2"
-                  key={comment.commentid}
+                  className={
+                    "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
+                  }
                 >
-                  <div className="relative group flex-none">
-                    <Link href={"/profile"}>
+                  <div className="flex space-x-3">
+                    {insertCommentState.comment.user.profilepic ? (
                       <Image
                         unoptimized
                         alt="Amanuel Ferede"
-                        src={comment.profilepic}
+                        src={insertCommentState.comment?.user.profilepic}
                         width={0}
                         height={0}
                         sizes="100vh"
                         className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
                       />
-                    </Link>
-                    <div
-                      className={
-                        "absolute group-hover:block hidden w-96 z-50  -left-32 rounded-lg  p-4  bg-white shadow-lg"
-                      }
-                    >
-                      <div className="flex space-x-3">
-                        <Image
-                          unoptimized
-                          className="w-20 h-20 rounded-full  object-cover"
-                          alt="Amanuel Ferede"
-                          src={comment.profilepic}
-                          width={0}
-                          height={0}
-                          sizes="100vh"
-                        />
+                    ) : null}
 
-                        <div className=" flex-col space-y-2 flex-1 mt-3">
-                          <p className="text-lg font-bold">Amanuel Ferede</p>
-                          <p className="">Lives in AddisAbaba Ethiopia </p>
-                          <p>Studid Civil Engineering at BahirDar University</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2 mt-3">
-                        <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                          <FaUserFriends className="w-4 h-4" />
-                          <span>Friends</span>
-                        </button>
-                        <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                          <FaFacebookMessenger className="fill-white w-4 h-4" />
-                          <span>Message</span>
-                        </button>
-                        <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                          <IoIosMore className="w-4 h-4" />
-                        </button>
-                      </div>
+                    <div className=" flex-col space-y-2 flex-1 mt-3">
+                      <p className="text-lg font-bold">Amanuel Ferede</p>
+                      <p className="">Lives in AddisAbaba Ethiopia </p>
+                      <p>Studid Civil Engineering at BahirDar University</p>
                     </div>
                   </div>
-                  <div className="">
-                    <div className="p-3 bg-gray-100 rounded-xl ">
-                      <p className="font-semibold">
-                        {comment.fname} {comment.lname}
-                      </p>
-                      <p>{comment.comment}</p>
-                    </div>
 
-                    <div className="flex space-x-4 pl-3">
-                      <span className="text-sm"></span>
-                      <span className="text-sm">Like</span>
-                      <span className="text-sm">Reply</span>
-                    </div>
+                  <div className="flex items-center space-x-2 mt-3">
+                    <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                      <FaUserFriends className="w-4 h-4" />
+                      <span>Friends</span>
+                    </button>
+                    <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                      <FaFacebookMessenger className="fill-white w-4 h-4" />
+                      <span>Message</span>
+                    </button>
+                    <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                      <IoIosMore className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-              );
-            }
+              </div>
+              <div className="">
+                <div className="p-3 bg-gray-100 rounded-xl ">
+                  <p className="font-semibold">
+                    {insertCommentState.comment?.user.fname}{" "}
+                    {insertCommentState.comment?.user.lname}
+                  </p>
+                  <p>{insertCommentState.comment.comment}</p>
+                </div>
+
+                <div className="flex space-x-4 pl-3">
+                  <span className="text-sm"></span>
+                  <span className="text-sm">Like</span>
+                  <span className="text-sm">Reply</span>
+                </div>
+              </div>
+            </div>
           )}
         </div>
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">

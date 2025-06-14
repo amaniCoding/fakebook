@@ -5,10 +5,16 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 
-import { AddPostState, Comment, Comments, PostReactionInfo } from "./types";
+import {
+  AddPostState,
+  Comment,
+  Comments,
+  MediaComments,
+  PostReactionInfo,
+} from "./types";
 import {
   FirstMediaReactor,
-  MediaComments,
+  CommentData,
   MediaCommentsCount,
   MediaReactionCount,
   MediaReactionGroup,
@@ -74,19 +80,48 @@ export async function fetchCommentsAction(postId: string) {
   }
 }
 
+export async function insertMediaComment(
+  userId: string,
+  postId: string,
+  mediaId: string,
+  comment: string
+) {
+  const data =
+    await sql<MediaComments>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${userId}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+`;
+  return {
+    commentid: data.rows[0].commentid,
+    comment: data.rows[0].comment,
+    date: data.rows[0].date,
+    user: {
+      fname: data.rows[0].fname,
+      lname: data.rows[0].lname,
+      userid: data.rows[0].userid,
+      profilepic: data.rows[0].profilepic,
+    },
+  };
+}
+
 export async function MediaCommentAction(
-  user: User,
+  userId: string,
   postId: string,
   mediaId: string,
   comment: string
 ) {
   try {
-    const insertComments =
-      await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${user.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
-`;
-    revalidatePath(`/${postId}/${mediaId}`);
+    return await insertMediaComment(userId, postId, mediaId, comment);
   } catch (error) {
-    console.error(`Error inserting comment ${error}`);
+    return {
+      commentid: "",
+      comment: "",
+      date: "",
+      user: {
+        userid: "",
+        fname: "",
+        lname: "",
+        profilepic: "",
+      },
+    };
   }
 }
 
@@ -99,7 +134,6 @@ export async function commentAction(
     const insertComments =
       await sql<Comment>`INSERT INTO ucomments (postid, userid, comment) VALUES (${postId}, ${user.userid}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
-    revalidatePath("/");
     return {
       loading: false,
       comment: {
@@ -160,7 +194,7 @@ export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
 
 export async function fetchMediaComments(postId: string, mediaId: string) {
   const data =
-    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+    await sql<CommentData>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
   return data.rows;
 }
 
@@ -257,13 +291,22 @@ async function unReactPostMedia(
   return await sql`DELETE FROM umediareactions WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
 }
 
+async function undatePostMediaReaction(
+  postId: string,
+  userId: string,
+  mediaId: string,
+  reactionType: string
+) {
+  return await sql`UPDATE umediareactions SET reactiontype = ${reactionType} WHERE postid = ${postId} AND mediaid = ${mediaId} AND userid = ${userId}`;
+}
+
 async function isPostMediaIsReactedByLoggedUser(
   postId: string,
   userId: string,
   mediaId: string
 ) {
   const data = await sql<PostReactionInfo>`
-  SELECT ureactions.reactionid, ureactions.reactiontype, users.fname, users.lname FROM uposts JOIN medias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND mediaid = ${mediaId} AND users.userid = ${userId}`;
+  SELECT umediareactions.reactionid, umediareactions.reactiontype, users.fname, users.lname FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND users.userid = ${userId}`;
   if (data.rows.length > 0) {
     return {
       isReacted: true,
@@ -312,9 +355,9 @@ export async function UpdateMediaReactionAction(
       !(await isPostMediaIsReactedByLoggedUser(postId, userId, mediaId))
         .isReacted
     ) {
-      reactPostMedia(postId, userId, mediaId, reactionType);
+      await reactPostMedia(postId, userId, mediaId, reactionType);
     } else {
-      unReactPostMedia(postId, userId, mediaId);
+      await undatePostMediaReaction(postId, userId, mediaId, reactionType);
     }
 
     const [
