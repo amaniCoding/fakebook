@@ -370,213 +370,211 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
   const renderReactionStatus = () => {
-    if (postInfo) {
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "like"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "like");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/like.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-blue-600 font-semibold">Like</span>
-          </div>
-        );
-      }
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "love"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "love");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/love.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-pink-500 font-semibold">Love</span>
-          </div>
-        );
-      }
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "lagh"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "lagh");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/haha.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-yellow-700 font-semibold">Haha</span>
-          </div>
-        );
-      }
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "care"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "care");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/care.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-orange-500 font-semibold">Care</span>
-          </div>
-        );
-      }
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
-          "angry"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "angry");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/angry.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-yellow-700 font-semibold">Angry</span>
-          </div>
-        );
-      }
+    if (!postInfo) {
+      return;
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "like"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "like");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/like.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-blue-600 font-semibold">Like</span>
+        </div>
+      );
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "love"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "love");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/love.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-pink-500 font-semibold">Love</span>
+        </div>
+      );
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "lagh"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "lagh");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/haha.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Haha</span>
+        </div>
+      );
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "care"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "care");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/care.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-orange-500 font-semibold">Care</span>
+        </div>
+      );
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "angry"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "angry");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/angry.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Angry</span>
+        </div>
+      );
+    }
 
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "sad"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "sad");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/sad.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-yellow-700 font-semibold">Sad</span>
-          </div>
-        );
-      }
-      if (
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "wow"
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "wow");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/wow.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span className="text-orange-500 font-semibold">Wow</span>
-          </div>
-        );
-      }
-      if (
-        (!postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-          postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
-            undefined) ||
-        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === ""
-      ) {
-        return (
-          <div
-            className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-            onClick={() => {
-              handelReaction(props.postId, LoggedInUser.userid, "like");
-            }}
-            onMouseEnter={handelMouseOverLike}
-            onMouseLeave={handelMouseOutLike}
-          >
-            <Image
-              alt="Amanuel Ferede"
-              src={"/reactions/likew.png"}
-              width={0}
-              height={0}
-              sizes="100vh"
-              className="w-6 h-6 object-cover rounded-full block flex-none"
-            />
-            <span>Like</span>
-          </div>
-        );
-      }
-    } else {
-      return null;
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "sad"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "sad");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/sad.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-yellow-700 font-semibold">Sad</span>
+        </div>
+      );
+    }
+    if (
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "wow"
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "wow");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/wow.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span className="text-orange-500 font-semibold">Wow</span>
+        </div>
+      );
+    }
+    if (
+      !postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      (postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
+        undefined ||
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "")
+    ) {
+      return (
+        <div
+          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
+          onClick={() => {
+            handelReaction(props.postId, LoggedInUser.userid, "like");
+          }}
+          onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseOutLike}
+        >
+          <Image
+            alt="Amanuel Ferede"
+            src={"/reactions/likew.png"}
+            width={0}
+            height={0}
+            sizes="100vh"
+            className="w-6 h-6 object-cover rounded-full block flex-none"
+          />
+          <span>Like</span>
+        </div>
+      );
     }
   };
 
@@ -591,7 +589,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         const updatedMediaReactionInfo = await UpdateMediaReactionAction(
           postId,
           userId,
-          postInfo.medias[currentPhotoIndex].mediaid,
+          postInfo.medias[currentPhotoIndex]?.mediaid,
           reactionType
         );
 
