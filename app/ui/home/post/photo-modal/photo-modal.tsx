@@ -29,9 +29,7 @@ import {
   updatePostInfo,
   updatePostInfoWithComments,
 } from "@/app/store/slices/user/post/postSlice";
-import Loading from "@/app/story/[storyid]/loading";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
-import { Underdog } from "next/font/google";
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.postInfo);
@@ -62,12 +60,15 @@ export default function PhotoModal(props: PhotoModalProps) {
         },
       },
     });
-  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
-    return media.mediaid === props.mediaId;
-  });
+  const currentPhotoIndexFromProp =
+    postInfo &&
+    postInfo.medias.findIndex((media) => {
+      return media.mediaid === props.mediaId;
+    });
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
     currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
   );
+  console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
     if (!postInfo) {
@@ -608,8 +609,8 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    console.log(props.postInfo);
-  }, [props.postInfo]);
+    console.log(postInfo);
+  }, [postInfo]);
 
   return (
     <div className="grid grid-cols-12 gap-3 h-screen fixed top-0 bottom-0 left-0 right-0 z-50">
