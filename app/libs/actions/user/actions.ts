@@ -23,6 +23,12 @@ import {
   StoryMedia,
   User,
 } from "../../data/user/types";
+import {
+  fetchNewPostInfo,
+  fetchPostInfo,
+  fetchPosts,
+} from "../../data/user/user";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 
 export async function fetchPhotoComments(mediaId: string, postId: string) {
   try {
@@ -523,15 +529,15 @@ export async function createPost(
       );
     }
 
-    revalidatePath("/");
-    return {
-      isSuccessfull: true,
-    };
+    const updatedPosts = await fetchNewPostInfo(LoggedInUser.userid, postId);
+    if (updatedPosts) {
+      return {
+        isSuccessfull: true,
+        postInfo: updatedPosts,
+      };
+    }
   } catch (error) {
     console.error("Error while trying to upload a file\n", error);
-    return {
-      isSuccessfull: true,
-    };
   }
 }
 

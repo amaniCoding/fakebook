@@ -5,6 +5,7 @@ import {
   LikeActionState,
   postInfo,
   PostInfoCommentPayload,
+  PostInfoPayLoad,
   postOption,
   SubmittedPostType,
   UpdateFeedActionPayload,
@@ -136,11 +137,17 @@ export const userPostSlice = createSlice({
       const feed = state.feeds.find((_feed) => {
         return _feed.postId === action.payload.postId;
       });
-      if (feed && action.payload.reactionInfo) {
+
+      if (feed) {
         feed.reactionInfo = action.payload.reactionInfo;
       }
     },
-
+    updateFeedsWithNewPost: (
+      state,
+      action: PayloadAction<PostInfoPayLoad[]>
+    ) => {
+      state.feeds.push(action.payload[0]);
+    },
     updateFeedWithComment: (
       state,
       action: PayloadAction<CommentPayLoad | undefined>
@@ -210,6 +217,7 @@ export const {
   updatePostInfoWithComments,
   updateFeedWithComment,
   setLikeStateAction,
+  updateFeedsWithNewPost,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

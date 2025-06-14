@@ -61,9 +61,11 @@ export default function CommentItem({ feed }: CommentItemProps) {
     try {
       settoShowReactionBox(false);
       const reactionInfo = await UpdateReaction(postId, userId, reactionType);
-      dispatch(
-        updateFeeds({ postId: feed.postId, reactionInfo: reactionInfo })
-      );
+      if (reactionInfo) {
+        dispatch(
+          updateFeeds({ postId: feed.postId, reactionInfo: reactionInfo })
+        );
+      }
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
       settoShowReactionBox(false);
@@ -83,9 +85,14 @@ export default function CommentItem({ feed }: CommentItemProps) {
         userId,
         reactionType
       );
-      dispatch(
-        updateFeeds({ postId: feed.postId, reactionInfo: updatedReactionInfo })
-      );
+      if (updatedReactionInfo) {
+        dispatch(
+          updateFeeds({
+            postId: feed.postId,
+            reactionInfo: updatedReactionInfo,
+          })
+        );
+      }
     } catch (error) {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
@@ -339,7 +346,11 @@ export default function CommentItem({ feed }: CommentItemProps) {
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
-            <p>{parseInt(feed.comments) > 0 ? feed.comments : null}</p>
+            <p>
+              {parseInt(feed.commentInfo.commentsCount) > 0
+                ? feed.commentInfo.commentsCount
+                : null}
+            </p>
             <FaComment className="w-5 h-5 fill-gray-500" />
           </div>
 

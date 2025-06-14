@@ -7,7 +7,6 @@ import {
   Comment,
   Reaction,
   ReactionGroup,
-  User,
   PostDBNew,
   MediaReactionGroup,
   FirstMediaReactor,
@@ -89,7 +88,7 @@ async function isPostReactedByLoggedInUser(postId: string, userId: string) {
   }
 }
 
-export async function fetchPosts(user: User) {
+export async function fetchPosts(userId: string) {
   try {
     const posts =
       await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
@@ -104,7 +103,65 @@ export async function fetchPosts(user: User) {
           commentsCount,
           comments,
         ] = await Promise.all([
-          isPostReactedByLoggedInUser(row.postid, user.userid),
+          isPostReactedByLoggedInUser(row.postid, userId),
+          totalPostReactions(row.postid),
+          groupPostReactions(row.postid),
+          firstReactorInfo(row.postid),
+          getPostMedias(row.postid),
+          getPostTotalComments(row.postid),
+          getPostComments(row.postid),
+        ]);
+        return {
+          postId: row.postid,
+          post: row.post,
+          date: row.date,
+
+          medias: medias,
+          user: {
+            userid: row.userid,
+            fname: row.fname,
+            lname: row.lname,
+            profilepic: row.profilepic,
+          },
+
+          commentInfo: {
+            commentsCount: commentsCount[0].comments,
+            comments: comments,
+          },
+
+          reactionInfo: {
+            isReacted: _isPostReactedByLoggedInUser.isReacted,
+            reactionType: _isPostReactedByLoggedInUser.reactionType,
+            firstReactorInfo: _firstReactorInfo,
+            reactions: _totalPostReactions,
+            reactionGroup: _groupPostReactions,
+          },
+        };
+      })
+    );
+    return allPosts;
+  } catch (error) {
+    console.log("Database error", error);
+    throw new Error("Faild to fetch feed data");
+  }
+}
+
+export async function fetchNewPostInfo(postId: string, userId: string) {
+  try {
+    const posts =
+      await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY uposts.date DESC`;
+    const allPosts = await Promise.all(
+      posts.rows.map(async (row) => {
+        const [
+          _isPostReactedByLoggedInUser,
+          _totalPostReactions,
+          _groupPostReactions,
+          _firstReactorInfo,
+          medias,
+          commentsCount,
+          comments,
+        ] = await Promise.all([
+          isPostReactedByLoggedInUser(row.postid, userId),
           totalPostReactions(row.postid),
           groupPostReactions(row.postid),
           firstReactorInfo(row.postid),

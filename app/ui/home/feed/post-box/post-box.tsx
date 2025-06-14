@@ -7,7 +7,11 @@ import { FaUserFriends } from "react-icons/fa";
 import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { PiGifFill } from "react-icons/pi";
 import { IoIosMore } from "react-icons/io";
-import { setPost, setPostOption } from "@/app/store/slices/user/post/postSlice";
+import {
+  setPost,
+  setPostOption,
+  updateFeedsWithNewPost,
+} from "@/app/store/slices/user/post/postSlice";
 import React, {
   ChangeEvent,
   useActionState,
@@ -25,6 +29,7 @@ export default function PostBox(props: { onClose: () => void }) {
   const dispatch = useAppDispatch();
   const initialState: AddPostState = {
     isSuccessfull: false,
+    postInfo: [],
   };
   const post = useAppSelector((state) => state.userPost.post);
   const postOption = useAppSelector((state) => state.userPost.postOption);
@@ -34,7 +39,7 @@ export default function PostBox(props: { onClose: () => void }) {
   const [clientHeight, setClientHeight] = useState<number | undefined>(0);
   const [scrollHeight, setScrollHeight] = useState<number | undefined>(0);
   const [state, formAction, pending] = useActionState(createPost, initialState);
-  const isSuccessfull = state.isSuccessfull;
+  const isSuccessfull = state?.isSuccessfull;
 
   const [postOptionFromPostBox, setpostOptionFromPostBox] =
     useState<postOption>(postOption);
@@ -128,8 +133,9 @@ export default function PostBox(props: { onClose: () => void }) {
       setpostFromPostBox("");
       setFilesToView([]);
       dispatch(setPost(""));
+      dispatch(updateFeedsWithNewPost(state.postInfo));
     }
-  }, [dispatch, isSuccessfull, props]);
+  }, [dispatch, isSuccessfull, props, state?.postInfo]);
 
   return (
     <>
