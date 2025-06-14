@@ -1,6 +1,7 @@
 import { Posts } from "@/app/libs/data/user/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  CommentPayLoad,
   LikeActionState,
   postInfo,
   PostInfoCommentPayload,
@@ -140,6 +141,18 @@ export const userPostSlice = createSlice({
       }
     },
 
+    updateFeedWithComment: (
+      state,
+      action: PayloadAction<CommentPayLoad | undefined>
+    ) => {
+      const feed = state.feeds.find((_feed) => {
+        return _feed.postId === action.payload?.postId;
+      });
+      if (feed && action.payload?.commentData) {
+        feed.commentInfo.comments.push(action.payload.commentData);
+      }
+    },
+
     updatePostInfo: (
       state,
       action: PayloadAction<UpdatePostInfoActionPayload>
@@ -197,6 +210,7 @@ export const {
   updateFeeds,
   updatePostInfo,
   updatePostInfoWithComments,
+  updateFeedWithComment,
   setLikeStateAction,
 } = userPostSlice.actions;
 

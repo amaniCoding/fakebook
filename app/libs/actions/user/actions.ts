@@ -135,25 +135,13 @@ export async function commentAction(
       await sql<Comment>`INSERT INTO ucomments (postid, userid, comment) VALUES (${postId}, ${user.userid}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
     return {
-      loading: false,
-      comment: {
-        comment: insertComments.rows[0].comment,
-        commentid: insertComments.rows[0].commentid,
-        date: insertComments.rows[0].date,
-        user: user,
-      },
+      comment: insertComments.rows[0].comment,
+      commentid: insertComments.rows[0].commentid,
+      date: insertComments.rows[0].date,
+      user: user,
     };
   } catch (error) {
     console.error(`Error inserting comment ${error}`);
-    return {
-      loading: false,
-      comment: {
-        commentid: "",
-        comment: "",
-        date: "",
-        user: user,
-      },
-    };
   }
 }
 

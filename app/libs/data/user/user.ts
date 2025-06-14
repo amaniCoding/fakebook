@@ -20,15 +20,21 @@ import { PostReactionInfo } from "../../actions/user/types";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 
 async function getPostMedias(postId: string) {
-  const rows =
+  const data =
     await sql<Media>`SELECT umedias.media, umedias.mediaid FROM uposts JOIN users ON uposts.userid = users.userid JOIN umedias ON uposts.postid = umedias.postid WHERE uposts.postid = ${postId} ORDER BY umedias.date DESC`;
-  return rows;
+  return data.rows;
 }
 
 async function getPostTotalComments(postId: string) {
-  const rows =
+  const data =
     await sql<Comment>`SELECT COUNT(uposts.postid) as comments FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${postId}`;
-  return rows;
+  return data.rows;
+}
+
+async function getPostComments(postId: string) {
+  const data =
+    await sql<CommentData>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid WHERE uposts.postid = ${postId}`;
+  return data.rows;
 }
 
 async function groupPostReactions(postId: string) {
@@ -95,6 +101,7 @@ export async function fetchPosts(user: User) {
           _groupPostReactions,
           _firstReactorInfo,
           medias,
+          commentsCount,
           comments,
         ] = await Promise.all([
           isPostReactedByLoggedInUser(row.postid, user.userid),
@@ -103,13 +110,14 @@ export async function fetchPosts(user: User) {
           firstReactorInfo(row.postid),
           getPostMedias(row.postid),
           getPostTotalComments(row.postid),
+          getPostComments(row.postid),
         ]);
         return {
           postId: row.postid,
           post: row.post,
           date: row.date,
 
-          medias: medias.rows,
+          medias: medias,
           user: {
             userid: row.userid,
             fname: row.fname,
@@ -117,7 +125,10 @@ export async function fetchPosts(user: User) {
             profilepic: row.profilepic,
           },
 
-          comments: comments.rows[0].comments,
+          commentInfo: {
+            commentsCount: commentsCount[0].comments,
+            comments: comments,
+          },
 
           reactionInfo: {
             isReacted: _isPostReactedByLoggedInUser.isReacted,

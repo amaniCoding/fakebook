@@ -55,6 +55,16 @@ export type UpdateFeedActionPayload = {
   postId: string;
   reactionInfo: ReactionInfo | undefined;
 };
+
+export type CommentInfo = {
+  commentsCount: string;
+  comments: CommentData[];
+};
+
+export type CommentPayLoad = {
+  postId: string;
+  commentData: CommentData | undefined;
+};
 export type UpdatePostInfoActionPayload = {
   postId: string;
   reactionInfo: ReactionPostInfo | undefined;

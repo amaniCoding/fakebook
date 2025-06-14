@@ -16,13 +16,16 @@ import { getCommentsStateAction } from "@/app/libs/actions/user/types";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { CommentBoxProps } from "./types";
+import { useAppDispatch } from "@/app/store/hooks";
+import { updateFeedWithComment } from "@/app/store/slices/user/post/postSlice";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
+  const dispatch = useAppDispatch();
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
-    comments: [],
+    comments: post.commentInfo.comments,
   });
 
   const [comment, setComment] = useState<string>("");
@@ -273,7 +276,17 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   ) => {
     if (e.key === "Enter") {
       try {
-        await commentAction(LoggedInUser, post.postId, comment);
+        const insertedComment = await commentAction(
+          LoggedInUser,
+          post.postId,
+          comment
+        );
+        dispatch(
+          updateFeedWithComment({
+            postId: post.postId,
+            commentData: insertedComment,
+          })
+        );
       } catch (error) {
         console.error(`error ${error}`);
       }
@@ -701,8 +714,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
               <FaRegComment className="w-6 h-6" />
               <span>
-                {post.comments}{" "}
-                {`comment ${parseInt(post.comments) > 1 ? "s" : ""}`}
+                {post.commentInfo.commentsCount}{" "}
+                {`comment ${
+                  parseInt(post.commentInfo.commentsCount) > 1 ? "s" : ""
+                }`}
               </span>
             </div>
 

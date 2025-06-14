@@ -96,13 +96,18 @@ export type ReactionInfo = {
   reactionGroup: ReactionGroup[];
 };
 
+export type CommentInfo = {
+  commentsCount: string;
+  comments: CommentData[];
+};
+
 export type Posts = {
   postId: string;
   post: string;
   date: string;
   medias: Media[];
   user: User;
-  comments: string;
+  commentInfo: CommentInfo;
   reactionInfo: ReactionInfo;
 };
 
