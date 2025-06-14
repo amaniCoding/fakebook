@@ -732,81 +732,85 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
               <CommentsSkeleton />
             ) : (
               <>
-                {commentsData.comments.map((comment) => {
-                  return (
-                    <div
-                      className="flex flex-row mb-3 space-x-3 pb-2"
-                      key={comment.commentid}
-                    >
-                      <div className="relative group flex-none">
-                        <Link href={"/profile"}>
-                          <Image
-                            unoptimized
-                            alt="Amanuel Ferede"
-                            src={comment.user.profilepic}
-                            width={0}
-                            height={0}
-                            sizes="100vh"
-                            className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                          />
-                        </Link>
-                        <div
-                          className={
-                            "absolute group-hover:block hidden w-96 z-[500]  -left-32 rounded-lg  p-4  bg-white shadow-lg"
-                          }
-                        >
-                          <div className="flex space-x-3">
+                {commentsData.comments &&
+                  commentsData.comments.map((comment) => {
+                    return (
+                      <div
+                        className="flex flex-row mb-3 space-x-3 pb-2"
+                        key={comment.commentid}
+                      >
+                        <div className="relative group flex-none">
+                          <Link href={"/profile"}>
                             <Image
                               unoptimized
-                              className="w-20 h-20 rounded-full  object-cover"
                               alt="Amanuel Ferede"
                               src={comment.user.profilepic}
                               width={0}
                               height={0}
                               sizes="100vh"
+                              className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
                             />
+                          </Link>
+                          <div
+                            className={
+                              "absolute group-hover:block hidden w-96 z-[500]  -left-32 rounded-lg  p-4  bg-white shadow-lg"
+                            }
+                          >
+                            <div className="flex space-x-3">
+                              <Image
+                                unoptimized
+                                className="w-20 h-20 rounded-full  object-cover"
+                                alt="Amanuel Ferede"
+                                src={comment.user.profilepic}
+                                width={0}
+                                height={0}
+                                sizes="100vh"
+                              />
 
-                            <div className=" flex-col space-y-2 flex-1 mt-3">
-                              <p className="text-lg font-bold">
-                                Amanuel Ferede
-                              </p>
-                              <p className="">Lives in AddisAbaba Ethiopia </p>
-                              <p>
-                                Studid Civil Engineering at BahirDar University
-                              </p>
+                              <div className=" flex-col space-y-2 flex-1 mt-3">
+                                <p className="text-lg font-bold">
+                                  Amanuel Ferede
+                                </p>
+                                <p className="">
+                                  Lives in AddisAbaba Ethiopia{" "}
+                                </p>
+                                <p>
+                                  Studid Civil Engineering at BahirDar
+                                  University
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center space-x-2 mt-3">
+                              <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                                <FaUserFriends className="w-4 h-4" />
+                                <span>Friends</span>
+                              </button>
+                              <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                                <FaFacebookMessenger className="fill-white w-4 h-4" />
+                                <span>Message</span>
+                              </button>
+                              <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                                <IoIosMore className="w-4 h-4" />
+                              </button>
                             </div>
                           </div>
+                        </div>
+                        <div className="">
+                          <div className="p-3 bg-gray-100 rounded-xl ">
+                            <p className="font-semibold">Amanuel Ferede</p>
+                            <p>{comment.comment}</p>
+                          </div>
 
-                          <div className="flex items-center space-x-2 mt-3">
-                            <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                              <FaUserFriends className="w-4 h-4" />
-                              <span>Friends</span>
-                            </button>
-                            <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                              <FaFacebookMessenger className="fill-white w-4 h-4" />
-                              <span>Message</span>
-                            </button>
-                            <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                              <IoIosMore className="w-4 h-4" />
-                            </button>
+                          <div className="flex space-x-4 pl-3">
+                            <span className="text-sm"></span>
+                            <span className="text-sm">Like</span>
+                            <span className="text-sm">Reply</span>
                           </div>
                         </div>
                       </div>
-                      <div className="">
-                        <div className="p-3 bg-gray-100 rounded-xl ">
-                          <p className="font-semibold">Amanuel Ferede</p>
-                          <p>{comment.comment}</p>
-                        </div>
-
-                        <div className="flex space-x-4 pl-3">
-                          <span className="text-sm"></span>
-                          <span className="text-sm">Like</span>
-                          <span className="text-sm">Reply</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </>
             )}
           </div>
