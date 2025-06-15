@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Image from "next/image";
@@ -133,7 +132,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (e.key === "Enter") {
       try {
         const insertedComment = await MediaCommentAction(
-          LoggedInUser.userid,
+          LoggedInUser,
           props.postId,
           postInfo.medias[currentPhotoIndex]?.mediaid,
           comment
@@ -165,8 +164,8 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    console.log("commentsData", commentsData.comments);
-  }, [commentsData.comments]);
+    console.log("commentsData", insertCommentState.comment);
+  }, [insertCommentState.comment]);
 
   const renderComments = () => {
     if (!postInfo) {

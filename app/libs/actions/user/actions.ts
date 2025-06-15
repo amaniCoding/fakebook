@@ -87,35 +87,30 @@ export async function fetchCommentsAction(postId: string) {
 }
 
 export async function insertMediaComment(
-  userId: string,
+  loggedinuser: User,
   postId: string,
   mediaId: string,
   comment: string
 ) {
   const data =
-    await sql<MediaComments>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${userId}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+    await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${loggedinuser.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
   return {
     commentid: data.rows[0].commentid,
     comment: data.rows[0].comment,
     date: data.rows[0].date,
-    user: {
-      fname: data.rows[0].fname,
-      lname: data.rows[0].lname,
-      userid: data.rows[0].userid,
-      profilepic: data.rows[0].profilepic,
-    },
+    user: loggedinuser,
   };
 }
 
 export async function MediaCommentAction(
-  userId: string,
+  LoggedInUser: User,
   postId: string,
   mediaId: string,
   comment: string
 ) {
   try {
-    return await insertMediaComment(userId, postId, mediaId, comment);
+    return await insertMediaComment(LoggedInUser, postId, mediaId, comment);
   } catch (error) {
     console.error(`Error while inserting media comment`);
   }
