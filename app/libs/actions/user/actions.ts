@@ -177,9 +177,23 @@ export async function fetchMediaCommentsCount(postId: string, mediaId: string) {
 }
 
 export async function fetchMediaComments(postId: string, mediaId: string) {
-  const data =
-    await sql<CommentData>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
-  return data.rows;
+  const comments =
+    await sql<MediaComments>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+  return {
+    comments: comments.rows.map((comment) => {
+      return {
+        commentid: comment.commentid,
+        comment: comment.comment,
+        date: comment.date,
+        user: {
+          fname: comment.fname,
+          lname: comment.lname,
+          userid: comment.userid,
+          profilepic: comment.profilepic,
+        },
+      };
+    }),
+  };
 }
 
 export async function getMediaReactionCount(postId: string, mediaId: string) {
