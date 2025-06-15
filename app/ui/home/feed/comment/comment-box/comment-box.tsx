@@ -38,6 +38,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     setTimeOutId(timeoutid);
   };
 
+  useEffect(() => {
+    commentBoxRef.current?.scrollTo({
+      behavior: "smooth",
+      top: 350,
+    });
+  }, []);
+
   const handelUpdateLike = async (
     postId: string,
     userId: string,
@@ -299,7 +306,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           setComment("");
           commentBoxRef.current?.scrollTo({
             behavior: "smooth",
-            top: 250,
+            top: 350,
           });
         }
       } catch (error) {

@@ -1,4 +1,5 @@
 "use client";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 import Image from "next/image";
 import Link from "next/link";
 import { BiSolidGrid } from "react-icons/bi";
@@ -55,7 +56,7 @@ export default function NavBar() {
 
           <Image
             alt="Amanuel Ferede"
-            src={"/feeds/user.jpg"}
+            src={LoggedInUser.profilepic}
             width={0}
             height={0}
             sizes="100vh"

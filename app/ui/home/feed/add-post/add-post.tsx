@@ -13,6 +13,7 @@ import {
 } from "@/app/store/slices/user/post/postSlice";
 import { useAppSelector } from "@/app/store/hooks";
 import { postOption } from "./types";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 export default function AddPost() {
   const [isPostBoxShow, setIsPostBoxShown] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ export default function AddPost() {
         <div className="w-full px-3 py-3 border-b border-b-gray-100 flex md:items-center space-x-3">
           <Image
             alt="Amanuel Ferede"
-            src={"/feeds/user.jpg"}
+            src={LoggedInUser.profilepic}
             width={0}
             height={0}
             sizes="100vh"

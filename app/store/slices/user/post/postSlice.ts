@@ -152,8 +152,11 @@ export const userPostSlice = createSlice({
       const feed = state.feeds.find((_feed) => {
         return _feed.postId === action.payload.postId;
       });
-      if (feed && action.payload?.commentData) {
+      if (feed && action.payload.commentData) {
         feed.commentInfo.comments.push(action.payload.commentData);
+        const newCommentCount = parseInt(feed.commentInfo.commentsCount) + 1;
+        const newCommentCountString = newCommentCount.toString();
+        feed.commentInfo.commentsCount = newCommentCountString;
       }
     },
 
