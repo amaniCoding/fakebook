@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Image from "next/image";
@@ -165,6 +166,9 @@ export default function PhotoModal(props: PhotoModalProps) {
   const renderComments = () => {
     if (!postInfo) {
       return;
+    }
+    if (commentsData.loading) {
+      return <CommentsSkeleton />;
     }
     return commentsData.comments.map((comment) => {
       return (
@@ -801,10 +805,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           </div>
         </div>
 
-        <div className="px-3 h-full">
-          {renderComments()}
-          {insertCommentState.loading && <CommentsSkeleton />}
-        </div>
+        <div className="px-3 h-full">{renderComments()}</div>
         <div className="sticky rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
           <Image
             alt="Amanuel Ferede"
