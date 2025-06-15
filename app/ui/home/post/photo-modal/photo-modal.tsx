@@ -613,10 +613,12 @@ export default function PhotoModal(props: PhotoModalProps) {
           props.postId,
           props.mediaId
         );
-        setCommentsData({
-          loading: false,
-          comments: mediaComments,
-        });
+        if (mediaComments) {
+          setCommentsData({
+            loading: false,
+            comments: mediaComments,
+          });
+        }
       } catch (error) {
         console.error(`error ${error}`);
       }
