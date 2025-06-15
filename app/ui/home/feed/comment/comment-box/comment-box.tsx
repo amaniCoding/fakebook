@@ -325,10 +325,6 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         });
       } catch (error) {
         console.error(`error ${error}`);
-        setCommentsData({
-          loading: false,
-          comments: [],
-        });
       }
     };
 

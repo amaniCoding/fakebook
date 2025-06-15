@@ -190,6 +190,9 @@ export const userPostSlice = createSlice({
         });
         if (media) {
           media.commentInfo.comments.push(action.payload.comment);
+          const newCommentCount = parseInt(media.commentInfo.count) + 1;
+          const newCommentCountString = newCommentCount.toString();
+          media.commentInfo.count = newCommentCountString;
         }
       }
     },

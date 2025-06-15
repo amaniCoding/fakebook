@@ -29,6 +29,7 @@ import {
   updatePostInfoWithComments,
 } from "@/app/store/slices/user/post/postSlice";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
+import { fetchMediaComments } from "@/app/libs/data/user/user";
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.postInfo);
@@ -132,7 +133,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         const insertedComment = await MediaCommentAction(
           LoggedInUser.userid,
           props.postId,
-          postInfo.medias[currentPhotoIndex].mediaid,
+          postInfo.medias[currentPhotoIndex]?.mediaid,
           comment
         );
         if (insertedComment) {
@@ -600,6 +601,25 @@ export default function PhotoModal(props: PhotoModalProps) {
       settoShowReactionBox(false);
     }
   };
+
+  useEffect(() => {
+    const fetchMediaCommentsForUseEffect = async () => {
+      try {
+        const mediaComments = await fetchMediaComments(
+          props.postId,
+          props.mediaId
+        );
+        setCommentsData({
+          loading: false,
+          comments: mediaComments,
+        });
+      } catch (error) {
+        console.error(`error ${error}`);
+      }
+    };
+
+    fetchMediaCommentsForUseEffect();
+  }, [props.mediaId, props.postId]);
 
   useEffect(() => {
     console.log(postInfo);
