@@ -148,12 +148,9 @@ export const userPostSlice = createSlice({
     ) => {
       state.feeds.push(action.payload[0]);
     },
-    updateFeedWithComment: (
-      state,
-      action: PayloadAction<CommentPayLoad | undefined>
-    ) => {
+    updateFeedWithComment: (state, action: PayloadAction<CommentPayLoad>) => {
       const feed = state.feeds.find((_feed) => {
-        return _feed.postId === action.payload?.postId;
+        return _feed.postId === action.payload.postId;
       });
       if (feed && action.payload?.commentData) {
         feed.commentInfo.comments.push(action.payload.commentData);

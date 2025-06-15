@@ -5,7 +5,7 @@ import { PiShareFat } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   commentAction,
   fetchCommentsAction,
@@ -25,8 +25,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
-    comments: post.commentInfo.comments,
+    comments: [],
   });
+  const commentBoxRef = useRef<HTMLDivElement>(null);
 
   const [comment, setComment] = useState<string>("");
 
@@ -281,12 +282,26 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           post.postId,
           comment
         );
-        dispatch(
-          updateFeedWithComment({
-            postId: post.postId,
-            commentData: insertedComment,
-          })
-        );
+        if (insertedComment) {
+          const newComments = [insertedComment, ...commentsData.comments];
+          setCommentsData({
+            loading: false,
+            comments: newComments,
+          });
+
+          dispatch(
+            updateFeedWithComment({
+              postId: post.postId,
+              commentData: insertedComment,
+            })
+          );
+
+          setComment("");
+          commentBoxRef.current?.scrollTo({
+            behavior: "smooth",
+            top: 250,
+          });
+        }
       } catch (error) {
         console.error(`error ${error}`);
       }
@@ -328,7 +343,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             }}
           />
         </div>
-        <div className="overflow-y-auto socrollabar h-[430px] relative">
+        <div
+          className="overflow-y-auto socrollabar h-[430px] relative"
+          ref={commentBoxRef}
+        >
           <div className="flex justify-between">
             <div className="flex space-x-3 p-2">
               <Image
