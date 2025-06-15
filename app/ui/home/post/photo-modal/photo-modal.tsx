@@ -38,12 +38,15 @@ export default function PhotoModal(props: PhotoModalProps) {
     dispatch(setPostInfo(props.postInfo));
   }, [dispatch, props.postInfo]);
 
-  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
-    return media.mediaid === props.mediaId;
-  });
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(
-    currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
-  );
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  useEffect(() => {
+    const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
+      return media.mediaid === props.mediaId;
+    });
+    setCurrentPhotoIndex(
+      currentPhotoIndexFromProp ? currentPhotoIndexFromProp : 0
+    );
+  }, [postInfo?.medias, props.mediaId]);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
