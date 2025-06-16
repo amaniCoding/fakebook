@@ -28,7 +28,7 @@ export type PostInfo = {
 
 export type AddPostState = {
   isSuccessfull: boolean;
-  postInfo: PostInfo[];
+  postInfo: PostInfo | undefined;
 };
 
 export type LikeActionState = {

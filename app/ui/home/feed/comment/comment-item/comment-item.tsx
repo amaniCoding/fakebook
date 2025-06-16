@@ -345,14 +345,12 @@ export default function CommentItem({ feed }: CommentItemProps) {
         </div>
 
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1">
-            <p>
-              {parseInt(feed.commentInfo.commentsCount) > 0
-                ? feed.commentInfo.commentsCount
-                : null}
-            </p>
-            <FaComment className="w-5 h-5 fill-gray-500" />
-          </div>
+          {parseInt(feed.commentInfo.commentsCount) > 0 ? (
+            <div className="flex items-center space-x-1">
+              <p>{feed.commentInfo.commentsCount}</p>
+              <FaComment className="w-5 h-5 fill-gray-500" />
+            </div>
+          ) : null}
 
           <div className="flex items-center space-x-1 fill-gray-500">
             <p></p>

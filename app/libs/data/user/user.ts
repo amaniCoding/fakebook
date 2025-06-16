@@ -146,7 +146,7 @@ export async function fetchPosts(userId: string) {
   }
 }
 
-export async function fetchNewPostInfo(postId: string, userId: string) {
+export async function fetchNewPostInfo(userId: string, postId: string) {
   try {
     const posts =
       await sql<PostDB>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY uposts.date DESC`;

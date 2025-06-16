@@ -29,7 +29,7 @@ export default function PostBox(props: { onClose: () => void }) {
   const dispatch = useAppDispatch();
   const initialState: AddPostState = {
     isSuccessfull: false,
-    postInfo: [],
+    postInfo: undefined,
   };
   const post = useAppSelector((state) => state.userPost.post);
   const postOption = useAppSelector((state) => state.userPost.postOption);
@@ -46,8 +46,6 @@ export default function PostBox(props: { onClose: () => void }) {
 
   const [filesToView, setFilesToView] = useState<string[]>([]);
 
-  const [postButtonEnabled, setpostButtonEnabled] = useState<boolean>(false);
-
   const input = useRef<HTMLInputElement>(null);
 
   const textAreaForText = useRef<HTMLTextAreaElement>(null);
@@ -60,7 +58,6 @@ export default function PostBox(props: { onClose: () => void }) {
   };
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    setpostButtonEnabled(true);
     if (window.FileReader) {
       const filesToView: string[] = [];
       const files = e.target.files;
@@ -120,20 +117,12 @@ export default function PostBox(props: { onClose: () => void }) {
   };
 
   useEffect(() => {
-    if (!postFromPostBox || filesToView.length === 0) {
-      setpostButtonEnabled(false);
-    } else {
-      setpostButtonEnabled(true);
-    }
-  }, [filesToView.length, postFromPostBox]);
-
-  useEffect(() => {
     if (isSuccessfull) {
       props.onClose();
       setpostFromPostBox("");
       setFilesToView([]);
       dispatch(setPost(""));
-      dispatch(updateFeedsWithNewPost(state.postInfo));
+      dispatch(updateFeedsWithNewPost(state.postInfo!));
     }
   }, [dispatch, isSuccessfull, props, state?.postInfo]);
 
@@ -159,7 +148,6 @@ export default function PostBox(props: { onClose: () => void }) {
               onClick={() => {
                 dispatch(setPostOption(postOptionFromPostBox));
                 dispatch(setPost(postFromPostBox));
-                setpostButtonEnabled(false);
                 props.onClose();
               }}
             />
@@ -268,7 +256,7 @@ export default function PostBox(props: { onClose: () => void }) {
             <button
               type="submit"
               className={`w-full text-center  py-2 cursor-pointer text-white rounded-md ${
-                postButtonEnabled || postFromPostBox
+                filesToView.length > 0 || postFromPostBox
                   ? "bg-blue-600"
                   : "bg-gray-300"
               }`}

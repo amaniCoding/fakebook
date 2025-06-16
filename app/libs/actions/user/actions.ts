@@ -542,7 +542,7 @@ export async function createPost(
     if (updatedPosts) {
       return {
         isSuccessfull: true,
-        postInfo: updatedPosts,
+        postInfo: updatedPosts[0],
       };
     }
   } catch (error) {
