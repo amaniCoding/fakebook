@@ -17,7 +17,10 @@ import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { CommentBoxProps } from "./types";
 import { useAppDispatch } from "@/app/store/hooks";
-import { updateFeedWithComment } from "@/app/store/slices/user/post/postSlice";
+import {
+  updateFeeds,
+  updateFeedWithComment,
+} from "@/app/store/slices/user/post/postSlice";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const dispatch = useAppDispatch();
@@ -52,16 +55,18 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   ) => {
     try {
       settoShowReactionBox(false);
-      await UpdateReaction(postId, userId, reactionType);
+      const reactionInfo = await UpdateReaction(postId, userId, reactionType);
+      if (reactionInfo) {
+        dispatch(
+          updateFeeds({ postId: post.postId, reactionInfo: reactionInfo })
+        );
+      }
     } catch (error) {
       console.error(`error while updating reactions ${error}`);
       settoShowReactionBox(false);
     }
   };
 
-  const handelMouseOutLike = () => {
-    settoShowReactionBox(false);
-  };
   const handelReaction = async (
     postId: string,
     userId: string,
@@ -70,12 +75,35 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
-      await LikeAction(postId, userId, reactionType);
+      const updatedReactionInfo = await LikeAction(
+        postId,
+        userId,
+        reactionType
+      );
+      if (updatedReactionInfo) {
+        dispatch(
+          updateFeeds({
+            postId: post.postId,
+            reactionInfo: updatedReactionInfo,
+          })
+        );
+      }
     } catch (error) {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
       console.error(`error ${error}`);
     }
+  };
+
+  const handelMouseOutLike = () => {
+    settoShowReactionBox(false);
+  };
+
+  const handelMouseLeaveLike = () => {
+    const timeoutid = setTimeout(() => {
+      settoShowReactionBox(false);
+    }, 1000);
+    setTimeOutId(timeoutid);
   };
 
   const renderReactionStatus = () => {
@@ -90,6 +118,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -114,6 +143,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "love");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -138,6 +168,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "lagh");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -162,6 +193,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "care");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -186,6 +218,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "angry");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -211,6 +244,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "sad");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -235,6 +269,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "wow");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -248,10 +283,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         </div>
       );
     }
-    if (
-      !post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === undefined
-    ) {
+    if (!post.reactionInfo.isReacted && post.reactionInfo.reactionType === "") {
       return (
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
@@ -259,6 +291,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             handelReaction(post.postId, LoggedInUser.userid, "like");
           }}
           onMouseEnter={handelMouseOverLike}
+          onMouseLeave={handelMouseLeaveLike}
         >
           <Image
             alt="Amanuel Ferede"
@@ -332,7 +365,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   }, [post.postId]);
 
   return (
-    <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
+    <section className="bg-gray-100/75 absolute top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
       <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
         <div className="flex rounded-t-xl items-center justify-between mb-2 border-b-2 border-b-slate-200 p-2 sticky w-full left-0 right-0 bg-white top-0">
           <p></p>

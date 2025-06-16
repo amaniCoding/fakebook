@@ -724,7 +724,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
                 <p>{renderCommentCount()}</p>
               </div>
-              <div className=" flex mb-4 items-center justify-between border-t border-t-gray-300">
+              <div className=" flex mb-4 items-center justify-between border-t border-t-gray-300 relative">
                 {renderReactionStatus()}
                 {toShowReactionBox && (
                   <div
