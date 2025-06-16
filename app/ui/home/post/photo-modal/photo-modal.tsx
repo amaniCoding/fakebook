@@ -632,7 +632,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     };
 
     fetchMediaCommentsForUseEffect();
-  }, [props.mediaId, props.postId]);
+  }, [props.mediaId, props.postId, currentPhotoIndex]);
 
   useEffect(() => {
     console.log(postInfo);
