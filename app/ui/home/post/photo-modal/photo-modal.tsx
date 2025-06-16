@@ -728,7 +728,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 {renderReactionStatus()}
                 {toShowReactionBox && (
                   <div
-                    className="absolute -left-10 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
+                    className="absolute left-1 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
                     onMouseOver={handelOverMouseOutBox}
                     onMouseLeave={handelonMouseLeaveReactionBox}
                   >
