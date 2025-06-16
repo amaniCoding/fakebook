@@ -260,7 +260,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    if (currentPhotoIndex > postInfo.medias.length - 1) {
+    if (currentPhotoIndex >= postInfo.medias.length - 1) {
       setCurrentPhotoIndex(0);
     } else {
       const newIndex = currentPhotoIndex + 1;
@@ -275,7 +275,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    if (currentPhotoIndex < 0) {
+    if (currentPhotoIndex <= 0) {
       setCurrentPhotoIndex(postInfo.medias.length - 1);
     } else {
       const newIndex = currentPhotoIndex - 1;
