@@ -38,15 +38,13 @@ export default function PhotoModal(props: PhotoModalProps) {
     dispatch(setPostInfo(props.postInfo));
   }, [dispatch, props.postInfo]);
 
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<
-    number | undefined
-  >(0);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaid === props.mediaId;
   });
-  setCurrentPhotoIndex(
-    currentPhotoIndexFromProp === -1 ? 0 : currentPhotoIndexFromProp
-  );
+  useEffect(() => {
+    setCurrentPhotoIndex(currentPhotoIndexFromProp!);
+  }, [currentPhotoIndexFromProp]);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
@@ -77,8 +75,8 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    if (parseInt(postInfo.medias[currentPhotoIndex!]?.commentInfo.count) > 0) {
-      return postInfo.medias[currentPhotoIndex!]?.commentInfo.count;
+    if (parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) > 0) {
+      return postInfo.medias[currentPhotoIndex]?.commentInfo.count;
     } else {
       return "";
     }
@@ -108,13 +106,13 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionGroup.length > 0
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.length > 0
     ) {
-      return postInfo.medias[
-        currentPhotoIndex!
-      ]?.reactionInfo.reactionGroup.map((gr, index) => {
-        return <ReactionIcons key={index} reactiontype={gr.reactiontype} />;
-      });
+      return postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.map(
+        (gr, index) => {
+          return <ReactionIcons key={index} reactiontype={gr.reactiontype} />;
+        }
+      );
     }
   };
 
@@ -137,7 +135,7 @@ export default function PhotoModal(props: PhotoModalProps) {
         const insertedComment = await MediaCommentAction(
           LoggedInUser,
           props.postId,
-          postInfo.medias[currentPhotoIndex!]?.mediaid,
+          postInfo.medias[currentPhotoIndex]?.mediaid,
           comment
         );
         if (insertedComment) {
@@ -152,7 +150,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           });
           dispatch(
             updatePostInfoWithComments({
-              mediaId: props.mediaId,
+              mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
               postId: props.postId,
               comment: insertedComment,
             })
@@ -260,10 +258,10 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    if (currentPhotoIndex! >= postInfo.medias.length - 1) {
+    if (currentPhotoIndex >= postInfo.medias.length - 1) {
       setCurrentPhotoIndex(0);
     } else {
-      const newIndex = currentPhotoIndex! + 1;
+      const newIndex = currentPhotoIndex + 1;
       setCurrentPhotoIndex(newIndex);
     }
   };
@@ -275,10 +273,10 @@ export default function PhotoModal(props: PhotoModalProps) {
     if (!postInfo) {
       return;
     }
-    if (currentPhotoIndex! <= 0) {
+    if (currentPhotoIndex <= 0) {
       setCurrentPhotoIndex(postInfo.medias.length - 1);
     } else {
-      const newIndex = currentPhotoIndex! - 1;
+      const newIndex = currentPhotoIndex - 1;
       setCurrentPhotoIndex(newIndex);
     }
   };
@@ -288,12 +286,12 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
 
-    if (currentPhotoIndex! > postInfo.medias.length - 1) {
+    if (currentPhotoIndex > postInfo.medias.length - 1) {
       return postInfo.medias[0]?.media;
-    } else if (currentPhotoIndex! < 0) {
+    } else if (currentPhotoIndex < 0) {
       return postInfo.medias[postInfo.medias.length - 1]?.media;
     } else {
-      return postInfo.medias[currentPhotoIndex!]?.media;
+      return postInfo.medias[currentPhotoIndex]?.media;
     }
   };
 
@@ -302,13 +300,12 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
     if (
-      parseInt(postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactions) ===
-      1
+      parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions) === 1
     ) {
       return (
         <p>
           {
-            postInfo.medias[currentPhotoIndex!]?.reactionInfo.firstReactorInfo
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.firstReactorInfo
               .reactor
           }
         </p>
@@ -316,19 +313,19 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     if (
-      parseInt(postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactions) >
+      parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions) >
         1 &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted
     ) {
       return (
         <p>
           You and{" "}
           {parseInt(
-            postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactions
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions
           ) - 1}{" "}
           Other
           {parseInt(
-            postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactions
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions
           ) -
             1 >=
           1
@@ -353,14 +350,14 @@ export default function PhotoModal(props: PhotoModalProps) {
       const updatedPostMediaReactions = await likeMediaAction(
         postId,
         userId,
-        postInfo.medias[currentPhotoIndex!].mediaid,
+        postInfo.medias[currentPhotoIndex].mediaid,
         reactionType
       );
 
       if (updatedPostMediaReactions) {
         dispatch(
           updatePostInfo({
-            mediaId: props.mediaId,
+            mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
             postId: props.postId,
             reactionInfo: updatedPostMediaReactions,
           })
@@ -377,8 +374,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "like"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "like"
     ) {
       return (
         <div
@@ -402,8 +399,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "love"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "love"
     ) {
       return (
         <div
@@ -427,8 +424,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "lagh"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "lagh"
     ) {
       return (
         <div
@@ -452,8 +449,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "care"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "care"
     ) {
       return (
         <div
@@ -477,8 +474,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "angry"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "angry"
     ) {
       return (
         <div
@@ -503,8 +500,8 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "sad"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "sad"
     ) {
       return (
         <div
@@ -528,8 +525,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "wow"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "wow"
     ) {
       return (
         <div
@@ -553,10 +550,10 @@ export default function PhotoModal(props: PhotoModalProps) {
       );
     }
     if (
-      !postInfo.medias[currentPhotoIndex!]?.reactionInfo.isReacted &&
-      (postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType ===
+      !postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
+      (postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType ===
         undefined ||
-        postInfo.medias[currentPhotoIndex!]?.reactionInfo.reactionType === "")
+        postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "")
     ) {
       return (
         <div
@@ -595,14 +592,14 @@ export default function PhotoModal(props: PhotoModalProps) {
       const updatedMediaReactionInfo = await UpdateMediaReactionAction(
         postId,
         userId,
-        postInfo.medias[currentPhotoIndex!]?.mediaid,
+        postInfo.medias[currentPhotoIndex]?.mediaid,
         reactionType
       );
 
       if (updatedMediaReactionInfo) {
         dispatch(
           updatePostInfo({
-            mediaId: props.mediaId,
+            mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
             postId: props.postId,
             reactionInfo: updatedMediaReactionInfo,
           })
@@ -622,7 +619,7 @@ export default function PhotoModal(props: PhotoModalProps) {
       try {
         const mediaComments = await fetchMediaComments(
           props.postId,
-          postInfo.medias[currentPhotoIndex!].mediaid
+          postInfo.medias[currentPhotoIndex].mediaid
         );
         if (mediaComments) {
           setCommentsData({
@@ -636,7 +633,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     };
 
     fetchMediaCommentsForUseEffect();
-  }, [currentPhotoIndex, postInfo, props.postId]);
+  }, [props.mediaId, props.postId, currentPhotoIndex]);
 
   useEffect(() => {
     console.log(postInfo);
@@ -732,7 +729,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 {renderReactionStatus()}
                 {toShowReactionBox && (
                   <div
-                    className="absolute left-1 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
+                    className="absolute -left-1 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
                     onMouseOver={handelOverMouseOutBox}
                     onMouseLeave={handelonMouseLeaveReactionBox}
                   >
