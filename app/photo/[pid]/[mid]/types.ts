@@ -1,6 +1,6 @@
-import { Posts } from "@/app/libs/data/user/types";
+import { APost } from "@/app/types/frontend/post";
 
 export type CommentBoxProps = {
-  post: Posts;
+  post: APost;
   onClose: () => void;
 };

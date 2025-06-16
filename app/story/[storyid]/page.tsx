@@ -1,9 +1,8 @@
 import {
-  fetchAStory,
   fetchAllStories,
+  fetchAStory,
   fetchCurrentStoryMedias,
-  fetchAllStoriesWithPhotos,
-} from "@/app/libs/data/user/user";
+} from "@/app/libs/data/story";
 import Home from "./components/home/home";
 
 export default async function Page(props: {
@@ -11,20 +10,17 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const { storyid } = params;
-  const [allStories, currentStory, currentStoryPhotos, allStoriesWithPhotos] =
-    await Promise.all([
-      fetchAllStories(),
-      fetchAStory(storyid),
-      fetchCurrentStoryMedias(storyid),
-      fetchAllStoriesWithPhotos(),
-    ]);
+  const [allStories, currentStory, currentStoryPhotos] = await Promise.all([
+    fetchAllStories(),
+    fetchAStory(storyid),
+    fetchCurrentStoryMedias(storyid),
+  ]);
 
   return (
     <>
       <Home
         allStories={allStories}
         storyid={storyid}
-        allStoriesWithPhotos={allStoriesWithPhotos}
         currentStory={currentStory}
         currentStoryPhotos={currentStoryPhotos}
       />

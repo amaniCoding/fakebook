@@ -6,13 +6,13 @@ import CommentBox from "../comment-box/comment-box";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat, PiShareFatFill } from "react-icons/pi";
 import ReactionIcons from "../../reaction-icons/reaction-icons";
-import { LikeAction, UpdateReaction } from "@/app/libs/actions/user/actions";
 import { showCommentBox } from "@/app/store/slices/user/comment/commentSlice";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { useAppDispatch } from "@/app/store/hooks";
 
 import { CommentItemProps } from "./types";
-import { updateFeeds } from "@/app/store/slices/user/post/postSlice";
+import { react, reReact } from "@/app/libs/actions/post";
+import { updateFeedsWithReactionInfo } from "@/app/store/slices/user/post/postSlice";
 
 export default function CommentItem({ feed }: CommentItemProps) {
   const dispatch = useAppDispatch();
@@ -60,10 +60,13 @@ export default function CommentItem({ feed }: CommentItemProps) {
   ) => {
     try {
       settoShowReactionBox(false);
-      const reactionInfo = await UpdateReaction(postId, userId, reactionType);
+      const reactionInfo = await reReact(postId, userId, reactionType);
       if (reactionInfo) {
         dispatch(
-          updateFeeds({ postId: feed.postId, reactionInfo: reactionInfo })
+          updateFeedsWithReactionInfo({
+            postId: feed.postId,
+            reactionInfo: reactionInfo,
+          })
         );
       }
     } catch (error) {
@@ -80,14 +83,10 @@ export default function CommentItem({ feed }: CommentItemProps) {
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
-      const updatedReactionInfo = await LikeAction(
-        postId,
-        userId,
-        reactionType
-      );
+      const updatedReactionInfo = await react(postId, userId, reactionType);
       if (updatedReactionInfo) {
         dispatch(
-          updateFeeds({
+          updateFeedsWithReactionInfo({
             postId: feed.postId,
             reactionInfo: updatedReactionInfo,
           })
@@ -336,7 +335,7 @@ export default function CommentItem({ feed }: CommentItemProps) {
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
                   return (
-                    <ReactionIcons key={index} reactiontype={gr.reactiontype} />
+                    <ReactionIcons key={index} reactiontype={gr.reactionType} />
                   );
                 })
               : null}

@@ -1,5 +1,5 @@
-import { Posts } from "@/app/libs/data/user/types";
+import { Post } from "@/app/types/frontend/post";
 
 export type CommentItemProps = {
-  feed: Posts;
+  feed: Post;
 };

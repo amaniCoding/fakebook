@@ -19,7 +19,7 @@ export default function FeedItem({ feed }: FeedItemType) {
               <Image
                 unoptimized
                 alt="Amanuel Ferede"
-                src={feed.user.profilepic}
+                src={feed.user.profilePic}
                 width={0}
                 height={0}
                 sizes="100vh"
@@ -37,7 +37,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                   unoptimized
                   className="w-20 h-20 rounded-full  object-cover"
                   alt="Amanuel Ferede"
-                  src={feed.user.profilepic}
+                  src={feed.user.profilePic}
                   width={0}
                   height={0}
                   sizes="100vh"
@@ -45,7 +45,7 @@ export default function FeedItem({ feed }: FeedItemType) {
 
                 <div className=" flex-col space-y-2 flex-1 mt-3">
                   <p className="text-lg font-bold">
-                    {feed.user.fname} {feed.user.lname}
+                    {feed.user.fName} {feed.user.lName}
                   </p>
                   <p className="">Lives in AddisAbaba Ethiopia </p>
                   <p>Studid Civil Engineering at BahirDar University</p>
@@ -71,7 +71,7 @@ export default function FeedItem({ feed }: FeedItemType) {
             <div className="flex-col space-y-0.5 relative group">
               <Link href={"/profile"} className="peer block">
                 <span className="font-semibold">
-                  {feed.user.fname} {feed.user.lname}
+                  {feed.user.fName} {feed.user.lName}
                 </span>
               </Link>
               <div
@@ -84,7 +84,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                     unoptimized
                     className="w-20 h-20 rounded-full  object-cover"
                     alt="Amanuel Ferede"
-                    src={feed.user.profilepic}
+                    src={feed.user.profilePic}
                     width={0}
                     height={0}
                     sizes="100vh"
@@ -92,7 +92,7 @@ export default function FeedItem({ feed }: FeedItemType) {
 
                   <div className=" flex-col space-y-2 flex-1 mt-3">
                     <p className="text-lg font-bold">
-                      {feed.user.fname} {feed.user.lname}
+                      {feed.user.fName} {feed.user.lName}
                     </p>
                     <p className="">Lives in AddisAbaba Ethiopia </p>
                     <p>Studid Civil Engineering at BahirDar University</p>
@@ -144,13 +144,13 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="w-1/2 h-full flex flex-col space-y-1">
                 {feed.medias.slice(0, 3).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
                       className="w-full h-[10.5rem] block"
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                     >
                       <div
                         className="w-full h-full"
@@ -169,12 +169,12 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="w-1/2 h-full flex flex-col space-y-1">
                 {feed.medias.slice(3, 4).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                       className="block w-full h-[15.5rem]"
                     >
                       <div
@@ -190,7 +190,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                   );
                 })}
                 <Link
-                  href={`/photo/${feed.postId}/${feed.medias[5].mediaid}`}
+                  href={`/photo/${feed.postId}/${feed.medias[5].mediaId}`}
                   className="block w-full h-[15.5rem] grow relative"
                 >
                   <div
@@ -215,13 +215,13 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="flex flex-col w-1/2 space-y-1">
                 {feed.medias.slice(0, 3).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
                       className="w-full h-[10.5rem]"
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                     >
                       <div
                         style={{
@@ -239,13 +239,13 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="flex w-1/2 flex-col space-y-1">
                 {feed.medias.slice(3, 6).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
                       className="w-full h-[15.5rem] grow"
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                     >
                       <div
                         className=""
@@ -267,12 +267,12 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="flex flex-col space-y-1 w-1/2 h-full">
                 {feed.medias.slice(0, 2).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                       className="w-full h-full"
                     >
                       <div
@@ -292,12 +292,12 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="flex flex-col w-1/2 h-full space-y-1">
                 {feed.medias.slice(2, 4).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                       className="w-full h-full"
                     >
                       <div
@@ -320,13 +320,13 @@ export default function FeedItem({ feed }: FeedItemType) {
               <div className="flex flex-col w-1/2 h-full space-y-1">
                 {feed.medias.slice(0, 2).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
-                    return file.mediaid === _file.mediaid;
+                    return file.mediaId === _file.mediaId;
                   });
                   return (
                     <Link
                       className="block w-full h-[15.5rem]"
-                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                      key={file.mediaid}
+                      href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                      key={file.mediaId}
                     >
                       <div
                         className="w-full h-full"
@@ -342,7 +342,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                 })}
               </div>
               <Link
-                href={`/photo/${feed.postId}/${feed.medias[2].mediaid}`}
+                href={`/photo/${feed.postId}/${feed.medias[2].mediaId}`}
                 className="w-1/2 h-full"
               >
                 <div
@@ -362,13 +362,13 @@ export default function FeedItem({ feed }: FeedItemType) {
             <div className="flex w-full space-x-1 h-full">
               {feed.medias.map((file) => {
                 const fileIndex = feed.medias.findIndex((_file) => {
-                  return file.mediaid === _file.mediaid;
+                  return file.mediaId === _file.mediaId;
                 });
                 return (
                   <Link
                     className="w-full h-full block"
-                    href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaid}`}
-                    key={file.mediaid}
+                    href={`/photo/${feed.postId}/${feed.medias[fileIndex].mediaId}`}
+                    key={file.mediaId}
                   >
                     <div
                       className="w-full h-full"
@@ -389,7 +389,7 @@ export default function FeedItem({ feed }: FeedItemType) {
             <div className="flex w-full space-x-1 h-full">
               <Link
                 className="w-full h-full block"
-                href={`/photo/${feed.postId}/${feed.medias[0].mediaid}`}
+                href={`/photo/${feed.postId}/${feed.medias[0].mediaId}`}
                 key={feed.medias[0].media}
               >
                 <div

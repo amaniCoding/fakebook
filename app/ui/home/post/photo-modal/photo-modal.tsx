@@ -9,38 +9,41 @@ import { GrNext, GrPrevious } from "react-icons/gr";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 
 import { PiShareFat } from "react-icons/pi";
-import { PhotoModalProps } from "./types";
-import { FaUserFriends } from "react-icons/fa";
 import {
   getCommentsStateAction,
   insertCommentStateAction,
-} from "@/app/libs/actions/user/types";
+  PhotoModalProps,
+} from "./types";
+import { FaUserFriends } from "react-icons/fa";
+
 import { LoggedInUser } from "@/app/config/loggedinuser";
-import {
-  fetchMediaComments,
-  likeMediaAction,
-  MediaCommentAction,
-  UpdateMediaReactionAction,
-} from "@/app/libs/actions/user/actions";
+
 import ReactionIcons from "../../feed/reaction-icons/reaction-icons";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
-import {
-  setPostInfo,
-  updatePostInfo,
-  updatePostInfoWithComments,
-} from "@/app/store/slices/user/post/postSlice";
+
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import NavBar2 from "../../sections/nav-bar2";
+import {
+  setAPost,
+  updateAPostWithCommentInfo,
+  updateAPostWithReactionInfo,
+} from "@/app/store/slices/user/post/postSlice";
+import {
+  mComment,
+  mComments,
+  mReact,
+  mReReact,
+} from "@/app/libs/actions/media";
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
-  const postInfo = useAppSelector((state) => state.userPost.postInfo);
+  const postInfo = useAppSelector((state) => state.userPost.aPost);
   useEffect(() => {
-    dispatch(setPostInfo(props.postInfo));
-  }, [dispatch, props.postInfo]);
+    dispatch(setAPost(props.post));
+  }, [dispatch, props.post]);
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
-    return media.mediaid === props.mediaId;
+    return media.mediaId === props.mediaId;
   });
   useEffect(() => {
     setCurrentPhotoIndex(currentPhotoIndexFromProp!);
@@ -58,13 +61,13 @@ export default function PhotoModal(props: PhotoModalProps) {
       loading: false,
       comment: {
         comment: "",
-        commentid: "",
+        commentId: "",
         date: "",
         user: {
-          fname: "",
-          lname: "",
-          profilepic: "",
-          userid: "",
+          fName: "",
+          lName: "",
+          profilePic: "",
+          userId: "",
         },
       },
     });
@@ -110,7 +113,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     ) {
       return postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.map(
         (gr, index) => {
-          return <ReactionIcons key={index} reactiontype={gr.reactiontype} />;
+          return <ReactionIcons key={index} reactiontype={gr.reactionType} />;
         }
       );
     }
@@ -132,10 +135,10 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
     if (e.key === "Enter") {
       try {
-        const insertedComment = await MediaCommentAction(
+        const insertedComment = await mComment(
           LoggedInUser,
           props.postId,
-          postInfo.medias[currentPhotoIndex]?.mediaid,
+          postInfo.medias[currentPhotoIndex]?.mediaId,
           comment
         );
         if (insertedComment) {
@@ -149,8 +152,8 @@ export default function PhotoModal(props: PhotoModalProps) {
             comment: insertedComment,
           });
           dispatch(
-            updatePostInfoWithComments({
-              mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
+            updateAPostWithCommentInfo({
+              mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
               postId: props.postId,
               comment: insertedComment,
             })
@@ -179,15 +182,15 @@ export default function PhotoModal(props: PhotoModalProps) {
       return (
         <div
           className="flex flex-row mb-3 space-x-3 pb-2"
-          key={comment.commentid}
+          key={comment.commentId}
         >
           <div className=" group flex-none">
             <Link href={"/profile"}>
-              {comment?.user?.profilepic ? (
+              {comment?.user?.profilePic ? (
                 <Image
                   unoptimized
                   alt="Amanuel Ferede"
-                  src={comment?.user?.profilepic}
+                  src={comment?.user?.profilePic}
                   width={0}
                   height={0}
                   sizes="100vh"
@@ -201,11 +204,11 @@ export default function PhotoModal(props: PhotoModalProps) {
               }
             >
               <div className="flex space-x-3">
-                {comment?.user?.profilepic ? (
+                {comment?.user?.profilePic ? (
                   <Image
                     unoptimized
                     alt="Amanuel Ferede"
-                    src={comment?.user?.profilepic}
+                    src={comment?.user?.profilePic}
                     width={0}
                     height={0}
                     sizes="100vh"
@@ -238,7 +241,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           <div className="">
             <div className="p-3 bg-gray-100 rounded-xl ">
               <p className="font-semibold">
-                {comment?.user?.fname} {comment?.user?.lname}
+                {comment?.user?.fName} {comment?.user?.lName}
               </p>
               <p>{comment?.comment}</p>
             </div>
@@ -347,17 +350,17 @@ export default function PhotoModal(props: PhotoModalProps) {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
 
-      const updatedPostMediaReactions = await likeMediaAction(
+      const updatedPostMediaReactions = await mReact(
         postId,
         userId,
-        postInfo.medias[currentPhotoIndex].mediaid,
+        postInfo.medias[currentPhotoIndex].mediaId,
         reactionType
       );
 
       if (updatedPostMediaReactions) {
         dispatch(
-          updatePostInfo({
-            mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
+          updateAPostWithReactionInfo({
+            mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
             postId: props.postId,
             reactionInfo: updatedPostMediaReactions,
           })
@@ -589,17 +592,17 @@ export default function PhotoModal(props: PhotoModalProps) {
     try {
       settoShowReactionBox(false);
 
-      const updatedMediaReactionInfo = await UpdateMediaReactionAction(
+      const updatedMediaReactionInfo = await mReReact(
         postId,
         userId,
-        postInfo.medias[currentPhotoIndex]?.mediaid,
+        postInfo.medias[currentPhotoIndex]?.mediaId,
         reactionType
       );
 
       if (updatedMediaReactionInfo) {
         dispatch(
-          updatePostInfo({
-            mediaId: postInfo.medias[currentPhotoIndex]?.mediaid,
+          updateAPostWithReactionInfo({
+            mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
             postId: props.postId,
             reactionInfo: updatedMediaReactionInfo,
           })
@@ -617,9 +620,9 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
     const fetchMediaCommentsForUseEffect = async () => {
       try {
-        const mediaComments = await fetchMediaComments(
+        const mediaComments = await mComments(
           props.postId,
-          postInfo.medias[currentPhotoIndex].mediaid
+          postInfo.medias[currentPhotoIndex].mediaId
         );
         if (mediaComments) {
           setCommentsData({
@@ -707,8 +710,8 @@ export default function PhotoModal(props: PhotoModalProps) {
                   ) : null}
                   <div className="flex flex-col">
                     <p>
-                      {postInfo && postInfo.user.fname}{" "}
-                      {postInfo && postInfo.user.lname}
+                      {postInfo && postInfo.user.fName}{" "}
+                      {postInfo && postInfo.user.lName}
                     </p>
                     <p>March 27 at 3:34 pm</p>
                   </div>

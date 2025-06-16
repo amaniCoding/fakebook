@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import Link from "next/link";
 import { BsPlus } from "react-icons/bs";
-import { SimpleMedia } from "@/app/libs/data/user/types";
+import { SimpleMedia } from "@/app/types/db/query/story";
 
 export default function StorySlider(props: {
   stories: {

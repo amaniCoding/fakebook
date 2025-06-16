@@ -1,16 +1,13 @@
-import { Posts } from "@/app/libs/data/user/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { ReactionInfoPayLoad } from "@/app/types/store/reaction";
 import {
-  CommentPayLoad,
-  LikeActionState,
-  postInfo,
-  PostInfoCommentPayload,
-  PostInfoPayLoad,
-  postOption,
-  SubmittedPostType,
-  UpdateFeedActionPayload,
-  UpdatePostInfoActionPayload,
-} from "./types";
+  MediaCommentPayload,
+  MediaReactionInfoPayLoad,
+} from "@/app/types/store/media";
+import { postOption, SubmittedPostType } from "@/app/types/store/post";
+import { CommentPayLoad } from "@/app/types/store/comment";
+import { APost, Post } from "@/app/types/frontend/post";
 
 // Define a type for the slice state
 interface StoryState {
@@ -24,9 +21,8 @@ interface StoryState {
     text: string | undefined;
   };
 
-  feeds: Posts[];
-  likeActionState: LikeActionState;
-  postInfo: postInfo | undefined;
+  feeds: Post[];
+  aPost: APost | undefined;
 }
 
 // Define the initial state using that type
@@ -54,38 +50,7 @@ const initialState: StoryState = {
   },
 
   feeds: [],
-  likeActionState: {
-    loading: false,
-    error: false,
-    reactionInfo: {
-      isReacted: false,
-      reactionGroup: [
-        {
-          count: "",
-          reactiontype: "",
-        },
-      ],
-      reactions: "",
-      reactionType: "",
-      firstReactorInfo: {
-        reactionId: "",
-        reactionType: "",
-        reactor: "",
-      },
-    },
-  },
-  postInfo: {
-    postId: "",
-    post: "",
-    date: "",
-    user: {
-      userId: "",
-      fname: "",
-      lname: "",
-      profilePic: "",
-    },
-    medias: [],
-  },
+  aPost: undefined,
 };
 
 export const userPostSlice = createSlice({
@@ -127,14 +92,17 @@ export const userPostSlice = createSlice({
     ) => {
       state.postBoxHeights = action.payload;
     },
-    setFeeds: (state, action: PayloadAction<Posts[]>) => {
+    setFeeds: (state, action: PayloadAction<Post[]>) => {
       state.feeds = action.payload;
     },
-    setPostInfo: (state, action: PayloadAction<postInfo | undefined>) => {
-      state.postInfo = action.payload;
+    setAPost: (state, action: PayloadAction<APost | undefined>) => {
+      state.aPost = action.payload;
     },
-    updateFeeds: (state, action: PayloadAction<UpdateFeedActionPayload>) => {
-      const feed = state.feeds.find((_feed) => {
+    updateFeedsWithReactionInfo: (
+      state,
+      action: PayloadAction<ReactionInfoPayLoad>
+    ) => {
+      const feed = state.feeds.find((_feed: { postId: string }) => {
         return _feed.postId === action.payload.postId;
       });
 
@@ -142,27 +110,27 @@ export const userPostSlice = createSlice({
         feed.reactionInfo = action.payload.reactionInfo;
       }
     },
-    updateFeedsWithNewPost: (state, action: PayloadAction<PostInfoPayLoad>) => {
+    updateFeedsWithNewPost: (state, action: PayloadAction<Post>) => {
       state.feeds.unshift(action.payload);
     },
-    updateFeedWithComment: (state, action: PayloadAction<CommentPayLoad>) => {
-      const feed = state.feeds.find((_feed) => {
+    updateFeedsWithComment: (state, action: PayloadAction<CommentPayLoad>) => {
+      const feed = state.feeds.find((_feed: { postId: string }) => {
         return _feed.postId === action.payload.postId;
       });
-      if (feed && action.payload.commentData) {
-        feed.commentInfo.comments.push(action.payload.commentData);
+      if (feed && action.payload.comment) {
+        feed.commentInfo.comments.push(action.payload.comment);
         const newCommentCount = parseInt(feed.commentInfo.commentsCount) + 1;
         const newCommentCountString = newCommentCount.toString();
         feed.commentInfo.commentsCount = newCommentCountString;
       }
     },
 
-    updatePostInfo: (
+    updateAPostWithReactionInfo: (
       state,
-      action: PayloadAction<UpdatePostInfoActionPayload>
+      action: PayloadAction<MediaReactionInfoPayLoad>
     ) => {
-      const media = state.postInfo?.medias.find((media) => {
-        if (media.mediaid === action.payload.mediaId) {
+      const media = state.aPost?.medias.find((media) => {
+        if (media.mediaId === action.payload.mediaId) {
           return true;
         } else {
           return false;
@@ -173,13 +141,13 @@ export const userPostSlice = createSlice({
       }
     },
 
-    updatePostInfoWithComments: (
+    updateAPostWithCommentInfo: (
       state,
-      action: PayloadAction<PostInfoCommentPayload>
+      action: PayloadAction<MediaCommentPayload>
     ) => {
       if (action.payload.comment) {
-        const media = state.postInfo?.medias.find((media) => {
-          if (media.mediaid === action.payload.mediaId) {
+        const media = state.aPost?.medias.find((media) => {
+          if (media.mediaId === action.payload.mediaId) {
             return true;
           } else {
             return false;
@@ -192,10 +160,6 @@ export const userPostSlice = createSlice({
           media.commentInfo.count = newCommentCountString;
         }
       }
-    },
-
-    setLikeStateAction: (state, action: PayloadAction<LikeActionState>) => {
-      state.likeActionState = action.payload;
     },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
@@ -211,12 +175,11 @@ export const {
   setMarginTop,
   setPostBoxHeight,
   setFeeds,
-  setPostInfo,
-  updateFeeds,
-  updatePostInfo,
-  updatePostInfoWithComments,
-  updateFeedWithComment,
-  setLikeStateAction,
+  setAPost,
+  updateFeedsWithReactionInfo,
+  updateAPostWithReactionInfo,
+  updateAPostWithCommentInfo,
+  updateFeedsWithComment,
   updateFeedsWithNewPost,
 } = userPostSlice.actions;
 

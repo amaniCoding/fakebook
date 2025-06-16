@@ -1,0 +1,14 @@
+import { Comment } from "../frontend/comment";
+import { ReactionInfo } from "../frontend/reaction";
+
+export type MediaReactionInfoPayLoad = {
+  postId: string;
+  reactionInfo: ReactionInfo;
+  mediaId: string;
+};
+
+export type MediaCommentPayload = {
+  postId: string;
+  comment: Comment;
+  mediaId: string;
+};

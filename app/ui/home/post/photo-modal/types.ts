@@ -1,6 +1,24 @@
+import { Comment } from "@/app/types/frontend/comment";
+import { APost } from "@/app/types/frontend/post";
+
 export type MediaReactionGroup = {
   reactiontype: string;
   count: string;
+};
+
+export type User = {
+  userId: string;
+  fName: string;
+  lName: string;
+  profilePic: string;
+};
+
+export type ReactionInfo = {
+  isReacted: boolean;
+  reactionType: string;
+  firstReactorInfo: FirstMediaReactor;
+  reactions: string;
+  reactionGroup: MediaReactionGroup[];
 };
 
 type FirstMediaReactor = {
@@ -9,17 +27,12 @@ type FirstMediaReactor = {
   reactor: string;
 };
 export type CommentData = {
-  commentid: string;
+  commentId: string;
   comment: string;
   date: string;
-  user: {
-    fname: string;
-    lname: string;
-    userid: string;
-    profilepic: string;
-  };
+  user: User;
 };
-type postInfo = {
+export type Post = {
   postId: string;
   post: string;
   date: string;
@@ -33,13 +46,7 @@ type postInfo = {
     mediaid: string;
     type: string;
     media: string;
-    reactionInfo: {
-      isReacted: boolean;
-      reactionType: string;
-      firstReactorInfo: FirstMediaReactor;
-      reactions: string;
-      reactionGroup: MediaReactionGroup[];
-    };
+    reactionInfo: ReactionInfo;
     commentInfo: {
       count: string;
       comments: CommentData[];
@@ -48,7 +55,17 @@ type postInfo = {
 };
 
 export type PhotoModalProps = {
-  postInfo: postInfo | undefined;
+  post: APost | undefined;
   postId: string;
   mediaId: string;
+};
+
+export type insertCommentStateAction = {
+  loading: boolean;
+  comment: Comment;
+};
+
+export type getCommentsStateAction = {
+  loading: boolean;
+  comments: Comment[];
 };

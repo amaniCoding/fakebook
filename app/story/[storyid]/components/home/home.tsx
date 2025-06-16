@@ -11,9 +11,9 @@ import {
   setStories,
 } from "@/app/store/slices/user/story/storySlice";
 import Link from "next/link";
-import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
 import { useAppDispatch } from "@/app/store/hooks";
 import { HomeProps, Story } from "./types";
+import { fetchStoryPhotos } from "@/app/libs/actions/story";
 
 export default function Home(props: HomeProps) {
   const dispatch = useAppDispatch();

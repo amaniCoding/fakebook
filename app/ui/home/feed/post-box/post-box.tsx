@@ -22,14 +22,15 @@ import React, {
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { postOption } from "./types";
 import FileViewer from "../photo-viewer/photo-viewer";
-import { createPost } from "@/app/libs/actions/user/actions";
-import { AddPostState } from "@/app/libs/actions/user/types";
+import { AddPostState } from "@/app/types/action/user/post";
+import { createPost } from "@/app/libs/actions/post";
+
 // import { createPost, State } from "@/app/libs/actions"
 export default function PostBox(props: { onClose: () => void }) {
   const dispatch = useAppDispatch();
   const initialState: AddPostState = {
     isSuccessfull: false,
-    postInfo: undefined,
+    post: undefined,
   };
   const post = useAppSelector((state) => state.userPost.post);
   const postOption = useAppSelector((state) => state.userPost.postOption);
@@ -122,9 +123,9 @@ export default function PostBox(props: { onClose: () => void }) {
       setpostFromPostBox("");
       setFilesToView([]);
       dispatch(setPost(""));
-      dispatch(updateFeedsWithNewPost(state.postInfo!));
+      dispatch(updateFeedsWithNewPost(state.post!));
     }
-  }, [dispatch, isSuccessfull, props, state?.postInfo]);
+  }, [dispatch, isSuccessfull, props, state?.post]);
 
   return (
     <>

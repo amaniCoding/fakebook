@@ -1,6 +1,11 @@
-import { Posts } from "@/app/libs/data/user/types";
+import { Post } from "@/app/types/frontend/post";
+import { Comment } from "@/app/types/frontend/comment";
+export type getCommentsStateAction = {
+  loading: boolean;
+  comments: Comment[];
+};
 
 export type CommentBoxProps = {
-  post: Posts;
+  post: Post;
   onClose: () => void;
 };

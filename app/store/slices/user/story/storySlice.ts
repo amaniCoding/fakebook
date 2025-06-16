@@ -1,5 +1,5 @@
+import { CurrentStoryPhotos, Story, StoryMedia } from "@/app/types/store/story";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CurrentStoryPhotos, Story, StoryMedia } from "./types";
 
 // Define a type for the slice state
 interface StoryState {

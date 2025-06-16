@@ -3,7 +3,6 @@ export type HomeProps = {
   storyid: string;
   currentStory: Story[];
   currentStoryPhotos: StoryMedia[];
-  allStoriesWithPhotos: StoryMedia[];
 };
 
 export type Story = {

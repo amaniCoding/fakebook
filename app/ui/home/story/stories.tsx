@@ -1,4 +1,4 @@
-import { fetchStoriesForSlider } from "@/app/libs/data/user/user";
+import { fetchStoriesForSlider } from "@/app/libs/data/story";
 import StorySlider from "./story-slider";
 
 export default async function Stories() {

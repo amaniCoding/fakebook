@@ -1,4 +1,4 @@
-import { fetchPostInfo } from "@/app/libs/data/user/user";
+import { fetchPostInfo } from "@/app/libs/data/post";
 import PhotoModal from "@/app/ui/home/post/photo-modal/photo-modal";
 export default async function Page(props: {
   params: Promise<{ pid: string; mid: string }>;
@@ -10,7 +10,7 @@ export default async function Page(props: {
   console.log(postInfo);
   return (
     <>
-      <PhotoModal postInfo={postInfo} mediaId={mediaId} postId={postId} />
+      <PhotoModal post={postInfo} mediaId={mediaId} postId={postId} />
     </>
   );
 }

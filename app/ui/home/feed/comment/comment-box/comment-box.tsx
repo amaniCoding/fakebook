@@ -6,20 +6,21 @@ import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import {
-  commentAction,
-  fetchCommentsAction,
-  LikeAction,
-  UpdateReaction,
-} from "@/app/libs/actions/user/actions";
-import { getCommentsStateAction } from "@/app/libs/actions/user/types";
+
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import { LoggedInUser } from "@/app/config/loggedinuser";
-import { CommentBoxProps } from "./types";
+import { CommentBoxProps, getCommentsStateAction } from "./types";
 import { useAppDispatch } from "@/app/store/hooks";
+
 import {
-  updateFeeds,
-  updateFeedWithComment,
+  react,
+  reReact,
+  postComment,
+  getComments,
+} from "@/app/libs/actions/post";
+import {
+  updateFeedsWithComment,
+  updateFeedsWithReactionInfo,
 } from "@/app/store/slices/user/post/postSlice";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
@@ -55,10 +56,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   ) => {
     try {
       settoShowReactionBox(false);
-      const reactionInfo = await UpdateReaction(postId, userId, reactionType);
+      const reactionInfo = await reReact(postId, userId, reactionType);
       if (reactionInfo) {
         dispatch(
-          updateFeeds({ postId: post.postId, reactionInfo: reactionInfo })
+          updateFeedsWithReactionInfo({
+            postId: post.postId,
+            reactionInfo: reactionInfo,
+          })
         );
       }
     } catch (error) {
@@ -75,14 +79,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     try {
       clearTimeout(timeOutId);
       settoShowReactionBox(false);
-      const updatedReactionInfo = await LikeAction(
-        postId,
-        userId,
-        reactionType
-      );
+      const updatedReactionInfo = await react(postId, userId, reactionType);
       if (updatedReactionInfo) {
         dispatch(
-          updateFeeds({
+          updateFeedsWithReactionInfo({
             postId: post.postId,
             reactionInfo: updatedReactionInfo,
           })
@@ -317,7 +317,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   ) => {
     if (e.key === "Enter") {
       try {
-        const insertedComment = await commentAction(
+        const insertedComment = await postComment(
           LoggedInUser,
           post.postId,
           comment
@@ -330,9 +330,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           });
 
           dispatch(
-            updateFeedWithComment({
+            updateFeedsWithComment({
               postId: post.postId,
-              commentData: insertedComment,
+              comment: insertedComment,
             })
           );
 
@@ -350,7 +350,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   useEffect(() => {
     const fetchCommentsForUseEffect = async () => {
       try {
-        const commdata = await fetchCommentsAction(post.postId);
+        const commdata = await getComments(post.postId);
         setCommentsData({
           loading: false,
           comments: commdata.comments,
@@ -369,7 +369,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         <div className="flex rounded-t-xl items-center justify-between mb-2 border-b-2 border-b-slate-200 p-2 sticky w-full left-0 right-0 bg-white top-0">
           <p></p>
           <p>
-            {post.user.fname} {""} {post.user.lname}&apos;s Post
+            {post.user.fName} {""} {post.user.lName}&apos;s Post
           </p>
           <FaXmark
             className="w-10 h-10 rounded-full hover:bg-slate-300 p-2 cursor-pointer"
@@ -387,7 +387,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
               <Image
                 unoptimized
                 alt="Amanuel Ferede"
-                src={post.user.profilepic}
+                src={post.user.profilePic}
                 width={0}
                 height={0}
                 sizes="100vh"
@@ -396,7 +396,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
               <div className="flex flex-col space-y-0.5">
                 <span>
                   {" "}
-                  {post.user.fname} {""} {post.user.lname}
+                  {post.user.fName} {""} {post.user.lName}
                 </span>
                 <span className="text-gray-400 text-sm">2 Hours</span>
               </div>
@@ -414,13 +414,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="w-1/2 h-full flex flex-col space-y-1">
                     {post.medias.slice(0, 3).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
                           className="w-full h-[10.5rem] block"
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                         >
                           <div
                             className="w-full h-full"
@@ -439,12 +439,12 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="w-1/2 h-full flex flex-col space-y-1">
                     {post.medias.slice(3, 4).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                           className="block w-full h-[15.5rem]"
                         >
                           <div
@@ -460,7 +460,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                       );
                     })}
                     <Link
-                      href={`/photo/${post.postId}/${post.medias[5].mediaid}`}
+                      href={`/photo/${post.postId}/${post.medias[5].mediaId}`}
                       className="block w-full h-[15.5rem] grow relative"
                     >
                       <div
@@ -488,13 +488,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="flex flex-col w-1/2 space-y-1">
                     {post.medias.slice(0, 3).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
                           className="w-full h-[10.5rem]"
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                         >
                           <div
                             style={{
@@ -512,13 +512,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="flex w-1/2 flex-col space-y-1">
                     {post.medias.slice(3, 6).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
                           className="w-full h-[15.5rem] grow"
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                         >
                           <div
                             className=""
@@ -540,12 +540,12 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="flex flex-col space-y-1 w-1/2 h-full">
                     {post.medias.slice(0, 2).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                           className="w-full h-full"
                         >
                           <div
@@ -565,12 +565,12 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="flex flex-col w-1/2 h-full space-y-1">
                     {post.medias.slice(2, 4).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                           className="w-full h-full"
                         >
                           <div
@@ -593,13 +593,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="flex flex-col w-1/2 h-full space-y-1">
                     {post.medias.slice(0, 2).map((file) => {
                       const fileIndex = post.medias.findIndex((_file) => {
-                        return file.mediaid === _file.mediaid;
+                        return file.mediaId === _file.mediaId;
                       });
                       return (
                         <Link
                           className="block w-full h-[15.5rem]"
-                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                          key={file.mediaid}
+                          href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                          key={file.mediaId}
                         >
                           <div
                             className="w-full h-full"
@@ -615,7 +615,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                     })}
                   </div>
                   <Link
-                    href={`/photo/${post.postId}/${post.medias[2].mediaid}`}
+                    href={`/photo/${post.postId}/${post.medias[2].mediaId}`}
                     className="w-1/2 h-full"
                   >
                     <div
@@ -636,13 +636,13 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                 <div className="flex w-full space-x-1 h-full">
                   {post.medias.map((file) => {
                     const fileIndex = post.medias.findIndex((_file) => {
-                      return file.mediaid === _file.mediaid;
+                      return file.mediaId === _file.mediaId;
                     });
                     return (
                       <Link
                         className="w-full h-full block"
-                        href={`/photo/${post.postId}/${post.medias[fileIndex].mediaid}`}
-                        key={file.mediaid}
+                        href={`/photo/${post.postId}/${post.medias[fileIndex].mediaId}`}
+                        key={file.mediaId}
                       >
                         <div
                           className="w-full h-full"
@@ -661,7 +661,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
               {post.medias.length === 1 && (
                 <Link
-                  href={`/photo/${post.postId}/${post.medias[0].mediaid}`}
+                  href={`/photo/${post.postId}/${post.medias[0].mediaId}`}
                   className="w-full h-[31rem]"
                 >
                   <div
@@ -790,14 +790,14 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                     return (
                       <div
                         className="flex flex-row mb-3 space-x-3 pb-2"
-                        key={comment.commentid}
+                        key={comment.commentId}
                       >
                         <div className="relative group flex-none">
                           <Link href={"/profile"}>
                             <Image
                               unoptimized
                               alt="Amanuel Ferede"
-                              src={comment.user.profilepic}
+                              src={comment.user.profilePic}
                               width={0}
                               height={0}
                               sizes="100vh"
@@ -814,7 +814,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                                 unoptimized
                                 className="w-20 h-20 rounded-full  object-cover"
                                 alt="Amanuel Ferede"
-                                src={comment.user.profilepic}
+                                src={comment.user.profilePic}
                                 width={0}
                                 height={0}
                                 sizes="100vh"

@@ -10,7 +10,7 @@ import {
   setCurrentStory,
   setCurrentStoryPhotos,
 } from "@/app/store/slices/user/story/storySlice";
-import { fetchStoryPhotos } from "@/app/libs/actions/user/actions";
+import { fetchStoryPhotos } from "@/app/libs/actions/story";
 export default function StoryViewer() {
   const dispatch = useAppDispatch();
   const currentStory = useAppSelector((state) => state.userStory.currentStory);
