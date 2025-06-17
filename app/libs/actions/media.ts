@@ -10,6 +10,7 @@ import {
   mgroupReactions,
   mtotalComments,
   reactMedia,
+  reReactMedia,
   unReactMedia,
 } from "../utils/media";
 
@@ -60,7 +61,7 @@ export async function mReReact(
     if (!(await isMediaReacted(postId, userId, mediaId)).isReacted) {
       await reactMedia(postId, userId, mediaId, reactionType);
     } else {
-      await reactMedia(postId, userId, mediaId, reactionType);
+      await reReactMedia(postId, userId, mediaId, reactionType);
     }
 
     const [
