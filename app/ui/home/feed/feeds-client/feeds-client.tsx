@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import FeedItem from "../feed-item/feed-item";
@@ -9,13 +8,6 @@ import { LoggedInUser } from "@/app/config/loggedinuser";
 import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 
 export default function FeedsClient() {
-  const debounce = (func: (...args: any) => void, delay: number) => {
-    let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  };
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
   const [page, setPage] = useState<number>(1);
@@ -30,9 +22,7 @@ export default function FeedsClient() {
         (entries) => {
           if (entries[0].isIntersecting) {
             const newPage = page + 1;
-            debounce(() => {
-              setPage(newPage);
-            }, 500);
+            setPage(newPage);
           }
         },
         { threshold: 1.0 }
