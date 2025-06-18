@@ -13,6 +13,8 @@ import {
   storyDummyData,
   storyphotoDummyData,
 } from "../../libs/placeholders/user/place-holder";
+import { User } from "@/app/types/db/query/user";
+import { letters, randomTexts } from "../utils";
 const client = await db.connect();
 
 async function seedUser() {
@@ -65,20 +67,30 @@ async function seedUser() {
 }
 
 async function seedPost() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  /*   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
     CREATE TABLE IF NOT EXISTS uposts (
       postid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       posttype TEXT NOT NULL,
       userid UUID NOT NULL,
-      post TEXT NOT NULL,
+      post TEXT,
       date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
-  `;
+  `; */
+  const randomUserIndex = Math.floor(Math.random() * 20);
+  const randomTextIndex = Math.floor(Math.random() * 20);
+  const post = randomTexts[randomTextIndex];
+  const usersDb = await client.sql<User>`SELECT * FROM users`;
+  const users = usersDb.rows;
+
+  const randomNumberForIsPost = Math.floor(Math.random() * 4) + 1;
+  const isOdd = randomNumberForIsPost % 2 !== 0;
 
   const insertedPosts = await Promise.all(
-    postDummyData.map(async (post) => {
-      return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES (${post.postType}, ${post.userId}, ${post.post}) ON CONFLICT (postid) DO NOTHING;
+    Array.from(Array(500).keys()).map((post) => {
+      return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', ${
+        users[randomUserIndex].userid
+      }, ${isOdd ? null : post}) ON CONFLICT (postid) DO NOTHING;
       `;
     })
   );
@@ -253,16 +265,69 @@ async function seedReplyReactions() {
 }
 
 async function seeMedias() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS umedias(
-      mediaid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      postid UUID NOT NULL,
-      media TEXT,
-      type: TEXT,
-      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
+  // await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  // await client.sql`
+  //   CREATE TABLE IF NOT EXISTS umedias(
+  //     mediaid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  //     postid UUID NOT NULL,
+  //     media TEXT,
+  //     type: TEXT,
+  //     date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  //   );
+  // `;
+
+  const postsdB = await client.sql`SELECT * FROM uposts`;
+  const posts = postsdB.rows;
+  let mediasArray: string[] = [];
+  let lettersArray: string[] = [];
+  let randomPhotoCount;
+  const medias = await Promise.all(
+    posts.map(async (post) => {
+      mediasArray = [];
+      lettersArray = [];
+      randomPhotoCount = Math.floor(Math.random() * 15) + 1;
+      const photoOrPost = Math.floor(Math.random() * 5) + 1;
+      const isOdd = photoOrPost % 2 !== 0;
+
+      Array.from(Array(randomPhotoCount).keys()).map((key) => {
+        lettersArray.push(letters[key]);
+      });
+
+      lettersArray.map((letter) => {
+        mediasArray.push(`/feeds/dummy/${letter}.jpg`);
+      });
+      if (post.post === null) {
+        const medias = await Promise.all(
+          mediasArray.map((media) => {
+            return client.sql`INSERT INTO umedias (postid, media, type) VALUES (${post.postid}, ${media}, 'image/jpeg')`;
+          })
+        );
+        return medias;
+      }
+      if (isOdd) {
+        return;
+      }
+      /** Recreate */
+      lettersArray = [];
+      mediasArray = [];
+      randomPhotoCount = Math.floor(Math.random() * 15) + 1;
+      Array.from(Array(randomPhotoCount).keys()).map((key) => {
+        lettersArray.push(letters[key]);
+      });
+
+      lettersArray.map((letter) => {
+        mediasArray.push(`/feeds/dummy/${letter}.jpg`);
+      });
+
+      const medias = await Promise.all(
+        mediasArray.map((media) => {
+          return client.sql`INSERT INTO umedias (postid, media, type) VALUES (${post.postid}, ${media}, 'image/jpeg') ON CONFLICT (mediaid) DO NOTHING`;
+        })
+      );
+      return medias;
+    })
+  );
+  return medias;
 }
 
 async function seedStoryMedias() {
@@ -292,22 +357,8 @@ export async function GET() {
     await client.sql`BEGIN`;
     await client.sql`COMMIT`;
 
-    // await seedUser();
-
-    // await seedPost();
-    //seeMedias();
-    //seedStories();
-    //seedStoryPhotos();
-
-    //await seedComments();
-    // await seedReplies();
-    // await seedCommentReactions();
-    //await seedPostReactions();
-    // await seedReplyReactions();
-
-    // await seedStoryMedias();
-    await seedMediaComments();
-    await seedMediaReactions();
+    await seedPost();
+    await seeMedias();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
