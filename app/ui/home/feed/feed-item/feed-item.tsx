@@ -224,6 +224,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                       key={file.mediaId}
                     >
                       <div
+                        className="w-full h-full"
                         style={{
                           backgroundImage: "url(" + `${file.media}` + ")",
                           backgroundPosition: "top center",
@@ -235,7 +236,6 @@ export default function FeedItem({ feed }: FeedItemType) {
                   );
                 })}
               </div>
-
               <div className="flex w-1/2 flex-col space-y-1">
                 {feed.medias.slice(3, 6).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {
@@ -248,7 +248,7 @@ export default function FeedItem({ feed }: FeedItemType) {
                       key={file.mediaId}
                     >
                       <div
-                        className=""
+                        className="w-full h-full"
                         style={{
                           backgroundImage: "url(" + `${file.media}` + ")",
                           backgroundPosition: "top center",
