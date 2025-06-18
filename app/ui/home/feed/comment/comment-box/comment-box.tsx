@@ -1,10 +1,9 @@
 "use client";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 import Image from "next/image";
-import { PiShareFat } from "react-icons/pi";
 import Link from "next/link";
 import { FaUserFriends } from "react-icons/fa";
-import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
+import { FaFacebookMessenger, FaXmark } from "react-icons/fa6";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
@@ -12,22 +11,12 @@ import { LoggedInUser } from "@/app/config/loggedinuser";
 import { CommentBoxProps, getCommentsStateAction } from "./types";
 import { useAppDispatch } from "@/app/store/hooks";
 
-import {
-  react,
-  reReact,
-  postComment,
-  getComments,
-} from "@/app/libs/actions/post";
-import {
-  updateFeedsWithComment,
-  updateFeedsWithReactionInfo,
-} from "@/app/store/slices/user/post/postSlice";
-import ReactionIcons from "../../reaction-icons/reaction-icons";
+import { postComment, getComments } from "@/app/libs/actions/post";
+import { updateFeedsWithComment } from "@/app/store/slices/user/post/postSlice";
+import CommentItem from "../comment-item/comment-item";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const dispatch = useAppDispatch();
-  const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
-  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
   const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
     loading: true,
     comments: [],
@@ -36,277 +25,11 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
   const [comment, setComment] = useState<string>("");
 
-  const handelMouseOverLike = () => {
-    const timeoutid = setTimeout(() => {
-      settoShowReactionBox(true);
-    }, 1000);
-    setTimeOutId(timeoutid);
-  };
-
   useEffect(() => {
     commentBoxRef.current?.scrollTo({
-      behavior: "smooth",
       top: 350,
     });
   }, []);
-
-  const handelUpdateLike = async (
-    postId: string,
-    userId: string,
-    reactionType: string
-  ) => {
-    try {
-      settoShowReactionBox(false);
-      const reactionInfo = await reReact(postId, userId, reactionType);
-      if (reactionInfo) {
-        dispatch(
-          updateFeedsWithReactionInfo({
-            postId: post.postId,
-            reactionInfo: reactionInfo,
-          })
-        );
-      }
-    } catch (error) {
-      console.error(`error while updating reactions ${error}`);
-      settoShowReactionBox(false);
-    }
-  };
-
-  const handelReaction = async (
-    postId: string,
-    userId: string,
-    reactionType: string
-  ) => {
-    try {
-      clearTimeout(timeOutId);
-      settoShowReactionBox(false);
-      const updatedReactionInfo = await react(postId, userId, reactionType);
-      if (updatedReactionInfo) {
-        dispatch(
-          updateFeedsWithReactionInfo({
-            postId: post.postId,
-            reactionInfo: updatedReactionInfo,
-          })
-        );
-      }
-    } catch (error) {
-      clearTimeout(timeOutId);
-      settoShowReactionBox(false);
-      console.error(`error ${error}`);
-    }
-  };
-
-  const handelMouseOutLike = () => {
-    settoShowReactionBox(false);
-  };
-
-  const handelMouseLeaveLike = () => {
-    const timeoutid = setTimeout(() => {
-      settoShowReactionBox(false);
-    }, 1000);
-    setTimeOutId(timeoutid);
-  };
-
-  const renderReactionStatus = () => {
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "like"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "like");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/like.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-blue-600 font-semibold">Like</span>
-        </div>
-      );
-    }
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "love"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "love");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/love.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-pink-500 font-semibold">Love</span>
-        </div>
-      );
-    }
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "lagh"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "lagh");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/haha.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Haha</span>
-        </div>
-      );
-    }
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "care"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "care");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/care.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-orange-500 font-semibold">Care</span>
-        </div>
-      );
-    }
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "angry"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "angry");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/angry.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Angry</span>
-        </div>
-      );
-    }
-
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "sad"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "sad");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/sad.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-yellow-700 font-semibold">Sad</span>
-        </div>
-      );
-    }
-    if (
-      post.reactionInfo.isReacted &&
-      post.reactionInfo.reactionType === "wow"
-    ) {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "wow");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/wow.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span className="text-orange-500 font-semibold">Wow</span>
-        </div>
-      );
-    }
-    if (!post.reactionInfo.isReacted && post.reactionInfo.reactionType === "") {
-      return (
-        <div
-          className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={() => {
-            handelReaction(post.postId, LoggedInUser.userid, "like");
-          }}
-          onMouseEnter={handelMouseOverLike}
-          onMouseLeave={handelMouseLeaveLike}
-        >
-          <Image
-            alt="Amanuel Ferede"
-            src={"/reactions/likew.png"}
-            width={0}
-            height={0}
-            sizes="100vh"
-            className="w-6 h-6 object-cover rounded-full block flex-none"
-          />
-          <span>Like</span>
-        </div>
-      );
-    }
-  };
 
   const onChangeComment = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
@@ -363,25 +86,6 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
     fetchCommentsForUseEffect();
   }, [post.postId]);
-
-  const renderReactionState = () => {
-    if (parseInt(post.reactionInfo.reactions) === 1) {
-      return <p>{post.reactionInfo.firstReactorInfo.reactor}</p>;
-    }
-
-    if (
-      parseInt(post.reactionInfo.reactions) > 1 &&
-      post.reactionInfo.isReacted
-    ) {
-      return (
-        <p>
-          You and {parseInt(post.reactionInfo.reactions) - 1} Other
-          {parseInt(post.reactionInfo.reactions) - 1 >= 1 ? "s" : ""}
-        </p>
-      );
-    }
-    return null;
-  };
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -698,126 +402,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             </div>
           )}
 
-          <div className="flex items-center justify-between px-2 mt-2 py-2 border-t border-b border-gray-300 relative">
-            <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
-              <div className="flex items-center space-x-0">
-                <div className="flex -space-x-1.5">
-                  {post.reactionInfo.reactionGroup.length > 0
-                    ? post.reactionInfo.reactionGroup.map((gr, index) => {
-                        return (
-                          <ReactionIcons
-                            key={index}
-                            reactiontype={gr.reactionType}
-                          />
-                        );
-                      })
-                    : null}
-                </div>
-                <p>{renderReactionState()}</p>
-              </div>
-            </div>
-            {renderReactionStatus()}
-            {toShowReactionBox && (
-              <div
-                className="absolute left-0 bottom-12 z-[100] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
-                onMouseLeave={handelMouseOutLike}
-              >
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "like");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/like.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "love");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/love.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "care");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/care.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "lagh");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/haha.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "wow");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/wow.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "sad");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/sad.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-                <Image
-                  onClick={() => {
-                    handelUpdateLike(post.postId, LoggedInUser.userid, "angry");
-                  }}
-                  alt="Amanuel Ferede"
-                  src={"/reactions/angry.png"}
-                  width={0}
-                  height={0}
-                  sizes="100vh"
-                  className="cursor-pointer w-14 h-14 object-cover rounded-full block flex-none"
-                />
-              </div>
-            )}
-            <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
-              <FaRegComment className="w-6 h-6" />
-              <span>
-                {parseInt(post.commentInfo.commentsCount) > 0
-                  ? post.commentInfo.commentsCount
-                  : null}{" "}
-                {`comment ${
-                  parseInt(post.commentInfo.commentsCount) > 1 ? "s" : ""
-                }`}
-              </span>
-            </div>
-
-            <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
-              <PiShareFat className="w-6 h-6" />
-              <span>Share</span>
-            </div>
-          </div>
+          <CommentItem feed={post} refer="commentbox" />
 
           <div className="px-6 py-2 ">
             {commentsData.loading ? (

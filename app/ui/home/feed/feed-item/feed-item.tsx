@@ -407,7 +407,7 @@ export default function FeedItem({ feed, ref }: FeedItemType) {
         </div>
       )}
 
-      <CommentItem feed={feed} />
+      <CommentItem feed={feed} refer="" />
     </div>
   );
 }

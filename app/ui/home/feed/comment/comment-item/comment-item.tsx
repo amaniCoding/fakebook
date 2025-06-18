@@ -14,7 +14,7 @@ import { CommentItemProps } from "./types";
 import { react, reReact } from "@/app/libs/actions/post";
 import { updateFeedsWithReactionInfo } from "@/app/store/slices/user/post/postSlice";
 
-export default function CommentItem({ feed }: CommentItemProps) {
+export default function CommentItem({ feed, refer }: CommentItemProps) {
   const dispatch = useAppDispatch();
 
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
@@ -446,7 +446,12 @@ export default function CommentItem({ feed }: CommentItemProps) {
         )}
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
-          onClick={handelShowCommentBox}
+          onClick={() => {
+            if (refer === "commentbox") {
+              return;
+            }
+            handelShowCommentBox();
+          }}
         >
           <FaRegComment className="w-6 h-6" />
           <span>Comment</span>
