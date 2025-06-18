@@ -122,7 +122,7 @@ export default function FeedItem({ feed }: FeedItemType) {
       <div className="px-5 mb-3 mt-2">
         {!isMore ? (
           <p>
-            {feed.post.substring(0, 170)}
+            {feed.post?.substring(0, 170)}
             <span
               className="cursor-pointer"
               onClick={() => {
@@ -130,7 +130,7 @@ export default function FeedItem({ feed }: FeedItemType) {
               }}
             >
               {" "}
-              {feed.post.length > 170 ? "...more" : ""}
+              {feed.post?.length > 170 ? "...more" : ""}
             </span>
           </p>
         ) : (
