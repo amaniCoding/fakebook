@@ -87,12 +87,10 @@ async function seedPost() {
   const isOdd = randomNumberForIsPost % 2 !== 0;
 
   const insertedPosts = await Promise.all(
-    Array.from(Array(500).keys()).map((post) => {
+    Array.from(Array(500).keys()).map((_post) => {
       return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', ${
         users[randomUserIndex].userid
-      }, ${
-        isOdd ? null : randomNumberForIsPost
-      }) ON CONFLICT (postid) DO NOTHING;
+      }, ${isOdd ? null : post}) ON CONFLICT (postid) DO NOTHING;
       `;
     })
   );
