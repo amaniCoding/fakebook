@@ -77,17 +77,17 @@ async function seedPost() {
       date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
   `; */
-  const randomUserIndex = Math.floor(Math.random() * 20);
-  const randomTextIndex = Math.floor(Math.random() * 20);
-  const post = randomTexts[randomTextIndex];
+
   const usersDb = await client.sql<User>`SELECT * FROM users`;
   const users = usersDb.rows;
-
-  const randomNumberForIsPost = Math.floor(Math.random() * 5) + 1;
-  const isOdd = randomNumberForIsPost % 2 !== 0;
-
   const insertedPosts = await Promise.all(
     Array.from(Array(500).keys()).map((_post) => {
+      const randomUserIndex = Math.floor(Math.random() * 20);
+      const randomTextIndex = Math.floor(Math.random() * 20);
+      const post = randomTexts[randomTextIndex];
+
+      const randomNumberForIsPost = Math.floor(Math.random() * 5) + 1;
+      const isOdd = randomNumberForIsPost % 2 !== 0;
       return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', ${
         users[randomUserIndex].userid
       }, ${isOdd ? null : post}) ON CONFLICT (postid) DO NOTHING;
@@ -282,7 +282,7 @@ async function seeMedias() {
   let lettersArray: string[] = [];
   let randomPhotoCount;
   const medias = await Promise.all(
-    posts.map(async (post) => {
+    posts.map((post) => {
       mediasArray = [];
       lettersArray = [];
       randomPhotoCount = Math.floor(Math.random() * 15) + 1;
@@ -297,12 +297,11 @@ async function seeMedias() {
         mediasArray.push(`/feeds/dummy/${letter}.jpg`);
       });
       if (post.post === null) {
-        const medias = await Promise.all(
+        return Promise.all(
           mediasArray.map((media) => {
             return client.sql`INSERT INTO umedias (postid, media, type) VALUES (${post.postid}, ${media}, 'image/jpeg')`;
           })
         );
-        return medias;
       }
       if (isOdd) {
         return;
@@ -319,12 +318,11 @@ async function seeMedias() {
         mediasArray.push(`/feeds/dummy/${letter}.jpg`);
       });
 
-      const medias = await Promise.all(
+      return Promise.all(
         mediasArray.map((media) => {
           return client.sql`INSERT INTO umedias (postid, media, type) VALUES (${post.postid}, ${media}, 'image/jpeg') ON CONFLICT (mediaid) DO NOTHING`;
         })
       );
-      return medias;
     })
   );
   return medias;
@@ -358,7 +356,7 @@ export async function GET() {
     await client.sql`COMMIT`;
 
     await seedPost();
-    await seeMedias();
+    //await seeMedias();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {

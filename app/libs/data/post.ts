@@ -15,7 +15,7 @@ import { LoggedInUser } from "@/app/config/loggedinuser";
 export async function fetchPosts(userId: string) {
   try {
     const posts =
-      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
+      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC LIMIT 15`;
     const allPosts = await Promise.all(
       posts.rows.map(async (row) => {
         const [
