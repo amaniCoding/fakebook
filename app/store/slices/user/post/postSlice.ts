@@ -95,6 +95,9 @@ export const userPostSlice = createSlice({
     setFeeds: (state, action: PayloadAction<Post[]>) => {
       state.feeds = action.payload;
     },
+    feedFeeds: (state, action: PayloadAction<Post[]>) => {
+      state.feeds = [...state.feeds, ...action.payload];
+    },
     setAPost: (state, action: PayloadAction<APost | undefined>) => {
       state.aPost = action.payload;
     },
@@ -175,6 +178,7 @@ export const {
   setMarginTop,
   setPostBoxHeight,
   setFeeds,
+  feedFeeds,
   setAPost,
   updateFeedsWithReactionInfo,
   updateAPostWithReactionInfo,

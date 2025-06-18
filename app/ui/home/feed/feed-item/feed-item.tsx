@@ -7,11 +7,11 @@ import CommentItem from "../comment/comment-item/comment-item";
 import { FeedItemType } from "./types";
 import { useState } from "react";
 
-export default function FeedItem({ feed }: FeedItemType) {
+export default function FeedItem({ feed, ref }: FeedItemType) {
   const [isMore, setIsMore] = useState<boolean>(false);
 
   return (
-    <div className="py-2 bg-white rounded-lg mb-4 shadow-md">
+    <div className="py-2 bg-white rounded-lg mb-4 shadow-md" ref={ref}>
       <div className="flex justify-between">
         <div className="flex space-x-3 px-6 pt-2">
           <div className="flex-col space-y-0.5 relative group">

@@ -14,7 +14,7 @@ import {
   totalReactions,
   unReactPost,
 } from "../utils/post";
-import { fetchNewPost } from "../data/post";
+import { fetchNewPost, fetchPosts } from "../data/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { AddPostState } from "@/app/types/action/user/post";
 export async function createPost(
@@ -194,4 +194,9 @@ export async function reReact(
   } catch (error) {
     console.error(`Error in updating post reactions ${error}`);
   }
+}
+
+export async function fetchFeeds(userid: string, page: number) {
+  const feeds = await fetchPosts(userid, page);
+  return feeds;
 }

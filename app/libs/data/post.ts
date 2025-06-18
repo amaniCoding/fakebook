@@ -12,10 +12,11 @@ import {
 } from "../utils/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 
-export async function fetchPosts(userId: string) {
+export async function fetchPosts(userId: string, page: number = 1) {
+  const offset = (page - 1) * 10;
   try {
     const posts =
-      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC LIMIT 15`;
+      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC LIMIT 5 OFFSET ${offset}`;
     const allPosts = await Promise.all(
       posts.rows.map(async (row) => {
         const [
