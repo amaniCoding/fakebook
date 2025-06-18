@@ -79,9 +79,14 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
     if (parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) > 0) {
-      return postInfo.medias[currentPhotoIndex]?.commentInfo.count;
+      return (
+        <div className="flex items-center space-x-0">
+          <p>{postInfo.medias[currentPhotoIndex]?.commentInfo.count}</p>
+          <FaRegComment className="w-5 h-5 fill-gray-500" />
+        </div>
+      );
     } else {
-      return "";
+      return null;
     }
   };
 
@@ -356,6 +361,8 @@ export default function PhotoModal(props: PhotoModalProps) {
         postInfo.medias[currentPhotoIndex].mediaId,
         reactionType
       );
+
+      console.log(updatedPostMediaReactions);
 
       if (updatedPostMediaReactions) {
         dispatch(
@@ -646,7 +653,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     <>
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">
         <div className=" grid grid-cols-12 gap-3 ">
-          <div className="lg:col-span-9 col-span-12 h-screen bg-black flex items-center justify-center relative">
+          <div className="lg:col-span-9 col-span-12 h-screen bg-black relative">
             <div className="absolute top-2 left-2 flex items-center">
               <Link href={"/"} scroll={false} className=" cursor-pointer">
                 <FaXmark className="w-10 h-10 text-white rounded-full p-2" />
@@ -685,7 +692,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 width={0}
                 height={0}
                 sizes="100vh"
-                className="w-1/2 h-full object-scale-down"
+                className="w-full h-full object-scale-down"
               />
             )}
           </div>

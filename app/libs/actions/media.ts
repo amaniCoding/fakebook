@@ -8,7 +8,7 @@ import {
   isMediaReacted,
   mfirstReactor,
   mgroupReactions,
-  mtotalComments,
+  mtotalReactions,
   reactMedia,
   reReactMedia,
   unReactMedia,
@@ -34,7 +34,8 @@ export async function mReact(
       _firstMeidaReactorInfo,
     ] = await Promise.all([
       isMediaReacted(postId, userId, mediaId),
-      mtotalComments(postId, mediaId),
+      mtotalReactions(postId, mediaId),
+
       mgroupReactions(postId, mediaId),
       mfirstReactor(postId, mediaId),
     ]);
@@ -71,7 +72,7 @@ export async function mReReact(
       _firstMeidaReactorInfo,
     ] = await Promise.all([
       isMediaReacted(postId, userId, mediaId),
-      mtotalComments(postId, mediaId),
+      mtotalReactions(postId, mediaId),
       mgroupReactions(postId, mediaId),
       mfirstReactor(postId, mediaId),
     ]);
