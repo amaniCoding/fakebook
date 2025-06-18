@@ -767,7 +767,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
             <div className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer">
               <FaRegComment className="w-6 h-6" />
               <span>
-                {post.commentInfo.commentsCount}{" "}
+                {parseInt(post.commentInfo.commentsCount) > 0
+                  ? post.commentInfo.commentsCount
+                  : null}{" "}
                 {`comment ${
                   parseInt(post.commentInfo.commentsCount) > 1 ? "s" : ""
                 }`}
