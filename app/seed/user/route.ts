@@ -83,7 +83,7 @@ async function seedPost() {
   const usersDb = await client.sql<User>`SELECT * FROM users`;
   const users = usersDb.rows;
 
-  const randomNumberForIsPost = Math.floor(Math.random() * 4) + 1;
+  const randomNumberForIsPost = Math.floor(Math.random() * 5) + 1;
   const isOdd = randomNumberForIsPost % 2 !== 0;
 
   const insertedPosts = await Promise.all(
