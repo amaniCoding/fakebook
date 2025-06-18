@@ -10,7 +10,8 @@ import {
 } from "react-icons/md";
 import AddPost from "../ui/home/feed/add-post/add-post";
 import Link from "next/link";
-import FeedItems from "../ui/home/feed/feed-items";
+import FeedsClient from "../ui/home/feed/feeds-client/feeds-client";
+
 export const metadata: Metadata = {
   title: "Amanuel Ferede",
 };
@@ -118,7 +119,7 @@ export default function RootLayout({
               </div>
               <div className="md:w-[60%] w-full rounded-lg">
                 <AddPost />
-                <FeedItems />
+                <FeedsClient />
                 {children}
               </div>
             </div>
