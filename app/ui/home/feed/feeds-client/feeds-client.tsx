@@ -18,15 +18,12 @@ export default function FeedsClient() {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            const newPage = page + 1;
-            setPage(newPage);
-          }
-        },
-        { threshold: 1.0 }
-      );
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const newPage = page + 1;
+          setPage(newPage);
+        }
+      });
 
       if (node) observer.current.observe(node);
     },
@@ -45,6 +42,7 @@ export default function FeedsClient() {
       setLoading(false);
     };
     fetchAllFeeds();
+    console.log("page", page);
   }, [dispatch, page]);
 
   return (
