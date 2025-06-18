@@ -22,6 +22,7 @@ import {
   updateFeedsWithComment,
   updateFeedsWithReactionInfo,
 } from "@/app/store/slices/user/post/postSlice";
+import ReactionIcons from "../../reaction-icons/reaction-icons";
 
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const dispatch = useAppDispatch();
@@ -363,6 +364,25 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     fetchCommentsForUseEffect();
   }, [post.postId]);
 
+  const renderReactionState = () => {
+    if (parseInt(post.reactionInfo.reactions) === 1) {
+      return <p>{post.reactionInfo.firstReactorInfo.reactor}</p>;
+    }
+
+    if (
+      parseInt(post.reactionInfo.reactions) > 1 &&
+      post.reactionInfo.isReacted
+    ) {
+      return (
+        <p>
+          You and {parseInt(post.reactionInfo.reactions) - 1} Other
+          {parseInt(post.reactionInfo.reactions) - 1 >= 1 ? "s" : ""}
+        </p>
+      );
+    }
+    return null;
+  };
+
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
       <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
@@ -679,6 +699,23 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           )}
 
           <div className="flex items-center justify-between px-2 mt-2 py-2 border-t border-b border-gray-300 relative">
+            <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
+              <div className="flex items-center space-x-0">
+                <div className="flex -space-x-1.5">
+                  {post.reactionInfo.reactionGroup.length > 0
+                    ? post.reactionInfo.reactionGroup.map((gr, index) => {
+                        return (
+                          <ReactionIcons
+                            key={index}
+                            reactiontype={gr.reactionType}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+                <p>{renderReactionState()}</p>
+              </div>
+            </div>
             {renderReactionStatus()}
             {toShowReactionBox && (
               <div
