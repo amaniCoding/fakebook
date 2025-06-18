@@ -1,17 +1,16 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import FeedItem from "../feed-item/feed-item";
-import { FeedsClientProps } from "./types";
-import { feedFeeds, setFeeds } from "@/app/store/slices/user/post/postSlice";
+import { feedFeeds } from "@/app/store/slices/user/post/postSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { fetchFeeds } from "@/app/libs/actions/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 
-export default function FeedsClient({ feeds }: FeedsClientProps) {
+export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const observer = useRef<IntersectionObserver>(null);
   const lastPostElementRef = useCallback(
@@ -34,9 +33,6 @@ export default function FeedsClient({ feeds }: FeedsClientProps) {
   /**
    * set feed data for the first time
    */
-  useEffect(() => {
-    dispatch(setFeeds(feeds));
-  }, [dispatch, feeds]);
 
   useEffect(() => {
     setLoading(true);

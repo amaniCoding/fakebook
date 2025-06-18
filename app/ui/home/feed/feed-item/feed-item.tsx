@@ -211,7 +211,7 @@ export default function FeedItem({ feed, ref }: FeedItemType) {
             </div>
           )}
           {feed.medias.length === 5 && (
-            <div className="flex w-full space-x-1">
+            <div className="flex h-full w-full space-x-1">
               <div className="flex flex-col w-1/2 space-y-1">
                 {feed.medias.slice(0, 3).map((file) => {
                   const fileIndex = feed.medias.findIndex((_file) => {

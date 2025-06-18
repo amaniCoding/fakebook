@@ -1,9 +1,8 @@
 import { Suspense } from "react";
 import AddPost from "../feed/add-post/add-post";
-import FeedItemSkeleton from "../../skeletons/feed";
-import Feeds from "../feed/feed-items";
 import StoryItemSkeleton from "../../skeletons/story";
 import Stories from "../story/stories";
+import FeedsClient from "../feed/feeds-client/feeds-client";
 
 export default function FeedSection() {
   return (
@@ -12,9 +11,7 @@ export default function FeedSection() {
       <Suspense fallback={<StoryItemSkeleton />}>
         <Stories />
       </Suspense>
-      <Suspense fallback={<FeedItemSkeleton />}>
-        <Feeds />
-      </Suspense>
+      <FeedsClient />
     </div>
   );
 }
