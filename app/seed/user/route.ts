@@ -90,7 +90,9 @@ async function seedPost() {
     Array.from(Array(500).keys()).map((post) => {
       return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', ${
         users[randomUserIndex].userid
-      }, ${isOdd ? null : post}) ON CONFLICT (postid) DO NOTHING;
+      }, ${
+        isOdd ? null : randomNumberForIsPost
+      }) ON CONFLICT (postid) DO NOTHING;
       `;
     })
   );
@@ -358,7 +360,7 @@ export async function GET() {
     await client.sql`COMMIT`;
 
     await seedPost();
-    await seeMedias();
+    //await seeMedias();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
