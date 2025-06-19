@@ -14,7 +14,7 @@ import {
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import { IoIosMore, IoMdMore } from "react-icons/io";
-
+import { FaComment } from "react-icons/fa";
 import { PiShareFat } from "react-icons/pi";
 import { PhotoModalProps } from "./types";
 import { FaUserFriends } from "react-icons/fa";
@@ -97,9 +97,9 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
     if (parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) > 0) {
       return (
-        <div className="flex items-center space-x-0">
+        <div className="flex items-center space-x-1">
           <p>{postInfo.medias[currentPhotoIndex]?.commentInfo.count}</p>
-          <FaRegComment className="w-5 h-5 fill-gray-500" />
+          <FaComment className="w-5 h-5 fill-gray-500" />
         </div>
       );
     } else {
@@ -726,7 +726,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
-              <div className="h-auto overflow-y-auto">
+              <div className="min-h-auto overflow-y-auto">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
