@@ -1,4 +1,5 @@
 "use client";
+import { LoggedInUser } from "@/app/config/loggedinuser";
 import Image from "next/image";
 import { BiSolidGrid } from "react-icons/bi";
 import { FaFacebookMessenger } from "react-icons/fa6";
@@ -13,7 +14,7 @@ export default function NavBar2() {
 
       <Image
         alt="Amanuel Ferede"
-        src={"/feeds/user.jpg"}
+        src={LoggedInUser.profilepic}
         width={0}
         height={0}
         sizes="100vh"

@@ -48,6 +48,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
   let hasMore: boolean = false;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
   if (postInfo) {
@@ -186,7 +187,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
 
     return (
-      <div>
+      <div ref={commentsRef}>
         {postInfo.commentInfo.comments.comments.map((comment, index) => {
           return (
             <div
@@ -726,7 +727,9 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
-              <div className="min-h-auto overflow-y-auto">
+              <div
+                className={`min-h-[${commentsRef.current?.scrollHeight}px] overflow-y-auto`}
+              >
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
