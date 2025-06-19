@@ -50,7 +50,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
-
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
@@ -61,7 +61,8 @@ export default function PhotoModal(props: PhotoModalProps) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = postInfo.commentInfo.comments.page + 1;
+          const newPage = page + 1;
+          setPage(newPage);
           dispatch(
             updatePostMediaCommentPage({
               mediaId: props.mediaId,
@@ -74,7 +75,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, loading, postInfo, props.mediaId, props.postId]
+    [dispatch, loading, page, postInfo, props.mediaId, props.postId]
   );
 
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
@@ -708,7 +709,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             )}
           </div>
           <div className="lg:col-span-3 bg-white col-span-12">
-            <div className="h-[90vh] overflow-y-auto pb-72">
+            <div className="auto overflow-y-auto">
               <NavBar2 />
               <div className="flex items-center justify-between py-3 mb-3 pr-3 border-b border-gray-200">
                 <p className="text-sm">This is photo is from a post</p>

@@ -32,6 +32,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const feed = feeds.find((feed) => {
     return feed.postId === post.postId;
   });
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
@@ -42,7 +43,8 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = feed!.commentInfo.comments.page + 1;
+          const newPage = page + 1;
+          setPage(newPage);
           dispatch(
             updatePostCommentPage({
               postId: post.postId,
@@ -54,7 +56,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, feed, loading, post.postId]
+    [dispatch, loading, page, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
