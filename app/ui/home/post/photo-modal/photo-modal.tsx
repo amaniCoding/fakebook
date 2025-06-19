@@ -86,6 +86,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
+  const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
   useEffect(() => {
     setCurrentPhotoIndex(currentPhotoIndexFromProp!);
@@ -673,6 +674,10 @@ export default function PhotoModal(props: PhotoModalProps) {
     props.postId,
   ]);
 
+  useEffect(() => {
+    setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}vh`);
+  }, []);
+
   return (
     <>
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">
@@ -728,7 +733,8 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">View Post</p>
               </div>
               <div
-                className={`h-[${commentsRef.current?.scrollHeight}vh] overflow-y-auto`}
+                className={`overflow-y-auto`}
+                style={{ height: commentsScrollHeight }}
               >
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
