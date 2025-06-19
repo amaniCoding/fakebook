@@ -35,11 +35,15 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const [page, setPage] = useState<number>(feed!.commentInfo.comments.page);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasMore, setHasMore] = useState<boolean>(
-    page >= parseInt(post.commentInfo.commentsCount) / 5
+    page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
   );
   useEffect(() => {
     console.log("page", page);
     console.log("has more", hasMore);
+    console.log(
+      "calculate",
+      Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
+    );
   });
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
@@ -127,6 +131,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         }
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
+        setLoading(false);
       }
     };
     if (hasMore) {
