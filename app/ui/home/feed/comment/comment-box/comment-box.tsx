@@ -32,10 +32,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const feed = feeds.posts.find((feed) => {
     return feed.postId === post.postId;
   });
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(feed!.commentInfo.comments.page);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasMore, setHasMore] = useState<boolean>(
-    page === parseInt(post.commentInfo.commentsCount) / 5
+    page >= parseInt(post.commentInfo.commentsCount) / 5
   );
   useEffect(() => {
     console.log("page", page);
