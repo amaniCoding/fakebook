@@ -38,7 +38,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
   const hasMore =
     page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5);
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log("page", page);
     console.log("has more", hasMore);
     console.log(
@@ -46,7 +46,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
       page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
     );
     console.log("loading", loading);
-  }, [hasMore, loading, page, post.commentInfo.commentsCount]);
+  }, [hasMore, loading, page, post.commentInfo.commentsCount]); */
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {

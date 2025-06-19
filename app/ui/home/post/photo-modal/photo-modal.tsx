@@ -45,19 +45,15 @@ export default function PhotoModal(props: PhotoModalProps) {
   useEffect(() => {
     dispatch(setAPost(props.post));
   }, [dispatch, props.post]);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const observer = useRef<IntersectionObserver>(null);
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
-  const commentsCountUnde = postInfo?.commentInfo.commentsCount;
-  const commentsCount = commentsCountUnde ? parseInt(commentsCountUnde) : 0;
+  const hasMore = page >= parseInt(postInfo!.commentInfo.commentsCount) / 5;
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
-  const [page, setPage] = useState<number>(1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [hasMore, setHasMore] = useState<boolean>(commentsCount / 5 === page);
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const observer = useRef<IntersectionObserver>(null);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
@@ -638,7 +634,11 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    setLoading(true);
+    if (hasMore) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     const fetchMediaComments = async () => {
       if (!postInfo) {
         return;
@@ -663,6 +663,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   }, [
     currentPhotoIndex,
     dispatch,
+    hasMore,
     page,
     postInfo,
     props.mediaId,
