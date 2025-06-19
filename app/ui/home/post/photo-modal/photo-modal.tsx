@@ -641,7 +641,7 @@ export default function PhotoModal(props: PhotoModalProps) {
       const mediaComments = await mComments(
         props.postId,
         postInfo.medias[currentPhotoIndex].mediaId,
-        postInfo.commentInfo.comments.page
+        page
       );
       if (mediaComments) {
         dispatch(

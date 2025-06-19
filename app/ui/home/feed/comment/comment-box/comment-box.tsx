@@ -108,10 +108,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     const fetchAllComments = async () => {
       try {
         if (feed) {
-          const comments = await getComments(
-            post.postId,
-            feed.commentInfo.comments.page
-          );
+          const comments = await getComments(post.postId, page);
           if (comments) {
             dispatch(
               setPostComments({

@@ -344,9 +344,9 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
         </div>
 
         <div className="flex items-center space-x-4">
-          {feed.commentInfo.comments.comments.length > 0 ? (
+          {parseInt(feed.commentInfo.commentsCount) > 0 ? (
             <div className="flex items-center space-x-1">
-              <p>{feed.commentInfo.comments.comments.length}</p>
+              <p>{parseInt(feed.commentInfo.commentsCount)}</p>
               <FaComment className="w-5 h-5 fill-gray-500" />
             </div>
           ) : null}
