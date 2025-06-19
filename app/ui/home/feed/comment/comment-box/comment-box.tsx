@@ -116,12 +116,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   };
 
   useEffect(() => {
-    if (hasMore) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-
+    setLoading(true);
     const fetchAllComments = async () => {
       try {
         const comments = await getComments(post.postId, page);
@@ -139,9 +134,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         setLoading(false);
       }
     };
-    if (hasMore) {
-      return;
-    }
+
     fetchAllComments();
   }, [dispatch, hasMore, page, post.postId]);
 

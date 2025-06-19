@@ -638,29 +638,29 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    if (hasMore) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
     const fetchMediaComments = async () => {
       if (!postInfo) {
         return;
       }
-      const mediaComments = await mComments(
-        props.postId,
-        postInfo.medias[currentPhotoIndex].mediaId,
-        page
-      );
-      if (mediaComments) {
-        dispatch(
-          setMediaComments({
-            postId: props.postId,
-            mediaId: props.mediaId,
-            comments: mediaComments,
-          })
+      try {
+        setLoading(true);
+        const mediaComments = await mComments(
+          props.postId,
+          postInfo.medias[currentPhotoIndex].mediaId,
+          page
         );
+        if (mediaComments) {
+          dispatch(
+            setMediaComments({
+              postId: props.postId,
+              mediaId: props.mediaId,
+              comments: mediaComments,
+            })
+          );
+        }
         setLoading(false);
+      } catch (error) {
+        console.error(error);
       }
     };
     fetchMediaComments();

@@ -11,11 +11,8 @@ export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
   const [page, setPage] = useState<number>(1);
-  const perPage = 5;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [hasMore, setHasMore] = useState<boolean>(
-    page === feedsFromRedux.rowsCount / perPage
-  );
+
+  const hasMore = page >= feedsFromRedux.rowsCount / 5;
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const lastPostElementRef = useCallback(
