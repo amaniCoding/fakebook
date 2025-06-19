@@ -111,9 +111,10 @@ export async function mComment(
   };
 }
 
-export async function mComments(postId: string, mediaId: string) {
+export async function mComments(postId: string, mediaId: string, page: number) {
+  const offset = (page - 1) * 10;
   const comments =
-    await sql<MComment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
+    await sql<MComment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} ORDER BY umediacomments.date DESC LIMIT 10 OFFSET ${offset}`;
   const mediaCommentsData = comments.rows.map((comment) => {
     return {
       commentId: comment.commentid,

@@ -98,7 +98,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
   useEffect(() => {
     setLoading(true);
-    const fetchAllFeeds = async () => {
+    const fetchAllComments = async () => {
       try {
         const comments = await getComments(post.postId, page);
         if (comments) {
@@ -114,7 +114,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         console.error(`Error fetching comments ${error}`);
       }
     };
-    fetchAllFeeds();
+    fetchAllComments();
     console.log("page", page);
   }, [dispatch, page, post.postId]);
 

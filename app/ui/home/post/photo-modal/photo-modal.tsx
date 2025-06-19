@@ -628,7 +628,8 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
       const mediaComments = await mComments(
         props.postId,
-        postInfo.medias[currentPhotoIndex].mediaId
+        postInfo.medias[currentPhotoIndex].mediaId,
+        page
       );
       if (mediaComments) {
         dispatch(
@@ -642,7 +643,14 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
     };
     fetchMediaComments();
-  }, [currentPhotoIndex, dispatch, postInfo, props.mediaId, props.postId]);
+  }, [
+    currentPhotoIndex,
+    dispatch,
+    page,
+    postInfo,
+    props.mediaId,
+    props.postId,
+  ]);
 
   useEffect(() => {
     console.log(postInfo);

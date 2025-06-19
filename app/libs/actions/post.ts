@@ -79,7 +79,7 @@ export async function getComments(postId: string, page: number) {
   const offset = (page - 1) * 5;
   try {
     const comments =
-      await sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} LIMIT 5 OFFSET ${offset} ORDER BY ucomments.date DESC`;
+      await sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC LIMIT 5 OFFSET ${offset}`;
     const commentsData = comments.rows.map((comment) => {
       return {
         commentId: comment.commentid,
