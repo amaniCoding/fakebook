@@ -10,7 +10,6 @@ import { Media } from "@/app/types/db/query/media";
 import { CommentsCount } from "@/app/types/db/query/post";
 import {
   isMediaReacted,
-  mcomments,
   mfirstReactor,
   mgroupReactions,
   mtotalComments,
@@ -124,14 +123,12 @@ export async function MediasInfo(postId: string) {
         totalReactions,
         firstMediaReactor,
         loggedInUserReactionInfo,
-        mediaComments,
       ] = await Promise.all([
         mgroupReactions(postId, media.mediaid),
         mtotalComments(postId, media.mediaid),
         mtotalComments(postId, media.mediaid),
         mfirstReactor(postId, media.mediaid),
         isMediaReacted(postId, media.mediaid, LoggedInUser.userid),
-        mcomments(postId, media.mediaid),
       ]);
 
       return {
@@ -147,7 +144,10 @@ export async function MediasInfo(postId: string) {
         },
         commentInfo: {
           count: totalComments,
-          comments: mediaComments,
+          comments: {
+            loading: true,
+            comments: [],
+          },
         },
       };
     })

@@ -75,32 +75,27 @@ export async function createPost(
   }
 }
 
-export async function getComments(postId: string) {
+export async function getComments(postId: string, page: number) {
+  const offset = (page - 1) * 5;
   try {
     const comments =
-      await sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC`;
-    return {
-      loading: false,
-      comments: comments.rows.map((comment) => {
-        return {
-          commentId: comment.commentid,
-          comment: comment.comment,
-          date: comment.date,
-          user: {
-            fName: comment.fname,
-            lName: comment.lname,
-            userId: comment.userid,
-            profilePic: comment.profilepic,
-          },
-        };
-      }),
-    };
+      await sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} LIMIT 5 OFFSET ${offset} ORDER BY ucomments.date DESC`;
+    const commentsData = comments.rows.map((comment) => {
+      return {
+        commentId: comment.commentid,
+        comment: comment.comment,
+        date: comment.date,
+        user: {
+          fName: comment.fname,
+          lName: comment.lname,
+          userId: comment.userid,
+          profilePic: comment.profilepic,
+        },
+      };
+    });
+    return commentsData;
   } catch (error) {
     console.error(`error fetching comments ${error}`);
-    return {
-      loading: false,
-      comments: [],
-    };
   }
 }
 

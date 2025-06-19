@@ -1,4 +1,4 @@
-import { CommentInfo } from "../frontend/comment";
+import { Comment, CommentInfo } from "../frontend/comment";
 import { Media } from "../frontend/post";
 import { ReactionInfo } from "../frontend/reaction";
 import { User } from "../frontend/user";
@@ -33,4 +33,9 @@ export type SubmittedPostType = {
     post: SubmittedPost;
     photos: SubmittedPhoto[];
   };
+};
+
+export type InsertCommentAction = {
+  postId: string;
+  comments: Comment[];
 };

@@ -2,18 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useState, KeyboardEvent, useEffect } from "react";
+import {
+  ChangeEvent,
+  useState,
+  KeyboardEvent,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 
 import { FaFacebookMessenger, FaRegComment, FaXmark } from "react-icons/fa6";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import { IoIosMore, IoMdMore } from "react-icons/io";
 
 import { PiShareFat } from "react-icons/pi";
-import {
-  getCommentsStateAction,
-  insertCommentStateAction,
-  PhotoModalProps,
-} from "./types";
+import { PhotoModalProps } from "./types";
 import { FaUserFriends } from "react-icons/fa";
 
 import { LoggedInUser } from "@/app/config/loggedinuser";
@@ -25,6 +28,7 @@ import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import NavBar2 from "../../sections/nav-bar2";
 import {
   setAPost,
+  setMediaComments,
   updateAPostWithCommentInfo,
   updateAPostWithReactionInfo,
 } from "@/app/store/slices/user/post/postSlice";
@@ -45,33 +49,36 @@ export default function PhotoModal(props: PhotoModalProps) {
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
-  useEffect(() => {
-    setCurrentPhotoIndex(currentPhotoIndexFromProp!);
-  }, [currentPhotoIndexFromProp]);
+
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const observer = useRef<IntersectionObserver>(null);
+
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const newPage = page + 1;
+          setPage(newPage);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, page]
+  );
+
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
-  const [commentsData, setCommentsData] = useState<getCommentsStateAction>({
-    loading: true,
-    comments: [],
-  });
-  const [insertCommentState, setInsertCommentState] =
-    useState<insertCommentStateAction>({
-      loading: false,
-      comment: {
-        comment: "",
-        commentId: "",
-        date: "",
-        user: {
-          fName: "",
-          lName: "",
-          profilePic: "",
-          userId: "",
-        },
-      },
-    });
 
+  useEffect(() => {
+    setCurrentPhotoIndex(currentPhotoIndexFromProp!);
+  }, [currentPhotoIndexFromProp]);
   console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
@@ -147,15 +154,6 @@ export default function PhotoModal(props: PhotoModalProps) {
           comment
         );
         if (insertedComment) {
-          const newComments = [...commentsData.comments, insertedComment];
-          setCommentsData({
-            loading: false,
-            comments: newComments,
-          });
-          setInsertCommentState({
-            loading: false,
-            comment: insertedComment,
-          });
           dispatch(
             updateAPostWithCommentInfo({
               mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
@@ -172,22 +170,23 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
-  useEffect(() => {
-    console.log("commentsData", insertCommentState.comment);
-  }, [insertCommentState.comment]);
-
   const renderComments = () => {
     if (!postInfo) {
       return;
     }
-    if (commentsData.loading) {
+    if (postInfo.commentInfo.comments.loading) {
       return <CommentsSkeleton />;
     }
-    return commentsData.comments.map((comment) => {
+    return postInfo.commentInfo.comments.comments.map((comment, index) => {
       return (
         <div
           className="flex flex-row mb-3 space-x-3 pb-2"
           key={comment.commentId}
+          ref={
+            postInfo.commentInfo.comments.comments.length === index + 1
+              ? lastPostElementRef
+              : null
+          }
         >
           <div className=" group flex-none">
             <Link href={"/profile"}>
@@ -622,28 +621,28 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    if (!postInfo) {
-      return;
-    }
-    const fetchMediaCommentsForUseEffect = async () => {
-      try {
-        const mediaComments = await mComments(
-          props.postId,
-          postInfo.medias[currentPhotoIndex].mediaId
+    setLoading(true);
+    const fetchMediaComments = async () => {
+      if (!postInfo) {
+        return;
+      }
+      const mediaComments = await mComments(
+        props.postId,
+        postInfo.medias[currentPhotoIndex].mediaId
+      );
+      if (mediaComments) {
+        dispatch(
+          setMediaComments({
+            postId: props.postId,
+            mediaId: props.mediaId,
+            comments: mediaComments,
+          })
         );
-        if (mediaComments) {
-          setCommentsData({
-            loading: false,
-            comments: mediaComments.comments,
-          });
-        }
-      } catch (error) {
-        console.error(`error ${error}`);
+        setLoading(false);
       }
     };
-
-    fetchMediaCommentsForUseEffect();
-  }, [currentPhotoIndex, postInfo, props.postId]);
+    fetchMediaComments();
+  }, [currentPhotoIndex, dispatch, postInfo, props.mediaId, props.postId]);
 
   useEffect(() => {
     console.log(postInfo);

@@ -37,12 +37,15 @@ export default function FeedsClient() {
   useEffect(() => {
     setLoading(true);
     const fetchAllFeeds = async () => {
-      const feeds = await fetchFeeds(LoggedInUser.userid, page);
-      dispatch(feedFeeds(feeds));
-      setLoading(false);
+      try {
+        const feeds = await fetchFeeds(LoggedInUser.userid, page);
+        dispatch(feedFeeds(feeds));
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchAllFeeds();
-    console.log("page", page);
   }, [dispatch, page]);
 
   return (

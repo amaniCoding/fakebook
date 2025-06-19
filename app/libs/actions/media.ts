@@ -114,21 +114,20 @@ export async function mComment(
 export async function mComments(postId: string, mediaId: string) {
   const comments =
     await sql<MComment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
-  return {
-    comments: comments.rows.map((comment) => {
-      return {
-        commentId: comment.commentid,
-        comment: comment.comment,
-        date: comment.date,
-        user: {
-          fName: comment.fname,
-          lName: comment.lname,
-          userId: comment.userid,
-          profilePic: comment.profilepic,
-        },
-      };
-    }),
-  };
+  const mediaCommentsData = comments.rows.map((comment) => {
+    return {
+      commentId: comment.commentid,
+      comment: comment.comment,
+      date: comment.date,
+      user: {
+        fName: comment.fname,
+        lName: comment.lname,
+        userId: comment.userid,
+        profilePic: comment.profilepic,
+      },
+    };
+  });
+  return mediaCommentsData;
 }
 
 // export async function comment(

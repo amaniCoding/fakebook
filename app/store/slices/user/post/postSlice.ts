@@ -3,11 +3,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ReactionInfoPayLoad } from "@/app/types/store/reaction";
 import {
   MediaCommentPayload,
+  MediaCommentsPayload,
   MediaReactionInfoPayLoad,
 } from "@/app/types/store/media";
-import { postOption, SubmittedPostType } from "@/app/types/store/post";
+import {
+  InsertCommentAction,
+  postOption,
+  SubmittedPostType,
+} from "@/app/types/store/post";
 import { CommentPayLoad } from "@/app/types/store/comment";
 import { APost, Post } from "@/app/types/frontend/post";
+import { Comment } from "@/app/types/frontend/comment";
 
 // Define a type for the slice state
 interface StoryState {
@@ -23,6 +29,10 @@ interface StoryState {
 
   feeds: Post[];
   aPost: APost | undefined;
+  insertComment: {
+    loading: false;
+    comment: Comment[];
+  };
 }
 
 // Define the initial state using that type
@@ -51,6 +61,10 @@ const initialState: StoryState = {
 
   feeds: [],
   aPost: undefined,
+  insertComment: {
+    loading: false,
+    comment: [],
+  },
 };
 
 export const userPostSlice = createSlice({
@@ -121,10 +135,9 @@ export const userPostSlice = createSlice({
         return _feed.postId === action.payload.postId;
       });
       if (feed && action.payload.comment) {
-        feed.commentInfo.comments.push(action.payload.comment);
+        feed.commentInfo.comments.comments.push(action.payload.comment);
         const newCommentCount = parseInt(feed.commentInfo.commentsCount) + 1;
-        const newCommentCountString = newCommentCount.toString();
-        feed.commentInfo.commentsCount = newCommentCountString;
+        feed.commentInfo.commentsCount = newCommentCount.toString();
       }
     },
 
@@ -157,11 +170,39 @@ export const userPostSlice = createSlice({
           }
         });
         if (media) {
-          media.commentInfo.comments.push(action.payload.comment);
+          media.commentInfo.comments.comments.push(action.payload.comment);
           const newCommentCount = parseInt(media.commentInfo.count) + 1;
-          const newCommentCountString = newCommentCount.toString();
-          media.commentInfo.count = newCommentCountString;
+          media.commentInfo.count = newCommentCount.toString();
         }
+      }
+    },
+
+    setPostComments: (state, action: PayloadAction<InsertCommentAction>) => {
+      const feed = state.feeds.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      feed!.commentInfo.comments.comments = [
+        ...feed!.commentInfo.comments.comments,
+        ...action.payload.comments,
+      ];
+      feed!.commentInfo.comments.loading = false;
+    },
+
+    setMediaComments: (state, action: PayloadAction<MediaCommentsPayload>) => {
+      const media = state.aPost?.medias.find((media) => {
+        if (media.mediaId === action.payload.mediaId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (media) {
+        media.commentInfo.comments.comments = [
+          ...media.commentInfo.comments.comments,
+          ...action.payload.comments,
+        ];
+        media.commentInfo.comments.loading = false;
       }
     },
 
@@ -184,7 +225,9 @@ export const {
   updateAPostWithReactionInfo,
   updateAPostWithCommentInfo,
   updateFeedsWithComment,
+  setPostComments,
   updateFeedsWithNewPost,
+  setMediaComments,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

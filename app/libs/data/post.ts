@@ -6,7 +6,6 @@ import {
   groupReactions,
   isReacted,
   totalReactions,
-  comments,
   totalComments,
   MediasInfo,
 } from "../utils/post";
@@ -26,7 +25,6 @@ export async function fetchPosts(userId: string, page: number) {
           _firstReactorInfo,
           _medias,
           _commentsCount,
-          _comments,
         ] = await Promise.all([
           isReacted(row.postid, userId),
           totalReactions(row.postid),
@@ -35,7 +33,6 @@ export async function fetchPosts(userId: string, page: number) {
           medias(row.postid),
 
           totalComments(row.postid),
-          comments(row.postid),
         ]);
         return {
           postId: row.postid,
@@ -52,7 +49,10 @@ export async function fetchPosts(userId: string, page: number) {
 
           commentInfo: {
             commentsCount: _commentsCount[0].comments,
-            comments: _comments,
+            comments: {
+              loading: true,
+              comments: [],
+            },
           },
 
           reactionInfo: {
@@ -85,7 +85,6 @@ export async function fetchNewPost(userId: string, postId: string) {
           _firstReactorInfo,
           _medias,
           _commentsCount,
-          _comments,
         ] = await Promise.all([
           isReacted(row.postid, userId),
           totalReactions(row.postid),
@@ -93,7 +92,6 @@ export async function fetchNewPost(userId: string, postId: string) {
           firstReactor(row.postid),
           medias(row.postid),
           totalComments(row.postid),
-          comments(row.postid),
         ]);
         return {
           postId: row.postid,
@@ -110,7 +108,10 @@ export async function fetchNewPost(userId: string, postId: string) {
 
           commentInfo: {
             commentsCount: _commentsCount[0].comments,
-            comments: _comments,
+            comments: {
+              loading: true,
+              comments: [],
+            },
           },
 
           reactionInfo: {
@@ -141,7 +142,6 @@ export async function fetchPostInfo(postId: string) {
       _firstReactorInfo,
 
       _commentsCount,
-      _comments,
     ] = await Promise.all([
       fetchPost(postId),
       MediasInfo(postId),
@@ -150,7 +150,6 @@ export async function fetchPostInfo(postId: string) {
       groupReactions(postId),
       firstReactor(postId),
       totalComments(postId),
-      comments(postId),
     ]);
 
     return {
@@ -166,7 +165,10 @@ export async function fetchPostInfo(postId: string) {
       medias: medias,
       commentInfo: {
         commentsCount: _commentsCount[0].comments,
-        comments: _comments,
+        comments: {
+          loading: true,
+          comments: [],
+        },
       },
 
       reactionInfo: {

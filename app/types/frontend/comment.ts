@@ -9,5 +9,8 @@ export type Comment = {
 
 export type CommentInfo = {
   commentsCount: string;
-  comments: Comment[];
+  comments: {
+    loading: boolean;
+    comments: Comment[];
+  };
 };

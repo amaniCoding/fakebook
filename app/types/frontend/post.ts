@@ -35,7 +35,10 @@ export type APost = {
     };
     commentInfo: {
       count: string;
-      comments: Comment[];
+      comments: {
+        loading: boolean;
+        comments: Comment[];
+      };
     };
   }[];
   commentInfo: CommentInfo;
