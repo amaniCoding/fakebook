@@ -108,8 +108,8 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   };
 
   useEffect(() => {
-    setLoading(true);
     const fetchAllComments = async () => {
+      setLoading(true);
       try {
         const comments = await getComments(post.postId, page);
         if (comments) {
@@ -125,8 +125,11 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
         console.error(`Error fetching comments ${error}`);
       }
     };
+    if (hasMore) {
+      return;
+    }
     fetchAllComments();
-  }, [dispatch, page, post.postId]);
+  }, [dispatch, hasMore, page, post.postId]);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
