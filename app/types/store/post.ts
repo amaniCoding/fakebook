@@ -2,6 +2,7 @@ import { Comment, CommentInfo } from "../frontend/comment";
 import { Media } from "../frontend/post";
 import { ReactionInfo } from "../frontend/reaction";
 import { User } from "../frontend/user";
+import { Post } from "../frontend/post";
 
 export type PostPayLoad = {
   postId: string;
@@ -43,4 +44,9 @@ export type InsertCommentAction = {
 export type PagePayload = {
   page: number;
   postId: string;
+};
+
+export type PostsPayload = {
+  rowsCount: number;
+  posts: Post[];
 };

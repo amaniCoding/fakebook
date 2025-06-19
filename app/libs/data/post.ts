@@ -66,7 +66,10 @@ export async function fetchPosts(userId: string, page: number) {
         };
       })
     );
-    return allPosts;
+    return {
+      posts: allPosts,
+      total: posts.rowCount,
+    };
   } catch (error) {
     console.log("Database error", error);
     throw new Error("Faild to fetch feed data");

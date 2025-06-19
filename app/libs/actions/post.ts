@@ -78,9 +78,14 @@ export async function createPost(
 export async function getComments(postId: string, page: number) {
   const offset = (page - 1) * 5;
   try {
-    const comments =
-      await sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC LIMIT 5 OFFSET ${offset}`;
-    const commentsData = comments.rows.map((comment) => {
+    const commentsCount = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC`;
+    const comments = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC LIMIT 5 OFFSET ${offset}`;
+
+    const [_commentsCount, _comments] = await Promise.all([
+      commentsCount,
+      comments,
+    ]);
+    const commentsData = _comments.rows.map((comment) => {
       return {
         commentId: comment.commentid,
         comment: comment.comment,
@@ -93,7 +98,10 @@ export async function getComments(postId: string, page: number) {
         },
       };
     });
-    return commentsData;
+    return {
+      comments: commentsData,
+      count: _commentsCount.rowCount,
+    };
   } catch (error) {
     console.error(`error fetching comments ${error}`);
   }

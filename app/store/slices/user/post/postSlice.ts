@@ -12,6 +12,7 @@ import {
   postOption,
   SubmittedPostType,
   PagePayload,
+  PostsPayload,
 } from "@/app/types/store/post";
 import { CommentPayLoad } from "@/app/types/store/comment";
 import { APost, Post } from "@/app/types/frontend/post";
@@ -29,7 +30,10 @@ interface StoryState {
     text: string | undefined;
   };
 
-  feeds: Post[];
+  feeds: {
+    rowsCount: number;
+    posts: Post[];
+  };
   aPost: APost | undefined;
   insertComment: {
     loading: false;
@@ -61,7 +65,10 @@ const initialState: StoryState = {
     text: "auto",
   },
 
-  feeds: [],
+  feeds: {
+    rowsCount: 0,
+    posts: [],
+  },
   aPost: undefined,
   insertComment: {
     loading: false,
@@ -108,11 +115,12 @@ export const userPostSlice = createSlice({
     ) => {
       state.postBoxHeights = action.payload;
     },
-    setFeeds: (state, action: PayloadAction<Post[]>) => {
-      state.feeds = action.payload;
+    setFeeds: (state, action: PayloadAction<PostsPayload>) => {
+      state.feeds.posts = action.payload.posts;
+      state.feeds.rowsCount = action.payload.rowsCount;
     },
     feedFeeds: (state, action: PayloadAction<Post[]>) => {
-      state.feeds = [...state.feeds, ...action.payload];
+      state.feeds.posts = [...state.feeds.posts, ...action.payload];
     },
     setAPost: (state, action: PayloadAction<APost | undefined>) => {
       state.aPost = action.payload;
@@ -121,7 +129,7 @@ export const userPostSlice = createSlice({
       state,
       action: PayloadAction<ReactionInfoPayLoad>
     ) => {
-      const feed = state.feeds.find((_feed: { postId: string }) => {
+      const feed = state.feeds.posts.find((_feed: { postId: string }) => {
         return _feed.postId === action.payload.postId;
       });
 
@@ -130,10 +138,10 @@ export const userPostSlice = createSlice({
       }
     },
     updateFeedsWithNewPost: (state, action: PayloadAction<Post>) => {
-      state.feeds.unshift(action.payload);
+      state.feeds.posts.unshift(action.payload);
     },
     updateFeedsWithComment: (state, action: PayloadAction<CommentPayLoad>) => {
-      const feed = state.feeds.find((_feed: { postId: string }) => {
+      const feed = state.feeds.posts.find((_feed: { postId: string }) => {
         return _feed.postId === action.payload.postId;
       });
       if (feed && action.payload.comment) {
@@ -180,7 +188,7 @@ export const userPostSlice = createSlice({
     },
 
     setPostComments: (state, action: PayloadAction<InsertCommentAction>) => {
-      const feed = state.feeds.find((feed) => {
+      const feed = state.feeds.posts.find((feed) => {
         return feed.postId === action.payload.postId;
       });
 
@@ -209,7 +217,7 @@ export const userPostSlice = createSlice({
       }
     },
     updatePostCommentPage: (state, action: PayloadAction<PagePayload>) => {
-      const feed = state.feeds.find((feed) => {
+      const feed = state.feeds.posts.find((feed) => {
         return feed.postId === action.payload.postId;
       });
 

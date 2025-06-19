@@ -29,16 +29,20 @@ import CommentItem from "../comment-item/comment-item";
 export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const dispatch = useAppDispatch();
   const feeds = useAppSelector((state) => state.userPost.feeds);
-  const feed = feeds.find((feed) => {
+  const feed = feeds.posts.find((feed) => {
     return feed.postId === post.postId;
   });
   const [page, setPage] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hasMore, setHasMore] = useState<boolean>(
+    page === parseInt(post.commentInfo.commentsCount) / 5
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading) return;
+      if (loading || hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -56,7 +60,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, loading, page, post.postId]
+    [dispatch, hasMore, loading, page, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
@@ -112,12 +116,11 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           dispatch(
             setPostComments({
               postId: post.postId,
-              comments: comments,
+              comments: comments.comments,
             })
           );
+          setLoading(false);
         }
-
-        setLoading(false);
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
       }

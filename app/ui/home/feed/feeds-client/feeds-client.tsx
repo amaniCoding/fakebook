@@ -11,11 +11,16 @@ export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
   const [page, setPage] = useState<number>(1);
+  const perPage = 5;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hasMore, setHasMore] = useState<boolean>(
+    page === feedsFromRedux.rowsCount / perPage
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading) return;
+      if (loading || hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -27,7 +32,7 @@ export default function FeedsClient() {
 
       if (node) observer.current.observe(node);
     },
-    [loading, page]
+    [hasMore, loading, page]
   );
 
   /**
@@ -39,7 +44,7 @@ export default function FeedsClient() {
     const fetchAllFeeds = async () => {
       try {
         const feeds = await fetchFeeds(LoggedInUser.userid, page);
-        dispatch(feedFeeds(feeds));
+        dispatch(feedFeeds(feeds.posts));
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -50,13 +55,15 @@ export default function FeedsClient() {
 
   return (
     <>
-      {feedsFromRedux.map((feed, index) => {
+      {feedsFromRedux.posts.map((feed, index) => {
         return (
           <FeedItem
             key={feed.postId}
             feed={feed}
             ref={
-              feedsFromRedux.length === index + 1 ? lastPostElementRef : null
+              feedsFromRedux.posts.length === index + 1
+                ? lastPostElementRef
+                : null
             }
           />
         );

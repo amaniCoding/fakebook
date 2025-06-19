@@ -47,16 +47,21 @@ export default function PhotoModal(props: PhotoModalProps) {
   }, [dispatch, props.post]);
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  const commentsCountUnde = postInfo?.commentInfo.commentsCount;
+  const commentsCount = commentsCountUnde ? parseInt(commentsCountUnde) : 0;
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
   const [page, setPage] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hasMore, setHasMore] = useState<boolean>(commentsCount / 5 === page);
+
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading || !postInfo) return;
+      if (loading || hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -75,7 +80,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, loading, page, postInfo, props.mediaId, props.postId]
+    [dispatch, hasMore, loading, page, props.mediaId, props.postId]
   );
 
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
