@@ -48,9 +48,11 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
-
+  let hasMore: boolean = false;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
-  const hasMore = page >= parseInt(postInfo!.commentInfo.commentsCount) / 5;
+  if (postInfo) {
+    hasMore = page >= parseInt(postInfo.commentInfo.commentsCount) / 5;
+  }
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
