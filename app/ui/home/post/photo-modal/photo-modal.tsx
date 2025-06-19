@@ -720,172 +720,174 @@ export default function PhotoModal(props: PhotoModalProps) {
             )}
           </div>
           <div className="lg:col-span-3 bg-white col-span-12">
-            <div className="auto overflow-y-auto">
-              <NavBar2 />
+            <NavBar2 />
+            <div className="">
               <div className="flex items-center justify-between py-3 mb-3 pr-3 border-b border-gray-200">
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center space-x-2">
-                  {postInfo?.user.profilePic ? (
-                    <Image
-                      alt="Amanuel Ferede"
-                      src={postInfo?.user.profilePic}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="w-10 h-10 rounded-full object-fill"
-                    />
-                  ) : null}
-                  <div className="flex flex-col">
-                    <p>
-                      {postInfo && postInfo.user.fName}{" "}
-                      {postInfo && postInfo.user.lName}
-                    </p>
-                    <p>March 27 at 3:34 pm</p>
+              <div className="h-auto overflow-y-auto">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center space-x-2">
+                    {postInfo?.user.profilePic ? (
+                      <Image
+                        alt="Amanuel Ferede"
+                        src={postInfo?.user.profilePic}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="w-10 h-10 rounded-full object-fill"
+                      />
+                    ) : null}
+                    <div className="flex flex-col">
+                      <p>
+                        {postInfo && postInfo.user.fName}{" "}
+                        {postInfo && postInfo.user.lName}
+                      </p>
+                      <p>March 27 at 3:34 pm</p>
+                    </div>
+                  </div>
+                  <IoMdMore className="w-7 h-7" />
+                </div>
+                <div className="flex items-center space-x justify-between px-2">
+                  <div className="flex items-center space-x-0 ">
+                    <div className="flex space-x-0">
+                      {renderReactionGroupIcons()}
+                    </div>
+                    <p>{renderReactionState()}</p>
+                  </div>
+
+                  <p>{renderCommentCount()}</p>
+                </div>
+                <div className=" flex mb-4 items-center justify-between border-t border-t-gray-300 relative">
+                  {renderReactionStatus()}
+                  {toShowReactionBox && (
+                    <div
+                      className="absolute -left-1 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
+                      onMouseOver={handelOverMouseOutBox}
+                      onMouseLeave={handelonMouseLeaveReactionBox}
+                    >
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "like"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/like.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "love"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/love.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "care"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/care.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "lagh"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/haha.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "wow"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/wow.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "sad"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/sad.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                      <Image
+                        onClick={() => {
+                          handelUpdateLike(
+                            props.postId,
+                            LoggedInUser.userid,
+                            "angry"
+                          );
+                        }}
+                        alt="Amanuel Ferede"
+                        src={"/reactions/angry.png"}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
+                      />
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-3 hover:bg-slate-50 px-4 py-1.5 grow justify-center rounded-md cursor-pointer">
+                    <FaRegComment className="w-6 h-6" />
+                  </div>
+
+                  <div className="flex items-center space-x-3 hover:bg-slate-50 px-4 py-1.5 grow justify-center rounded-md cursor-pointer">
+                    <PiShareFat className="w-6 h-6" />
                   </div>
                 </div>
-                <IoMdMore className="w-7 h-7" />
-              </div>
-              <div className="flex items-center space-x justify-between px-2">
-                <div className="flex items-center space-x-0 ">
-                  <div className="flex space-x-0">
-                    {renderReactionGroupIcons()}
-                  </div>
-                  <p>{renderReactionState()}</p>
-                </div>
 
-                <p>{renderCommentCount()}</p>
+                <div className="px-3 h-full">{renderComments()}</div>
               </div>
-              <div className=" flex mb-4 items-center justify-between border-t border-t-gray-300 relative">
-                {renderReactionStatus()}
-                {toShowReactionBox && (
-                  <div
-                    className="absolute -left-1 bottom-12 z-[499] flex items-center py-2 px-2 bg-white shadow-lg space-x-1 rounded-2xl"
-                    onMouseOver={handelOverMouseOutBox}
-                    onMouseLeave={handelonMouseLeaveReactionBox}
-                  >
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "like"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/like.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "love"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/love.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "care"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/care.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "lagh"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/haha.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "wow"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/wow.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "sad"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/sad.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                    <Image
-                      onClick={() => {
-                        handelUpdateLike(
-                          props.postId,
-                          LoggedInUser.userid,
-                          "angry"
-                        );
-                      }}
-                      alt="Amanuel Ferede"
-                      src={"/reactions/angry.png"}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="cursor-pointer w-10 h-10 object-cover rounded-full block flex-none"
-                    />
-                  </div>
-                )}
-                <div className="flex items-center space-x-3 hover:bg-slate-50 px-4 py-1.5 grow justify-center rounded-md cursor-pointer">
-                  <FaRegComment className="w-6 h-6" />
-                </div>
-
-                <div className="flex items-center space-x-3 hover:bg-slate-50 px-4 py-1.5 grow justify-center rounded-md cursor-pointer">
-                  <PiShareFat className="w-6 h-6" />
-                </div>
-              </div>
-
-              <div className="px-3 h-full">{renderComments()}</div>
             </div>
 
-            <div className=" sticky z-[100] rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
+            <div className="sticky z-[100] rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
               <Image
                 alt="Amanuel Ferede"
                 src={LoggedInUser.profilepic}
