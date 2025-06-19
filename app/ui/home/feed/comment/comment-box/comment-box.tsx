@@ -42,7 +42,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     console.log("has more", hasMore);
     console.log(
       "calculate",
-      Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
+      page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
     );
   });
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,7 +50,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading || hasMore) return;
+      if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -68,7 +68,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, hasMore, loading, page, post.postId]
+    [dispatch, loading, page, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
