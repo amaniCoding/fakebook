@@ -147,6 +147,7 @@ export async function MediasInfo(postId: string) {
           comments: {
             loading: true,
             comments: [],
+            page: 1,
           },
         },
       };

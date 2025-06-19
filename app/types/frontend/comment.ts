@@ -12,5 +12,6 @@ export type CommentInfo = {
   comments: {
     loading: boolean;
     comments: Comment[];
+    page: number;
   };
 };

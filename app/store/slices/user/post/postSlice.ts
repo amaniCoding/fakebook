@@ -5,11 +5,13 @@ import {
   MediaCommentPayload,
   MediaCommentsPayload,
   MediaReactionInfoPayLoad,
+  MediaPagePayload,
 } from "@/app/types/store/media";
 import {
   InsertCommentAction,
   postOption,
   SubmittedPostType,
+  PagePayload,
 } from "@/app/types/store/post";
 import { CommentPayLoad } from "@/app/types/store/comment";
 import { APost, Post } from "@/app/types/frontend/post";
@@ -186,6 +188,7 @@ export const userPostSlice = createSlice({
         ...feed!.commentInfo.comments.comments,
         ...action.payload.comments,
       ];
+
       feed!.commentInfo.comments.loading = false;
     },
 
@@ -203,6 +206,28 @@ export const userPostSlice = createSlice({
           ...action.payload.comments,
         ];
         media.commentInfo.comments.loading = false;
+      }
+    },
+    updatePostCommentPage: (state, action: PayloadAction<PagePayload>) => {
+      const feed = state.feeds.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      feed!.commentInfo.comments.page = action.payload.page;
+    },
+    updatePostMediaCommentPage: (
+      state,
+      action: PayloadAction<MediaPagePayload>
+    ) => {
+      const media = state.aPost?.medias.find((media) => {
+        if (media.mediaId === action.payload.mediaId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (media) {
+        media.commentInfo.comments.page = action.payload.page;
       }
     },
 
@@ -228,6 +253,8 @@ export const {
   setPostComments,
   updateFeedsWithNewPost,
   setMediaComments,
+  updatePostCommentPage,
+  updatePostMediaCommentPage,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

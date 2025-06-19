@@ -38,6 +38,7 @@ export type APost = {
       comments: {
         loading: boolean;
         comments: Comment[];
+        page: number;
       };
     };
   }[];

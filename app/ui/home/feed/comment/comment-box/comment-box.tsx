@@ -22,6 +22,7 @@ import { postComment, getComments } from "@/app/libs/actions/post";
 import {
   setPostComments,
   updateFeedsWithComment,
+  updatePostCommentPage,
 } from "@/app/store/slices/user/post/postSlice";
 import CommentItem from "../comment-item/comment-item";
 
@@ -31,7 +32,6 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const feed = feeds.find((feed) => {
     return feed.postId === post.postId;
   });
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
@@ -42,14 +42,19 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = page + 1;
-          setPage(newPage);
+          const newPage = feed!.commentInfo.comments.page + 1;
+          dispatch(
+            updatePostCommentPage({
+              postId: post.postId,
+              page: newPage,
+            })
+          );
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [loading, page]
+    [dispatch, feed, loading, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
@@ -100,7 +105,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     setLoading(true);
     const fetchAllComments = async () => {
       try {
-        const comments = await getComments(post.postId, page);
+        const comments = await getComments(
+          post.postId,
+          post.commentInfo.comments.page
+        );
         if (comments) {
           dispatch(
             setPostComments({
@@ -115,8 +123,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
       }
     };
     fetchAllComments();
-    console.log("page", page);
-  }, [dispatch, page, post.postId]);
+  }, [dispatch, post.commentInfo.comments.page, post.postId]);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -436,92 +443,83 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           <CommentItem feed={post} refer="commentbox" />
 
           <div className="px-6 py-2 ">
-            {feed?.commentInfo.comments.loading ? (
-              <CommentsSkeleton />
-            ) : (
-              <>
-                {feed?.commentInfo.comments.comments.map((comment, index) => {
-                  return (
+            {feed?.commentInfo.comments.comments.map((comment, index) => {
+              return (
+                <div
+                  className="flex flex-row mb-3 space-x-3 pb-2"
+                  key={comment.commentId}
+                  ref={
+                    feed.commentInfo.comments.comments.length === index + 1
+                      ? lastPostElementRef
+                      : null
+                  }
+                >
+                  <div className="relative group flex-none">
+                    <Link href={"/profile"}>
+                      <Image
+                        unoptimized
+                        alt="Amanuel Ferede"
+                        src={comment.user.profilePic}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                      />
+                    </Link>
                     <div
-                      className="flex flex-row mb-3 space-x-3 pb-2"
-                      key={comment.commentId}
-                      ref={
-                        feed.commentInfo.comments.comments.length === index + 1
-                          ? lastPostElementRef
-                          : null
+                      className={
+                        "absolute group-hover:block hidden w-96 z-[500]  -left-32 rounded-lg  p-4  bg-white shadow-lg"
                       }
                     >
-                      <div className="relative group flex-none">
-                        <Link href={"/profile"}>
-                          <Image
-                            unoptimized
-                            alt="Amanuel Ferede"
-                            src={comment.user.profilePic}
-                            width={0}
-                            height={0}
-                            sizes="100vh"
-                            className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                          />
-                        </Link>
-                        <div
-                          className={
-                            "absolute group-hover:block hidden w-96 z-[500]  -left-32 rounded-lg  p-4  bg-white shadow-lg"
-                          }
-                        >
-                          <div className="flex space-x-3">
-                            <Image
-                              unoptimized
-                              className="w-20 h-20 rounded-full  object-cover"
-                              alt="Amanuel Ferede"
-                              src={comment.user.profilePic}
-                              width={0}
-                              height={0}
-                              sizes="100vh"
-                            />
+                      <div className="flex space-x-3">
+                        <Image
+                          unoptimized
+                          className="w-20 h-20 rounded-full  object-cover"
+                          alt="Amanuel Ferede"
+                          src={comment.user.profilePic}
+                          width={0}
+                          height={0}
+                          sizes="100vh"
+                        />
 
-                            <div className=" flex-col space-y-2 flex-1 mt-3">
-                              <p className="text-lg font-bold">
-                                Amanuel Ferede
-                              </p>
-                              <p className="">Lives in AddisAbaba Ethiopia </p>
-                              <p>
-                                Studid Civil Engineering at BahirDar University
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center space-x-2 mt-3">
-                            <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                              <FaUserFriends className="w-4 h-4" />
-                              <span>Friends</span>
-                            </button>
-                            <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                              <FaFacebookMessenger className="fill-white w-4 h-4" />
-                              <span>Message</span>
-                            </button>
-                            <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                              <IoIosMore className="w-4 h-4" />
-                            </button>
-                          </div>
+                        <div className=" flex-col space-y-2 flex-1 mt-3">
+                          <p className="text-lg font-bold">Amanuel Ferede</p>
+                          <p className="">Lives in AddisAbaba Ethiopia </p>
+                          <p>Studid Civil Engineering at BahirDar University</p>
                         </div>
                       </div>
-                      <div className="">
-                        <div className="p-3 bg-gray-100 rounded-xl ">
-                          <p className="font-semibold">Amanuel Ferede</p>
-                          <p>{comment.comment}</p>
-                        </div>
 
-                        <div className="flex space-x-4 pl-3">
-                          <span className="text-sm"></span>
-                          <span className="text-sm">Like</span>
-                          <span className="text-sm">Reply</span>
-                        </div>
+                      <div className="flex items-center space-x-2 mt-3">
+                        <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                          <FaUserFriends className="w-4 h-4" />
+                          <span>Friends</span>
+                        </button>
+                        <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                          <FaFacebookMessenger className="fill-white w-4 h-4" />
+                          <span>Message</span>
+                        </button>
+                        <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                          <IoIosMore className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-                  );
-                })}
-              </>
-            )}
+                  </div>
+                  <div className="">
+                    <div className="p-3 bg-gray-100 rounded-xl ">
+                      <p className="font-semibold">Amanuel Ferede</p>
+                      <p>{comment.comment}</p>
+                    </div>
+
+                    <div className="flex space-x-4 pl-3">
+                      <span className="text-sm"></span>
+                      <span className="text-sm">Like</span>
+                      <span className="text-sm">Reply</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {loading && <CommentsSkeleton />}
           </div>
         </div>
 

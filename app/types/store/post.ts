@@ -39,3 +39,8 @@ export type InsertCommentAction = {
   postId: string;
   comments: Comment[];
 };
+
+export type PagePayload = {
+  page: number;
+  postId: string;
+};

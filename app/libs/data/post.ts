@@ -51,6 +51,7 @@ export async function fetchPosts(userId: string, page: number) {
             commentsCount: _commentsCount[0].comments,
             comments: {
               loading: true,
+              page: 1,
               comments: [],
             },
           },
@@ -168,6 +169,7 @@ export async function fetchPostInfo(postId: string) {
         comments: {
           loading: true,
           comments: [],
+          page: 1,
         },
       },
 

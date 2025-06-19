@@ -17,3 +17,9 @@ export type MediaCommentsPayload = {
   comments: Comment[];
   mediaId: string;
 };
+
+export type MediaPagePayload = {
+  page: number;
+  postId: string;
+  mediaId: string;
+};
