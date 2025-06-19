@@ -44,13 +44,14 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
       "calculate",
       page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
     );
+    console.log("loading", loading);
   });
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading) return;
+      if (loading || hasMore) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -68,7 +69,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, loading, page, post.postId]
+    [dispatch, hasMore, loading, page, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
@@ -116,8 +117,8 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchAllComments = async () => {
-      setLoading(true);
       try {
         const comments = await getComments(post.postId, page);
         if (comments) {
@@ -127,8 +128,8 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
               comments: comments.comments,
             })
           );
-          setLoading(false);
         }
+        setLoading(false);
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
         setLoading(false);
@@ -534,9 +535,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                 </div>
               );
             })}
-            {feed &&
-              feed.commentInfo.comments.comments.length > 0 &&
-              loading && <CommentsSkeleton />}
+            {parseInt(feed!.commentInfo.commentsCount) > 0 && loading && (
+              <CommentsSkeleton />
+            )}
           </div>
         </div>
 
