@@ -112,6 +112,7 @@ export async function fetchNewPost(userId: string, postId: string) {
             comments: {
               loading: true,
               comments: [],
+              page: 1,
             },
           },
 
