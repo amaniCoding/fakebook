@@ -33,10 +33,11 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     return feed.postId === post.postId;
   });
   const [page, setPage] = useState<number>(feed!.commentInfo.comments.page);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [hasMore, setHasMore] = useState<boolean>(
-    page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
-  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const observer = useRef<IntersectionObserver>(null);
+
+  const hasMore =
+    page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5);
   useEffect(() => {
     console.log("page", page);
     console.log("has more", hasMore);
@@ -45,9 +46,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
       page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5)
     );
     console.log("loading", loading);
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-  const observer = useRef<IntersectionObserver>(null);
+  }, [hasMore, loading, page, post.commentInfo.commentsCount]);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
@@ -117,7 +116,12 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   };
 
   useEffect(() => {
-    setLoading(true);
+    if (hasMore) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+
     const fetchAllComments = async () => {
       try {
         const comments = await getComments(post.postId, page);
