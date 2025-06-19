@@ -105,17 +105,19 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     setLoading(true);
     const fetchAllComments = async () => {
       try {
-        const comments = await getComments(
-          post.postId,
-          post.commentInfo.comments.page
-        );
-        if (comments) {
-          dispatch(
-            setPostComments({
-              postId: post.postId,
-              comments: comments,
-            })
+        if (feed) {
+          const comments = await getComments(
+            post.postId,
+            feed.commentInfo.comments.page
           );
+          if (comments) {
+            dispatch(
+              setPostComments({
+                postId: post.postId,
+                comments: comments,
+              })
+            );
+          }
         }
         setLoading(false);
       } catch (error) {
@@ -123,7 +125,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
       }
     };
     fetchAllComments();
-  }, [dispatch, post.commentInfo.comments.page, post.postId]);
+  }, [dispatch, feed, post.postId]);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
@@ -519,7 +521,9 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                 </div>
               );
             })}
-            {loading && <CommentsSkeleton />}
+            {feed &&
+              feed.commentInfo.comments.comments.length > 0 &&
+              loading && <CommentsSkeleton />}
           </div>
         </div>
 

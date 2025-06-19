@@ -265,7 +265,9 @@ export default function PhotoModal(props: PhotoModalProps) {
             </div>
           );
         })}
-        {loading && <CommentsSkeleton />}
+        {postInfo.commentInfo.comments.comments.length > 0 && loading && (
+          <CommentsSkeleton />
+        )}
       </div>
     );
   };
