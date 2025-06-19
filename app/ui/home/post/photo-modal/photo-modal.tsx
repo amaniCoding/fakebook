@@ -728,7 +728,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">View Post</p>
               </div>
               <div
-                className={`min-h-[${commentsRef.current?.scrollHeight}px] overflow-y-auto`}
+                className={`h-[${commentsRef.current?.scrollHeight}vh] overflow-y-auto`}
               >
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
