@@ -37,6 +37,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const [hasMore, setHasMore] = useState<boolean>(
     page === parseInt(post.commentInfo.commentsCount) / 5
   );
+  useEffect(() => {
+    console.log("page", page);
+    console.log("has more", hasMore);
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
 
