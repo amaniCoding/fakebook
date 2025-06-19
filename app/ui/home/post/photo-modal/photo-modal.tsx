@@ -655,12 +655,14 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
     };
     fetchMediaComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhotoIndex, dispatch, props.mediaId, props.postId]);
-
-  useEffect(() => {
-    console.log(postInfo);
-  }, [postInfo]);
+  }, [
+    currentPhotoIndex,
+    dispatch,
+    page,
+    postInfo,
+    props.mediaId,
+    props.postId,
+  ]);
 
   return (
     <>

@@ -107,25 +107,23 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
     setLoading(true);
     const fetchAllComments = async () => {
       try {
-        if (feed) {
-          const comments = await getComments(post.postId, page);
-          if (comments) {
-            dispatch(
-              setPostComments({
-                postId: post.postId,
-                comments: comments,
-              })
-            );
-          }
+        const comments = await getComments(post.postId, page);
+        if (comments) {
+          dispatch(
+            setPostComments({
+              postId: post.postId,
+              comments: comments,
+            })
+          );
         }
+
         setLoading(false);
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
       }
     };
     fetchAllComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, post.postId]);
+  }, [dispatch, page, post.postId]);
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
