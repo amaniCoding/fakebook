@@ -17,7 +17,7 @@ export default function FeedsClient() {
     feedsFromRedux.page ? feedsFromRedux.page : 1
   );
 
-  const hasMore = page >= feedsFromRedux.rowsCount / 5;
+  const hasMore = page >= feedsFromRedux.posts.length / 5;
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const lastPostElementRef = useCallback(
