@@ -676,7 +676,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   ]);
 
   useEffect(() => {
-    setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}vh`);
+    setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
   }, []);
 
   return (
