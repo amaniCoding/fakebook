@@ -3,10 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import FeedItem from "../feed-item/feed-item";
 import { feedFeeds, setFeeds } from "@/app/store/slices/user/post/postSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
-import { fetchFeeds } from "@/app/libs/actions/post";
+import { fetchFeedCount, fetchFeeds } from "@/app/libs/actions/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import FeedItemSkeleton from "@/app/ui/skeletons/feed";
-import { fetchPostsCount } from "@/app/libs/data/post";
 
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
@@ -45,7 +44,7 @@ export default function FeedsClient() {
   useEffect(() => {
     const fetchAllFeeds = async () => {
       try {
-        const feeds = await fetchPostsCount();
+        const feeds = await fetchFeedCount();
         dispatch(setFeeds(feeds));
       } catch (error) {
         console.error(error);
