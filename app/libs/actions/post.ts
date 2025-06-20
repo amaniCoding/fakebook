@@ -78,8 +78,8 @@ export async function createPost(
 export async function getComments(postId: string, page: number) {
   const offset = (page - 1) * 5;
   try {
-    const commentsCount = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC`;
-    const comments = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date DESC LIMIT 5 OFFSET ${offset}`;
+    const commentsCount = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date ASC`;
+    const comments = sql<Comment>`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN users ON ucomments.userid = users.userid WHERE uposts.postid = ${postId} ORDER BY ucomments.date ASC LIMIT 5 OFFSET ${offset}`;
 
     const [_commentsCount, _comments] = await Promise.all([
       commentsCount,
