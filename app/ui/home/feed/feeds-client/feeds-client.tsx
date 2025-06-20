@@ -13,11 +13,14 @@ import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
-  const [page, setPage] = useState<number>(
-    feedsFromRedux.page ? feedsFromRedux.page : 1
-  );
-
+  const newPage = feedsFromRedux.page ? feedsFromRedux.page : 1;
+  const [page, setPage] = useState<number>(newPage);
   const hasMore = page >= feedsFromRedux.posts.length / 5;
+  useEffect(() => {
+    console.log("hasmore", hasMore);
+    console.log("page", page);
+  }, [hasMore, page]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const lastPostElementRef = useCallback(
