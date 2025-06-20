@@ -657,10 +657,11 @@ export default function PhotoModal(props: PhotoModalProps) {
               comments: mediaComments,
             })
           );
+          setLoading(false);
         }
-        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     };
     fetchMediaComments();

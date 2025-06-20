@@ -127,8 +127,8 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
               comments: comments.comments,
             })
           );
+          setLoading(false);
         }
-        setLoading(false);
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
         setLoading(false);
