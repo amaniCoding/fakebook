@@ -225,7 +225,7 @@ export const userPostSlice = createSlice({
           return false;
         }
       });
-      console.log("from redux" + media?.commentInfo.comments.comments);
+      console.log("from redux", media?.commentInfo.comments.comments);
     },
 
     updatePostCommentPage: (state, action: PayloadAction<PagePayload>) => {

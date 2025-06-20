@@ -661,10 +661,11 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
+    setLoading(true);
     if (!postInfo) {
       return;
     }
-    setLoading(true);
+
     const fetchMediaComments = async () => {
       try {
         const mediaComments = await mComments(
@@ -690,7 +691,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     };
     fetchMediaComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhotoIndex, dispatch, page, props.mediaId, props.postId]);
+  }, [currentPhotoIndex, dispatch, page, props.postId]);
 
   useEffect(() => {
     if (!postInfo) {
@@ -699,7 +700,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
     dispatch(
       getMediaComments({
-        mediaId: postInfo?.medias[currentPhotoIndex].mediaId,
+        mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
         postId: props.postId,
         comments: [],
       })
