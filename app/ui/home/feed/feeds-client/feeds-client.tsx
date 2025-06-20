@@ -10,8 +10,8 @@ import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
-  const newPage = feedsFromRedux.page;
-  const [page, setPage] = useState<number>(newPage);
+
+  const [page, setPage] = useState<number>(1);
   const _rowCount = feedsFromRedux.rowsCount ? feedsFromRedux.rowsCount : 0;
   const hasMore = page >= Math.ceil(_rowCount / 5);
   useEffect(() => {
