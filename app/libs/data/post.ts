@@ -14,6 +14,8 @@ import { LoggedInUser } from "@/app/config/loggedinuser";
 export async function fetchPosts(userId: string, page: number) {
   const offset = (page - 1) * 5;
   try {
+    const allPostsForRowCount =
+      await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC`;
     const posts =
       await sql<Post>`SELECT * FROM uposts JOIN users ON uposts.userid = users.userid ORDER BY uposts.date DESC LIMIT 5 OFFSET ${offset}`;
     const allPosts = await Promise.all(
@@ -66,9 +68,14 @@ export async function fetchPosts(userId: string, page: number) {
         };
       })
     );
+
+    const [_allPosts, _allPostsForRowCount] = await Promise.all([
+      allPosts,
+      allPostsForRowCount,
+    ]);
     return {
-      posts: allPosts,
-      rowsCount: posts.rowCount,
+      posts: _allPosts,
+      rowsCount: _allPostsForRowCount.rowCount,
       page: 1,
     };
   } catch (error) {

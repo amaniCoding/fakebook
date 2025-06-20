@@ -340,7 +340,7 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
                 })
               : null}
           </div>
-          <p>{renderReactionState()}</p>
+          <div>{renderReactionState()}</div>
         </div>
 
         <div className="flex items-center space-x-4">

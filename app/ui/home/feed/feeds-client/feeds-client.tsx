@@ -1,10 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import FeedItem from "../feed-item/feed-item";
-import {
-  feedFeeds,
-  updatePostsPage,
-} from "@/app/store/slices/user/post/postSlice";
+import { feedFeeds, setFeeds } from "@/app/store/slices/user/post/postSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { fetchFeeds } from "@/app/libs/actions/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
@@ -13,9 +10,10 @@ import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
-  const newPage = feedsFromRedux.page ? feedsFromRedux.page : 1;
+  const newPage = feedsFromRedux.page;
   const [page, setPage] = useState<number>(newPage);
-  const hasMore = page >= Math.ceil(feedsFromRedux.posts.length / 5);
+  const _rowCount = feedsFromRedux.rowsCount ? feedsFromRedux.rowsCount : 0;
+  const hasMore = page >= Math.ceil(_rowCount / 5);
   useEffect(() => {
     console.log("hasmore", hasMore);
     console.log("page", page);
@@ -31,18 +29,13 @@ export default function FeedsClient() {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           const newPage = page + 1;
-          dispatch(
-            updatePostsPage({
-              page: newPage,
-            })
-          );
           setPage(newPage);
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, hasMore, loading, page]
+    [hasMore, loading, page]
   );
 
   /**
@@ -55,6 +48,7 @@ export default function FeedsClient() {
       try {
         const feeds = await fetchFeeds(LoggedInUser.userid, page);
         dispatch(feedFeeds(feeds.posts));
+        dispatch(setFeeds(feeds));
         setLoading(false);
       } catch (error) {
         console.error(error);

@@ -51,6 +51,7 @@ export type PostsPayLoad = {
 };
 
 export type PostsPayload = {
-  rowsCount: number;
+  rowsCount: number | null;
   posts: Post[];
+  page: number;
 };
