@@ -217,17 +217,6 @@ export const userPostSlice = createSlice({
       }
     },
 
-    getMediaComments: (state, action: PayloadAction<MediaCommentsPayload>) => {
-      const media = state.aPost?.medias.find((media) => {
-        if (media.mediaId === action.payload.mediaId) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      console.log("from redux", media?.commentInfo.comments.comments);
-    },
-
     updatePostCommentPage: (state, action: PayloadAction<PagePayload>) => {
       const feed = state.feeds.posts.find((feed) => {
         return feed.postId === action.payload.postId;
@@ -261,7 +250,6 @@ export const {
   setPostOption,
   setSubmittedPost,
   setRows,
-  getMediaComments,
   setMarginTop,
   setPostBoxHeight,
   setFeeds,

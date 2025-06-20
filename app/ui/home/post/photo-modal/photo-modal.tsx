@@ -27,7 +27,6 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import NavBar2 from "../../sections/nav-bar2";
 import {
-  getMediaComments,
   setAPost,
   setMediaComments,
   updateAPostWithCommentInfo,
@@ -47,14 +46,6 @@ export default function PhotoModal(props: PhotoModalProps) {
   useEffect(() => {
     dispatch(setAPost(props.post));
   }, [dispatch, props.post]);
-
-  useEffect(() => {
-    if (!postInfo) {
-      console.log("postinfo is not defined");
-    } else {
-      console.log("postinfo is defined", postInfo);
-    }
-  }, [postInfo]);
 
   const pageFromRedux = postInfo ? postInfo.commentInfo.comments.page : 1;
   const [page, setPage] = useState<number>(pageFromRedux);
@@ -107,13 +98,11 @@ export default function PhotoModal(props: PhotoModalProps) {
     ]
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
   useEffect(() => {
     setCurrentPhotoIndex(currentPhotoIndexFromProp!);
-    console.log("hasmore", hasMore);
-  }, [currentPhotoIndexFromProp, hasMore]);
+  }, [currentPhotoIndexFromProp]);
   console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
@@ -212,37 +201,20 @@ export default function PhotoModal(props: PhotoModalProps) {
 
     return (
       <div ref={commentsRef}>
-        {postInfo.commentInfo.comments.comments.map((comment, index) => {
-          return (
-            <div
-              className="flex flex-row mb-3 space-x-3 pb-2"
-              key={comment.commentId}
-              ref={
-                postInfo.commentInfo.comments.comments.length === index + 1
-                  ? lastPostElementRef
-                  : null
-              }
-            >
-              <div className=" group flex-none">
-                <Link href={"/profile"}>
-                  {comment?.user?.profilePic ? (
-                    <Image
-                      unoptimized
-                      alt="Amanuel Ferede"
-                      src={comment?.user?.profilePic}
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
-                    />
-                  ) : null}
-                </Link>
-                <div
-                  className={
-                    "absolute group-hover:block hidden w-96 z-[500] right-4 rounded-lg  p-4  bg-white shadow-lg"
-                  }
-                >
-                  <div className="flex space-x-3">
+        {postInfo.medias[currentPhotoIndex].commentInfo.comments.comments.map(
+          (comment, index) => {
+            return (
+              <div
+                className="flex flex-row mb-3 space-x-3 pb-2"
+                key={comment.commentId}
+                ref={
+                  postInfo.commentInfo.comments.comments.length === index + 1
+                    ? lastPostElementRef
+                    : null
+                }
+              >
+                <div className=" group flex-none">
+                  <Link href={"/profile"}>
                     {comment?.user?.profilePic ? (
                       <Image
                         unoptimized
@@ -254,46 +226,65 @@ export default function PhotoModal(props: PhotoModalProps) {
                         className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
                       />
                     ) : null}
+                  </Link>
+                  <div
+                    className={
+                      "absolute group-hover:block hidden w-96 z-[500] right-4 rounded-lg  p-4  bg-white shadow-lg"
+                    }
+                  >
+                    <div className="flex space-x-3">
+                      {comment?.user?.profilePic ? (
+                        <Image
+                          unoptimized
+                          alt="Amanuel Ferede"
+                          src={comment?.user?.profilePic}
+                          width={0}
+                          height={0}
+                          sizes="100vh"
+                          className="w-9 h-9 object-cover rounded-full ring-2 ring-offset-2 ring-blue-400"
+                        />
+                      ) : null}
 
-                    <div className=" flex-col space-y-2 flex-1 mt-3">
-                      <p className="text-lg font-bold">Amanuel Ferede</p>
-                      <p className="">Lives in AddisAbaba Ethiopia </p>
-                      <p>Studid Civil Engineering at BahirDar University</p>
+                      <div className=" flex-col space-y-2 flex-1 mt-3">
+                        <p className="text-lg font-bold">Amanuel Ferede</p>
+                        <p className="">Lives in AddisAbaba Ethiopia </p>
+                        <p>Studid Civil Engineering at BahirDar University</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 mt-3">
+                      <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
+                        <FaUserFriends className="w-4 h-4" />
+                        <span>Friends</span>
+                      </button>
+                      <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
+                        <FaFacebookMessenger className="fill-white w-4 h-4" />
+                        <span>Message</span>
+                      </button>
+                      <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
+                        <IoIosMore className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
+                </div>
+                <div className="">
+                  <div className="p-3 bg-gray-100 rounded-xl ">
+                    <p className="font-semibold">
+                      {comment?.user?.fName} {comment?.user?.lName}
+                    </p>
+                    <p>{comment?.comment}</p>
+                  </div>
 
-                  <div className="flex items-center space-x-2 mt-3">
-                    <button className="px-3 grow py-1.5 bg-gray-400 text-white flex space-x-2 items-center justify-center rounded-md">
-                      <FaUserFriends className="w-4 h-4" />
-                      <span>Friends</span>
-                    </button>
-                    <button className="px-3 grow py-1.5 bg-blue-600 text-white flex space-x-2 items-center justify-center rounded-md">
-                      <FaFacebookMessenger className="fill-white w-4 h-4" />
-                      <span>Message</span>
-                    </button>
-                    <button className="p-3 bg-gray-400 text-white flex space-x-2 items-center rounded-md">
-                      <IoIosMore className="w-4 h-4" />
-                    </button>
+                  <div className="flex space-x-4 pl-3">
+                    <span className="text-sm"></span>
+                    <span className="text-sm">Like</span>
+                    <span className="text-sm">Reply</span>
                   </div>
                 </div>
               </div>
-              <div className="">
-                <div className="p-3 bg-gray-100 rounded-xl ">
-                  <p className="font-semibold">
-                    {comment?.user?.fName} {comment?.user?.lName}
-                  </p>
-                  <p>{comment?.comment}</p>
-                </div>
-
-                <div className="flex space-x-4 pl-3">
-                  <span className="text-sm"></span>
-                  <span className="text-sm">Like</span>
-                  <span className="text-sm">Reply</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
         {parseInt(postInfo.commentInfo.commentsCount) > 0 && loading && (
           <CommentsSkeleton />
         )}
@@ -400,8 +391,6 @@ export default function PhotoModal(props: PhotoModalProps) {
         postInfo.medias[currentPhotoIndex].mediaId,
         reactionType
       );
-
-      console.log(updatedPostMediaReactions);
 
       if (updatedPostMediaReactions) {
         dispatch(
@@ -664,17 +653,20 @@ export default function PhotoModal(props: PhotoModalProps) {
     setLoading(true);
 
     const fetchMediaComments = async () => {
+      if (!postInfo) {
+        return;
+      }
       try {
         const mediaComments = await mComments(
           props.postId,
-          "ed07bcfc-966e-4c8b-b140-ba4d44d138bd",
+          postInfo.medias[currentPhotoIndex]?.mediaId,
           page
         );
         if (mediaComments.length > 0) {
           dispatch(
             setMediaComments({
               postId: props.postId,
-              mediaId: "ed07bcfc-966e-4c8b-b140-ba4d44d138bd",
+              mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
               comments: mediaComments,
             })
           );
@@ -687,6 +679,7 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
     };
     fetchMediaComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhotoIndex, dispatch, page, props.postId]);
 
   useEffect(() => {
@@ -694,13 +687,6 @@ export default function PhotoModal(props: PhotoModalProps) {
       return;
     }
     setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
-    dispatch(
-      getMediaComments({
-        mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
-        postId: props.postId,
-        comments: [],
-      })
-    );
   }, [currentPhotoIndex, postInfo, dispatch, props.postId]);
 
   return (
@@ -757,7 +743,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
-              <div className={`overflow-y-auto h-[70vh]`}>
+              <div className={``}>
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
@@ -914,7 +900,11 @@ export default function PhotoModal(props: PhotoModalProps) {
                   </div>
                 </div>
 
-                <div className="px-3 h-full">{renderComments()}</div>
+                <div
+                  className={`px-3 overflow-y-auto max-h-screen pb-96 min-h-[${commentsScrollHeight}]`}
+                >
+                  {renderComments()}
+                </div>
               </div>
               <div className="sticky z-[100] rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
                 <Image
