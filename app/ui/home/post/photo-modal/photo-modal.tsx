@@ -42,10 +42,9 @@ import {
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.aPost);
-  const apost = props.post ? props.post : null;
   useEffect(() => {
-    dispatch(setAPost(apost));
-  }, [apost, dispatch, props.post]);
+    dispatch(setAPost(props.post));
+  }, [dispatch, props.post]);
   const pageFromRedux =
     postInfo && postInfo.commentInfo.comments.page
       ? postInfo.commentInfo.comments.page
@@ -650,6 +649,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     setLoading(true);
     const fetchMediaComments = async () => {
       if (!postInfo) {
+        alert("fuck");
         return;
       }
       try {
@@ -662,7 +662,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           dispatch(
             setMediaComments({
               postId: props.postId,
-              mediaId: postInfo.medias[currentPhotoIndex].mediaId,
+              mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
               comments: mediaComments,
             })
           );
