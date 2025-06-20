@@ -294,7 +294,7 @@ export default function PhotoModal(props: PhotoModalProps) {
             </div>
           );
         })}
-        {postInfo.commentInfo.comments.comments.length > 0 && loading && (
+        {parseInt(postInfo.commentInfo.commentsCount) > 0 && loading && (
           <CommentsSkeleton />
         )}
       </div>
@@ -662,22 +662,19 @@ export default function PhotoModal(props: PhotoModalProps) {
 
   useEffect(() => {
     setLoading(true);
-    if (!postInfo) {
-      return;
-    }
 
     const fetchMediaComments = async () => {
       try {
         const mediaComments = await mComments(
           props.postId,
-          postInfo.medias[currentPhotoIndex]?.mediaId,
+          "ed07bcfc-966e-4c8b-b140-ba4d44d138bd",
           page
         );
         if (mediaComments.length > 0) {
           dispatch(
             setMediaComments({
               postId: props.postId,
-              mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
+              mediaId: "ed07bcfc-966e-4c8b-b140-ba4d44d138bd",
               comments: mediaComments,
             })
           );
@@ -690,7 +687,6 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
     };
     fetchMediaComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhotoIndex, dispatch, page, props.postId]);
 
   useEffect(() => {
