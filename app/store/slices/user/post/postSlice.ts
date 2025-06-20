@@ -118,7 +118,8 @@ export const userPostSlice = createSlice({
       state.postBoxHeights = action.payload;
     },
     setFeeds: (state, action: PayloadAction<PostsPayload>) => {
-      state.feeds = action.payload;
+      state.feeds.page = action.payload.page;
+      state.feeds.rowsCount = action.payload.rowCount;
     },
     feedFeeds: (state, action: PayloadAction<Post[]>) => {
       state.feeds.posts = [...state.feeds.posts, ...action.payload];

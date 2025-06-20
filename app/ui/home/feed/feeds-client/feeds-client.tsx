@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { fetchFeeds } from "@/app/libs/actions/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import FeedItemSkeleton from "@/app/ui/skeletons/feed";
+import { fetchPostsCount } from "@/app/libs/data/post";
 
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
@@ -41,14 +42,24 @@ export default function FeedsClient() {
   /**
    * set feed data for the first time
    */
-
+  useEffect(() => {
+    const fetchAllFeeds = async () => {
+      try {
+        const feeds = await fetchPostsCount();
+        dispatch(setFeeds(feeds));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAllFeeds();
+  }, [dispatch, page]);
   useEffect(() => {
     setLoading(true);
     const fetchAllFeeds = async () => {
       try {
         const feeds = await fetchFeeds(LoggedInUser.userid, page);
-        dispatch(feedFeeds(feeds.posts));
-        dispatch(setFeeds(feeds));
+        dispatch(feedFeeds(feeds));
+
         setLoading(false);
       } catch (error) {
         console.error(error);
