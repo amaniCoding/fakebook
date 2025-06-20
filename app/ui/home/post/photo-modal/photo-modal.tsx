@@ -27,6 +27,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 import NavBar2 from "../../sections/nav-bar2";
 import {
+  getMediaComments,
   setAPost,
   setMediaComments,
   updateAPostWithCommentInfo,
@@ -42,14 +43,25 @@ import {
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.aPost);
+
   useEffect(() => {
     dispatch(setAPost(props.post));
   }, [dispatch, props.post]);
-  const pageFromRedux =
-    postInfo && postInfo.commentInfo.comments.page
-      ? postInfo.commentInfo.comments.page
-      : 1;
+
+  useEffect(() => {
+    if (!postInfo) {
+      console.log("postinfo is not defined");
+    } else {
+      console.log("postinfo is defined", postInfo);
+    }
+  }, [postInfo]);
+
+  const pageFromRedux = postInfo ? postInfo.commentInfo.comments.page : 1;
   const [page, setPage] = useState<number>(pageFromRedux);
+  const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
+  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
+
+  const [comment, setComment] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
@@ -65,7 +77,7 @@ export default function PhotoModal(props: PhotoModalProps) {
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading || hasMore) return;
+      if (loading || hasMore || !postInfo) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -74,7 +86,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           setPage(newPage);
           dispatch(
             updatePostMediaCommentPage({
-              mediaId: props.mediaId,
+              mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
               postId: props.postId,
               page: newPage,
             })
@@ -84,13 +96,16 @@ export default function PhotoModal(props: PhotoModalProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, hasMore, loading, page, props.mediaId, props.postId]
+    [
+      currentPhotoIndex,
+      dispatch,
+      hasMore,
+      loading,
+      page,
+      postInfo,
+      props.postId,
+    ]
   );
-
-  const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
-  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
-
-  const [comment, setComment] = useState<string>("");
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
@@ -646,12 +661,11 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
+    if (!postInfo) {
+      return;
+    }
     setLoading(true);
     const fetchMediaComments = async () => {
-      if (!postInfo) {
-        alert("fuck");
-        return;
-      }
       try {
         const mediaComments = await mComments(
           props.postId,
@@ -666,6 +680,7 @@ export default function PhotoModal(props: PhotoModalProps) {
               comments: mediaComments,
             })
           );
+
           setLoading(false);
         }
       } catch (error) {
@@ -678,9 +693,18 @@ export default function PhotoModal(props: PhotoModalProps) {
   }, [currentPhotoIndex, dispatch, page, props.mediaId, props.postId]);
 
   useEffect(() => {
+    if (!postInfo) {
+      return;
+    }
     setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
-    console.log("media comments", postInfo?.commentInfo.comments.comments);
-  }, [postInfo?.commentInfo.comments, currentPhotoIndex]);
+    dispatch(
+      getMediaComments({
+        mediaId: postInfo?.medias[currentPhotoIndex].mediaId,
+        postId: props.postId,
+        comments: [],
+      })
+    );
+  }, [currentPhotoIndex, postInfo, dispatch, props.postId]);
 
   return (
     <>
