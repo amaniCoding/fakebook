@@ -28,12 +28,12 @@ export default function FeedsClient() {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           const newPage = page + 1;
-          setPage(newPage);
           dispatch(
             updatePostsPage({
               page: newPage,
             })
           );
+          setPage(newPage);
         }
       });
 
