@@ -34,7 +34,7 @@ interface StoryState {
   feeds: {
     rowsCount: number;
     posts: Post[];
-    page: number;
+    page: number | null;
   };
   aPost: APost | undefined;
   insertComment: {

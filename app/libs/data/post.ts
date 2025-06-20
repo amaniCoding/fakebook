@@ -68,7 +68,8 @@ export async function fetchPosts(userId: string, page: number) {
     );
     return {
       posts: allPosts,
-      total: posts.rowCount,
+      rowsCount: posts.rowCount,
+      page: 1,
     };
   } catch (error) {
     console.log("Database error", error);
