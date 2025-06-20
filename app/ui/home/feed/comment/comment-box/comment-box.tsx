@@ -105,9 +105,6 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
           );
 
           setComment("");
-          commentBoxRef.current?.scrollTo({
-            top: 350,
-          });
         }
       } catch (error) {
         console.error(`error ${error}`);
