@@ -60,11 +60,19 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
   if (postInfo) {
     hasMore =
-      page >= Math.ceil(parseInt(postInfo.commentInfo.commentsCount) / 5);
+      page >=
+      Math.ceil(
+        parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) / 5
+      );
   }
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
+
+  useEffect(() => {
+    console.log("page", page);
+    console.log("hasMore", hasMore);
+  }, [hasMore, page]);
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
@@ -201,14 +209,16 @@ export default function PhotoModal(props: PhotoModalProps) {
 
     return (
       <div ref={commentsRef}>
-        {postInfo.medias[currentPhotoIndex].commentInfo.comments.comments.map(
+        {postInfo.medias[currentPhotoIndex]?.commentInfo.comments.comments.map(
           (comment, index) => {
             return (
               <div
                 className="flex flex-row mb-3 space-x-3 pb-2"
                 key={comment.commentId}
                 ref={
-                  postInfo.commentInfo.comments.comments.length === index + 1
+                  postInfo.medias[currentPhotoIndex]?.commentInfo.comments
+                    .comments.length ===
+                  index + 1
                     ? lastPostElementRef
                     : null
                 }
