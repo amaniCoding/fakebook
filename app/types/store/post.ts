@@ -46,6 +46,10 @@ export type PagePayload = {
   postId: string;
 };
 
+export type PostsPayLoad = {
+  page: number;
+};
+
 export type PostsPayload = {
   rowsCount: number;
   posts: Post[];

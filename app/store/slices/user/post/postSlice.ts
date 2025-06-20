@@ -13,6 +13,7 @@ import {
   SubmittedPostType,
   PagePayload,
   PostsPayload,
+  PostsPayLoad,
 } from "@/app/types/store/post";
 import { CommentPayLoad } from "@/app/types/store/comment";
 import { APost, Post } from "@/app/types/frontend/post";
@@ -33,6 +34,7 @@ interface StoryState {
   feeds: {
     rowsCount: number;
     posts: Post[];
+    page: number;
   };
   aPost: APost | undefined;
   insertComment: {
@@ -68,6 +70,7 @@ const initialState: StoryState = {
   feeds: {
     rowsCount: 0,
     posts: [],
+    page: 1,
   },
   aPost: undefined,
   insertComment: {
@@ -224,6 +227,10 @@ export const userPostSlice = createSlice({
 
       feed!.commentInfo.comments.page = action.payload.page;
     },
+
+    updatePostsPage: (state, action: PayloadAction<PostsPayLoad>) => {
+      state.feeds.page = action.payload.page;
+    },
     updatePostMediaCommentPage: (
       state,
       action: PayloadAction<MediaPagePayload>
@@ -252,6 +259,7 @@ export const {
   setRows,
   setMarginTop,
   setPostBoxHeight,
+  updatePostsPage,
   setFeeds,
   feedFeeds,
   setAPost,

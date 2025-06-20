@@ -1,7 +1,10 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import FeedItem from "../feed-item/feed-item";
-import { feedFeeds } from "@/app/store/slices/user/post/postSlice";
+import {
+  feedFeeds,
+  updatePostsPage,
+} from "@/app/store/slices/user/post/postSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { fetchFeeds } from "@/app/libs/actions/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
@@ -10,7 +13,7 @@ import FeedItemSkeleton from "@/app/ui/skeletons/feed";
 export default function FeedsClient() {
   const dispatch = useAppDispatch();
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(feedsFromRedux.page);
 
   const hasMore = page >= feedsFromRedux.rowsCount / 5;
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,12 +27,17 @@ export default function FeedsClient() {
         if (entries[0].isIntersecting) {
           const newPage = page + 1;
           setPage(newPage);
+          dispatch(
+            updatePostsPage({
+              page: newPage,
+            })
+          );
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [hasMore, loading, page]
+    [dispatch, hasMore, loading, page]
   );
 
   /**
