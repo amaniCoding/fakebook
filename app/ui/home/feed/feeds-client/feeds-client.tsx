@@ -66,7 +66,7 @@ export default function FeedsClient() {
           />
         );
       })}
-      {loading && <FeedItemSkeleton />}
+      {loading && feedsFromRedux.posts.length > 0 && <FeedItemSkeleton />}
     </>
   );
 }

@@ -34,7 +34,7 @@ interface StoryState {
     rowsCount: number;
     posts: Post[];
   };
-  aPost: APost | undefined;
+  aPost: APost | null;
   insertComment: {
     loading: false;
     comment: Comment[];
@@ -69,7 +69,7 @@ const initialState: StoryState = {
     rowsCount: 0,
     posts: [],
   },
-  aPost: undefined,
+  aPost: null,
   insertComment: {
     loading: false,
     comment: [],
@@ -122,7 +122,7 @@ export const userPostSlice = createSlice({
     feedFeeds: (state, action: PayloadAction<Post[]>) => {
       state.feeds.posts = [...state.feeds.posts, ...action.payload];
     },
-    setAPost: (state, action: PayloadAction<APost | undefined>) => {
+    setAPost: (state, action: PayloadAction<APost | null>) => {
       state.aPost = action.payload;
     },
     updateFeedsWithReactionInfo: (

@@ -42,17 +42,23 @@ import {
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const postInfo = useAppSelector((state) => state.userPost.aPost);
+  const apost = props.post ? props.post : null;
   useEffect(() => {
-    dispatch(setAPost(props.post));
-  }, [dispatch, props.post]);
-  const [page, setPage] = useState<number>(1);
+    dispatch(setAPost(apost));
+  }, [apost, dispatch, props.post]);
+  const pageFromRedux =
+    postInfo && postInfo.commentInfo.comments.page
+      ? postInfo.commentInfo.comments.page
+      : 1;
+  const [page, setPage] = useState<number>(pageFromRedux);
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
   let hasMore: boolean = false;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
   if (postInfo) {
-    hasMore = page >= parseInt(postInfo.commentInfo.commentsCount) / 5;
+    hasMore =
+      page >= Math.ceil(parseInt(postInfo.commentInfo.commentsCount) / 5);
   }
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
@@ -86,11 +92,14 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
   useEffect(() => {
     setCurrentPhotoIndex(currentPhotoIndexFromProp!);
-  }, [currentPhotoIndexFromProp]);
+    console.log("hasmore", hasMore);
+  }, [currentPhotoIndexFromProp, hasMore]);
   console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
@@ -638,22 +647,22 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchMediaComments = async () => {
       if (!postInfo) {
         return;
       }
       try {
-        setLoading(true);
         const mediaComments = await mComments(
           props.postId,
-          postInfo.medias[currentPhotoIndex].mediaId,
+          postInfo.medias[currentPhotoIndex]?.mediaId,
           page
         );
-        if (mediaComments) {
+        if (mediaComments.length > 0) {
           dispatch(
             setMediaComments({
               postId: props.postId,
-              mediaId: props.mediaId,
+              mediaId: postInfo.medias[currentPhotoIndex].mediaId,
               comments: mediaComments,
             })
           );
@@ -665,19 +674,13 @@ export default function PhotoModal(props: PhotoModalProps) {
       }
     };
     fetchMediaComments();
-  }, [
-    currentPhotoIndex,
-    dispatch,
-    hasMore,
-    page,
-    postInfo,
-    props.mediaId,
-    props.postId,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPhotoIndex, dispatch, page, props.mediaId, props.postId]);
 
   useEffect(() => {
     setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
-  }, []);
+    console.log("media comments", postInfo?.commentInfo.comments.comments);
+  }, [postInfo?.commentInfo.comments, currentPhotoIndex]);
 
   return (
     <>
@@ -733,10 +736,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
-              <div
-                className={`overflow-y-auto`}
-                style={{ height: commentsScrollHeight }}
-              >
+              <div className={`overflow-y-auto h-[70vh]`}>
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
@@ -767,7 +767,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                     <p>{renderReactionState()}</p>
                   </div>
 
-                  <p>{renderCommentCount()}</p>
+                  <div>{renderCommentCount()}</div>
                 </div>
                 <div className=" flex mb-4 items-center justify-between border-t border-t-gray-300 relative">
                   {renderReactionStatus()}
@@ -895,28 +895,27 @@ export default function PhotoModal(props: PhotoModalProps) {
 
                 <div className="px-3 h-full">{renderComments()}</div>
               </div>
-            </div>
+              <div className="sticky z-[100] rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
+                <Image
+                  alt="Amanuel Ferede"
+                  src={LoggedInUser.profilepic}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
+                  className="w-10 h-10 object-cover rounded-full block flex-none"
+                />
 
-            <div className="sticky z-[100] rounded-b-xl flex bg-white space-x-2 bottom-0 left-0 right-0 p-2 w-full">
-              <Image
-                alt="Amanuel Ferede"
-                src={LoggedInUser.profilepic}
-                width={0}
-                height={0}
-                sizes="100vh"
-                className="w-10 h-10 object-cover rounded-full block flex-none"
-              />
-
-              <input
-                onChange={onChangeComment}
-                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                  insertCommentAction(e, comment);
-                }}
-                value={comment}
-                type="text"
-                className="p-3 block grow focus:outline-none bg-slate-50 rounded-xl"
-                placeholder="Write a comment ..."
-              ></input>
+                <input
+                  onChange={onChangeComment}
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                    insertCommentAction(e, comment);
+                  }}
+                  value={comment}
+                  type="text"
+                  className="p-3 block grow focus:outline-none bg-slate-50 rounded-xl"
+                  placeholder="Write a comment ..."
+                ></input>
+              </div>
             </div>
           </div>
         </div>
