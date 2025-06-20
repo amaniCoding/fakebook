@@ -15,7 +15,7 @@ export default function FeedsClient() {
   const feedsFromRedux = useAppSelector((state) => state.userPost.feeds);
   const newPage = feedsFromRedux.page ? feedsFromRedux.page : 1;
   const [page, setPage] = useState<number>(newPage);
-  const hasMore = page >= feedsFromRedux.posts.length / 5;
+  const hasMore = page >= Math.ceil(feedsFromRedux.posts.length / 5);
   useEffect(() => {
     console.log("hasmore", hasMore);
     console.log("page", page);
