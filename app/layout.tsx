@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="h-screen">
+        <div className="h-screen overflow-y-auto">
           <AppProvider>{children}</AppProvider>
         </div>
       </body>
