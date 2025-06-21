@@ -13,7 +13,7 @@ export default function FeedsClient() {
 
   const [page, setPage] = useState<number>(1);
   const _rowCount = feedsFromRedux.rowsCount ? feedsFromRedux.rowsCount : 0;
-  const hasMore = page >= Math.ceil(_rowCount / 5);
+  const hasMore = page > Math.ceil(_rowCount / 5);
   useEffect(() => {
     console.log("hasmore", hasMore);
     console.log("page", page);
@@ -57,7 +57,9 @@ export default function FeedsClient() {
     const fetchAllFeeds = async () => {
       try {
         const feeds = await fetchFeeds(LoggedInUser.userid, page);
-        dispatch(feedFeeds(feeds));
+        if (!hasMore) {
+          dispatch(feedFeeds(feeds));
+        }
 
         setLoading(false);
       } catch (error) {
@@ -66,7 +68,7 @@ export default function FeedsClient() {
       }
     };
     fetchAllFeeds();
-  }, [dispatch, page]);
+  }, [dispatch, hasMore, page]);
 
   return (
     <>
@@ -83,7 +85,7 @@ export default function FeedsClient() {
           />
         );
       })}
-      {loading && feedsFromRedux.posts.length > 0 && <FeedItemSkeleton />}
+      {loading && <FeedItemSkeleton />}
     </>
   );
 }
