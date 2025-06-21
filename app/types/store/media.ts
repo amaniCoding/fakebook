@@ -23,3 +23,8 @@ export type MediaPagePayload = {
   postId: string;
   mediaId: string;
 };
+
+export type MeidaLoadingPayload = {
+  loading: true | false;
+  mediaId: string | undefined;
+};

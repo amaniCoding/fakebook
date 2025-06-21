@@ -181,6 +181,7 @@ export async function fetchPostInfo(postId: string) {
           loading: true,
           comments: [],
           page: 1,
+          hasMore: false,
         },
       },
 

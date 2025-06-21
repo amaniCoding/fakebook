@@ -31,6 +31,7 @@ import {
   setMediaComments,
   updateAPostWithCommentInfo,
   updateAPostWithReactionInfo,
+  updatePostMediaCommentLoading,
   updatePostMediaCommentPage,
 } from "@/app/store/slices/user/post/postSlice";
 import {
@@ -41,41 +42,38 @@ import {
 } from "@/app/libs/actions/media";
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
-  const postInfo = useAppSelector((state) => state.userPost.aPost);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
 
+  const postInfo = useAppSelector((state) => state.userPost.aPost);
+  const page = postInfo?.medias[currentPhotoIndex]?.commentInfo.comments.page;
+
+  const loading =
+    postInfo?.medias[currentPhotoIndex]?.commentInfo.comments.loading;
+  const hasMore =
+    page ===
+    Math.ceil(
+      parseInt(
+        postInfo ? postInfo?.medias[currentPhotoIndex]?.commentInfo.count : "0"
+      ) / 5
+    );
+
+  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
+    return media.mediaId === props.mediaId;
+  });
   useEffect(() => {
     dispatch(setAPost(props.post));
   }, [dispatch, props.post]);
+  useEffect(() => {
+    setCurrentPhotoIndex(currentPhotoIndexFromProp!);
+  }, [currentPhotoIndexFromProp]);
 
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
 
-  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
-    return media.mediaId === props.mediaId;
-  });
-  const pageFromRedux = postInfo
-    ? postInfo.medias[currentPhotoIndex]?.commentInfo.comments.page
-    : 1;
-
-  const [page, setPage] = useState<number>(1);
-  const _hasMore = postInfo
-    ? page ===
-      Math.ceil(
-        parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) / 5
-      )
-    : false;
-  const [hasMore, setHasMore] = useState<boolean>(false);
-
-  useEffect(() => {
-    setPage(pageFromRedux);
-    setHasMore(_hasMore);
-  }, [_hasMore, pageFromRedux, currentPhotoIndex]);
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (loading || hasMore || !postInfo) return;
@@ -83,8 +81,10 @@ export default function PhotoModal(props: PhotoModalProps) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
+          if (!page) {
+            return;
+          }
           const newPage = page + 1;
-          setPage(newPage);
           dispatch(
             updatePostMediaCommentPage({
               mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
@@ -111,15 +111,10 @@ export default function PhotoModal(props: PhotoModalProps) {
   useEffect(() => {
     console.log("page", page);
     console.log("hasMore", hasMore);
-    console.log("page from redux", pageFromRedux);
-  }, [hasMore, page, currentPhotoIndex, pageFromRedux]);
+    console.log("loading", loading);
+  }, [hasMore, loading, page, currentPhotoIndex]);
 
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
-
-  useEffect(() => {
-    setCurrentPhotoIndex(currentPhotoIndexFromProp!);
-  }, [currentPhotoIndexFromProp]);
-  console.log("currentPhotoIndex", currentPhotoIndex);
 
   const renderCommentCount = () => {
     if (!postInfo) {
@@ -693,10 +688,13 @@ export default function PhotoModal(props: PhotoModalProps) {
   }, [currentPhotoIndex, postInfo, postInfo?.medias]);
 
   useEffect(() => {
-    setLoading(true);
+    updatePostMediaCommentLoading({
+      mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
+      loading: true,
+    });
 
     const fetchMediaComments = async () => {
-      if (!postInfo) {
+      if (!postInfo || !page) {
         return;
       }
       try {
@@ -714,17 +712,24 @@ export default function PhotoModal(props: PhotoModalProps) {
                 comments: mediaComments,
               })
             );
-            setLoading(false);
           }
+
+          updatePostMediaCommentLoading({
+            mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
+            loading: false,
+          });
         }
       } catch (error) {
         console.error(error);
-        setLoading(false);
+        updatePostMediaCommentLoading({
+          mediaId: postInfo?.medias[currentPhotoIndex].mediaId,
+          loading: false,
+        });
       }
     };
     fetchMediaComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhotoIndex, dispatch, hasMore, page, props.postId]);
+  }, [currentPhotoIndex, dispatch, page, props.postId]);
 
   useEffect(() => {
     if (!postInfo) {
@@ -815,7 +820,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                     <div className="flex space-x-0">
                       {renderReactionGroupIcons()}
                     </div>
-                    <p>{renderReactionState()}</p>
+                    <div>{renderReactionState()}</div>
                   </div>
 
                   <div>{renderCommentCount()}</div>

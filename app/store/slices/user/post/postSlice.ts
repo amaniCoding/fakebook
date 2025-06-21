@@ -6,6 +6,7 @@ import {
   MediaCommentsPayload,
   MediaReactionInfoPayLoad,
   MediaPagePayload,
+  MeidaLoadingPayload,
 } from "@/app/types/store/media";
 import {
   InsertCommentAction,
@@ -243,6 +244,22 @@ export const userPostSlice = createSlice({
       }
     },
 
+    updatePostMediaCommentLoading: (
+      state,
+      action: PayloadAction<MeidaLoadingPayload>
+    ) => {
+      const media = state.aPost?.medias.find((media) => {
+        if (media.mediaId === action.payload.mediaId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (media) {
+        media.commentInfo.comments.loading = action.payload.loading;
+      }
+    },
+
     // Use the PayloadAction type to declare the contents of `action.payload`
   },
 });
@@ -262,6 +279,7 @@ export const {
   updateAPostWithReactionInfo,
   updateAPostWithCommentInfo,
   updateFeedsWithComment,
+  updatePostMediaCommentLoading,
   setPostComments,
   updateFeedsWithNewPost,
   setMediaComments,
