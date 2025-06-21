@@ -50,7 +50,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   const loading =
     postInfo?.medias[currentPhotoIndex]?.commentInfo.comments.loading;
   const hasMore =
-    page ===
+    page! >
     Math.ceil(
       parseInt(
         postInfo ? postInfo?.medias[currentPhotoIndex]?.commentInfo.count : "0"
@@ -729,7 +729,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     };
     fetchMediaComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhotoIndex, dispatch, page, props.postId]);
+  }, [currentPhotoIndex, dispatch, hasMore, page, props.postId]);
 
   useEffect(() => {
     if (!postInfo) {
