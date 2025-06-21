@@ -114,7 +114,7 @@ export async function mComment(
 export async function mComments(postId: string, mediaId: string, page: number) {
   const offset = (page - 1) * 5;
   const comments =
-    await sql<MComment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} ORDER BY umediacomments.date DESC LIMIT 5 OFFSET ${offset}`;
+    await sql<MComment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} ORDER BY umediacomments.date ASC LIMIT 5 OFFSET ${offset}`;
   const mediaCommentsData = comments.rows.map((comment) => {
     return {
       commentId: comment.commentid,

@@ -47,8 +47,6 @@ export default function PhotoModal(props: PhotoModalProps) {
     dispatch(setAPost(props.post));
   }, [dispatch, props.post]);
 
-  const pageFromRedux = postInfo ? postInfo.commentInfo.comments.page : 1;
-  const [page, setPage] = useState<number>(pageFromRedux);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
@@ -58,6 +56,16 @@ export default function PhotoModal(props: PhotoModalProps) {
   const commentsRef = useRef<HTMLDivElement>(null);
   let hasMore: boolean = false;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+
+  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
+    return media.mediaId === props.mediaId;
+  });
+
+  const pageFromRedux = postInfo
+    ? postInfo.medias[currentPhotoIndex]?.commentInfo.comments.page
+    : 1;
+
+  const [page, setPage] = useState<number>(pageFromRedux);
   if (postInfo) {
     hasMore =
       page >=
@@ -65,15 +73,6 @@ export default function PhotoModal(props: PhotoModalProps) {
         parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) / 5
       );
   }
-  const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
-    return media.mediaId === props.mediaId;
-  });
-
-  useEffect(() => {
-    console.log("page", page);
-    console.log("hasMore", hasMore);
-  }, [hasMore, page]);
-
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (loading || hasMore || !postInfo) return;
@@ -105,6 +104,11 @@ export default function PhotoModal(props: PhotoModalProps) {
       props.postId,
     ]
   );
+
+  useEffect(() => {
+    console.log("page", page);
+    console.log("hasMore", hasMore);
+  }, [hasMore, page]);
 
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
@@ -658,6 +662,20 @@ export default function PhotoModal(props: PhotoModalProps) {
       settoShowReactionBox(false);
     }
   };
+
+  useEffect(() => {
+    if (!postInfo) {
+      return;
+    }
+    console.log(
+      "media COMMENT INFO",
+      postInfo?.medias[currentPhotoIndex]?.commentInfo.comments.comments
+    );
+    console.log(
+      "mecia REACTION INFO",
+      postInfo?.medias[currentPhotoIndex]?.reactionInfo
+    );
+  }, [currentPhotoIndex, postInfo, postInfo?.medias]);
 
   useEffect(() => {
     setLoading(true);
