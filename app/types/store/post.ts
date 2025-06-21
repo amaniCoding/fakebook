@@ -45,6 +45,11 @@ export type PagePayload = {
   postId: string;
 };
 
+export type loadingPayload = {
+  postId: string;
+  loading: true | false;
+};
+
 export type PostsPayLoad = {
   page: number;
 };

@@ -14,6 +14,7 @@ import {
   SubmittedPostType,
   PagePayload,
   PostsPayload,
+  loadingPayload,
 } from "@/app/types/store/post";
 import { CommentPayLoad } from "@/app/types/store/comment";
 import { APost, Post } from "@/app/types/frontend/post";
@@ -228,6 +229,16 @@ export const userPostSlice = createSlice({
       feed!.commentInfo.comments.page = action.payload.page;
     },
 
+    updatePostLoading: (state, action: PayloadAction<loadingPayload>) => {
+      const feed = state.feeds.posts.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      if (feed) {
+        feed.commentInfo.comments.loading = action.payload.loading;
+      }
+    },
+
     updatePostMediaCommentPage: (
       state,
       action: PayloadAction<MediaPagePayload>
@@ -283,6 +294,7 @@ export const {
   setPostComments,
   updateFeedsWithNewPost,
   setMediaComments,
+  updatePostLoading,
   updatePostCommentPage,
   updatePostMediaCommentPage,
 } = userPostSlice.actions;

@@ -23,6 +23,7 @@ import {
   setPostComments,
   updateFeedsWithComment,
   updatePostCommentPage,
+  updatePostLoading,
 } from "@/app/store/slices/user/post/postSlice";
 import CommentItem from "../comment-item/comment-item";
 
@@ -32,12 +33,12 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   const feed = feeds.posts.find((feed) => {
     return feed.postId === post.postId;
   });
-  const [page, setPage] = useState<number>(feed!.commentInfo.comments.page);
-  const [loading, setLoading] = useState<boolean>(true);
+  const page = feed?.commentInfo.comments.page;
+  const loading = feed?.commentInfo.comments.loading;
   const observer = useRef<IntersectionObserver>(null);
 
   const hasMore =
-    page >= Math.ceil(parseInt(post.commentInfo.commentsCount) / 5);
+    page! > Math.ceil(parseInt(post.commentInfo.commentsCount) / 5);
   /*   useEffect(() => {
     console.log("page", page);
     console.log("has more", hasMore);
@@ -55,8 +56,10 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = page + 1;
-          setPage(newPage);
+          if (!feed) {
+            return;
+          }
+          const newPage = feed.commentInfo.comments.page + 1;
           dispatch(
             updatePostCommentPage({
               postId: post.postId,
@@ -68,7 +71,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
       if (node) observer.current.observe(node);
     },
-    [dispatch, hasMore, loading, page, post.postId]
+    [dispatch, feed, hasMore, loading, post.postId]
   );
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
@@ -113,22 +116,39 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
   };
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(
+      updatePostLoading({
+        postId: post.postId,
+        loading: true,
+      })
+    );
     const fetchAllComments = async () => {
       try {
-        const comments = await getComments(post.postId, page);
+        const comments = await getComments(post.postId, page!);
         if (comments) {
+          if (!hasMore) {
+            dispatch(
+              setPostComments({
+                postId: post.postId,
+                comments: comments.comments,
+              })
+            );
+          }
           dispatch(
-            setPostComments({
+            updatePostLoading({
               postId: post.postId,
-              comments: comments.comments,
+              loading: false,
             })
           );
-          setLoading(false);
         }
       } catch (error) {
         console.error(`Error fetching comments ${error}`);
-        setLoading(false);
+        dispatch(
+          updatePostLoading({
+            postId: post.postId,
+            loading: false,
+          })
+        );
       }
     };
 
