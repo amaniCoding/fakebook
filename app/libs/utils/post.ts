@@ -13,6 +13,7 @@ import {
   mfirstReactor,
   mgroupReactions,
   mtotalComments,
+  mtotalReactions,
 } from "./media";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 export async function reReactPost(
@@ -126,7 +127,7 @@ export async function MediasInfo(postId: string) {
       ] = await Promise.all([
         mgroupReactions(postId, media.mediaid),
         mtotalComments(postId, media.mediaid),
-        mtotalComments(postId, media.mediaid),
+        mtotalReactions(postId, media.mediaid),
         mfirstReactor(postId, media.mediaid),
         isMediaReacted(postId, media.mediaid, LoggedInUser.userid),
       ]);

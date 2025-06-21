@@ -54,25 +54,28 @@ export default function PhotoModal(props: PhotoModalProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
-  let hasMore: boolean = false;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
 
   const currentPhotoIndexFromProp = postInfo?.medias.findIndex((media) => {
     return media.mediaId === props.mediaId;
   });
-
   const pageFromRedux = postInfo
     ? postInfo.medias[currentPhotoIndex]?.commentInfo.comments.page
     : 1;
 
-  const [page, setPage] = useState<number>(pageFromRedux);
-  if (postInfo) {
-    hasMore =
-      page >=
+  const [page, setPage] = useState<number>(1);
+  const _hasMore = postInfo
+    ? page ===
       Math.ceil(
         parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) / 5
-      );
-  }
+      )
+    : false;
+  const [hasMore, setHasMore] = useState<boolean>(false);
+
+  useEffect(() => {
+    setPage(pageFromRedux);
+    setHasMore(_hasMore);
+  }, [_hasMore, pageFromRedux, currentPhotoIndex]);
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (loading || hasMore || !postInfo) return;
@@ -300,9 +303,8 @@ export default function PhotoModal(props: PhotoModalProps) {
             );
           }
         )}
-        {parseInt(postInfo.commentInfo.commentsCount) > 0 && loading && (
-          <CommentsSkeleton />
-        )}
+        {parseInt(postInfo.medias[currentPhotoIndex]?.commentInfo.count) > 0 &&
+          loading && <CommentsSkeleton />}
       </div>
     );
   };
@@ -384,6 +386,18 @@ export default function PhotoModal(props: PhotoModalProps) {
           1
             ? "s"
             : ""}
+        </p>
+      );
+    }
+
+    if (
+      parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions) >
+        1 &&
+      !postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted
+    ) {
+      return (
+        <p>
+          {parseInt(postInfo.medias[currentPhotoIndex]?.reactionInfo.reactions)}
         </p>
       );
     }
@@ -692,15 +706,16 @@ export default function PhotoModal(props: PhotoModalProps) {
           page
         );
         if (mediaComments.length > 0) {
-          dispatch(
-            setMediaComments({
-              postId: props.postId,
-              mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
-              comments: mediaComments,
-            })
-          );
-
-          setLoading(false);
+          if (!hasMore) {
+            dispatch(
+              setMediaComments({
+                postId: props.postId,
+                mediaId: postInfo.medias[currentPhotoIndex]?.mediaId,
+                comments: mediaComments,
+              })
+            );
+            setLoading(false);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -709,7 +724,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     };
     fetchMediaComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhotoIndex, dispatch, page, props.postId]);
+  }, [currentPhotoIndex, dispatch, hasMore, page, props.postId]);
 
   useEffect(() => {
     if (!postInfo) {
