@@ -108,7 +108,8 @@ export default function PhotoModal(props: PhotoModalProps) {
   useEffect(() => {
     console.log("page", page);
     console.log("hasMore", hasMore);
-  }, [hasMore, page]);
+    console.log("page from redux", pageFromRedux);
+  }, [hasMore, page, currentPhotoIndex, pageFromRedux]);
 
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
