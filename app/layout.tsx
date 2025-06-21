@@ -14,8 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="h-screen">
-        <AppProvider>{children}</AppProvider>
+      <body>
+        <div className="h-screen">
+          <AppProvider>{children}</AppProvider>
+        </div>
       </body>
     </html>
   );
