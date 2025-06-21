@@ -14,10 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <div className="h-screen overflow-y-auto">
-          <AppProvider>{children}</AppProvider>
-        </div>
+      <body className="bg-gray-100">
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
