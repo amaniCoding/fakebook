@@ -14,7 +14,7 @@ import {
   storyphotoDummyData,
 } from "../../libs/placeholders/user/place-holder";
 import { User } from "@/app/types/db/query/user";
-import { letters, randomTexts } from "../utils";
+import { letters, randomTexts, reactions } from "../utils";
 const client = await db.connect();
 
 async function seedUser() {
@@ -191,28 +191,6 @@ async function seedMediaReactions() {
   `;
 }
 
-async function seedPostReactions() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS ureactions (
-      reactionid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      postid UUID NOT NULL,
-      userid UUID NOT NULL,
-      reactiontype TEXT NOT NULL,
-      date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
-
-  const insertedPostReactions = await Promise.all(
-    postReactionDummyData.map(async (reaction) => {
-      return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${reaction.postId}, ${reaction.userId}, ${reaction.reactionType}) ON CONFLICT (reactionid) DO NOTHING
-      `;
-    })
-  );
-
-  return insertedPostReactions;
-}
-
 async function seedCommentReactions() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -285,12 +263,14 @@ async function seeMedias() {
     posts.map((post) => {
       mediasArray = [];
       lettersArray = [];
-      randomPhotoCount = Math.floor(Math.random() * 15) + 1;
+      randomPhotoCount = Math.floor(Math.random() * 9) + 1;
       const photoOrPost = Math.floor(Math.random() * 5) + 1;
       const isOdd = photoOrPost % 2 !== 0;
 
       Array.from(Array(randomPhotoCount).keys()).map((key) => {
-        lettersArray.push(letters[key]);
+        const randomLetterIndex = Math.floor(Math.random() * 26);
+        const letter = letters[randomLetterIndex];
+        lettersArray.push(letter);
       });
 
       lettersArray.map((letter) => {
@@ -311,7 +291,9 @@ async function seeMedias() {
       mediasArray = [];
       randomPhotoCount = Math.floor(Math.random() * 15) + 1;
       Array.from(Array(randomPhotoCount).keys()).map((key) => {
-        lettersArray.push(letters[key]);
+        const randomLetterIndex = Math.floor(Math.random() * 26);
+        const letter = letters[randomLetterIndex];
+        lettersArray.push(letter);
       });
 
       lettersArray.map((letter) => {
@@ -326,6 +308,134 @@ async function seeMedias() {
     })
   );
   return medias;
+}
+
+async function seedPostComments() {
+  const postsdB = await client.sql`SELECT * FROM uposts`;
+  const usersdB = await client.sql`SELECT * FROM users`;
+
+  const [_posts, _users] = await Promise.all([postsdB, usersdB]);
+
+  const posts = _posts.rows;
+  const users = _users.rows;
+
+  const comments = await Promise.all(
+    posts.map((post) => {
+      const randomCommentCount = Math.floor(Math.random() * 701) + 700;
+
+      return Promise.all(
+        Array.from(Array(randomCommentCount).keys()).map((key) => {
+          const randomCommentIndex = Math.floor(Math.random() * 20);
+          const randomUserIndex = Math.floor(Math.random() * 20);
+          const randomUser = users[randomUserIndex];
+          const randomComment = randomTexts[randomCommentIndex];
+          return client.sql`INSERT INTO ucomments (postid, userid, comment) VALUES (${post.postId}, ${randomUser.userid}, ${randomComment}) ON CONFLICT (commentid) DO NOTHING`;
+        })
+      );
+    })
+  );
+  return comments;
+}
+
+async function seedPostMediaComments() {
+  const mediasdB =
+    await client.sql`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid`;
+  const usersdB = await client.sql`SELECT * FROM users`;
+
+  const [_medias, _users] = await Promise.all([mediasdB, usersdB]);
+
+  const posts = _medias.rows;
+  const users = _users.rows;
+
+  const comments = await Promise.all(
+    posts.map((media) => {
+      const randomCommentCount = Math.floor(Math.random() * 701) + 700;
+
+      return Promise.all(
+        Array.from(Array(randomCommentCount).keys()).map((key) => {
+          const randomCommentIndex = Math.floor(Math.random() * 20);
+          const randomUserIndex = Math.floor(Math.random() * 20);
+          const randomUser = users[randomUserIndex];
+          const randomComment = randomTexts[randomCommentIndex];
+          return client.sql`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, ${randomComment}) ON CONFLICT (commentid) DO NOTHING`;
+        })
+      );
+    })
+  );
+  return comments;
+}
+
+async function seedPostReactions() {
+  const postsdB = await client.sql`SELECT * FROM uposts`;
+  const usersdB = await client.sql`SELECT * FROM users`;
+
+  const [_posts, _users] = await Promise.all([postsdB, usersdB]);
+
+  const posts = _posts.rows;
+  const users = _users.rows;
+
+  const comments = await Promise.all(
+    posts.map((post) => {
+      const ReactionArray: string[] = [];
+
+      const randomReactionCount = Math.floor(Math.random() * 7) + 1;
+
+      Array.from(Array(randomReactionCount).keys()).map((count) => {
+        const randomReactionIndex = Math.floor(Math.random() * 7);
+        const reaction = reactions[randomReactionIndex];
+        ReactionArray.push(reaction);
+      });
+      return ReactionArray.map((reaction) => {
+        const randomReactionCount = Math.floor(Math.random() * 701) + 700;
+
+        return Promise.all(
+          Array.from(Array(randomReactionCount).keys()).map(() => {
+            const randomUserIndex = Math.floor(Math.random() * 20);
+            const randomUser = users[randomUserIndex];
+            return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postId}, ${randomUser.userid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
+          })
+        );
+      });
+    })
+  );
+  return comments;
+}
+
+async function seedPostMediaReactions() {
+  const mediasdB =
+    await client.sql`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid`;
+  const usersdB = await client.sql`SELECT * FROM users`;
+
+  const [_medias, _users] = await Promise.all([mediasdB, usersdB]);
+
+  const medias = _medias.rows;
+  const users = _users.rows;
+
+  const comments = await Promise.all(
+    medias.map((media) => {
+      const ReactionArray: string[] = [];
+
+      const randomReactionCount = Math.floor(Math.random() * 7) + 1;
+
+      Array.from(Array(randomReactionCount).keys()).map((count) => {
+        const randomReactionIndex = Math.floor(Math.random() * 7);
+        const reaction = reactions[randomReactionIndex];
+        ReactionArray.push(reaction);
+      });
+      return ReactionArray.map((reaction) => {
+        const randomReactionCount = Math.floor(Math.random() * 701) + 700;
+
+        return Promise.all(
+          Array.from(Array(randomReactionCount).keys()).map(() => {
+            const randomUserIndex = Math.floor(Math.random() * 20);
+            const randomUser = users[randomUserIndex];
+            return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
+          })
+        );
+      });
+    })
+  );
+  return comments;
 }
 
 async function seedStoryMedias() {
@@ -355,8 +465,12 @@ export async function GET() {
     await client.sql`BEGIN`;
     await client.sql`COMMIT`;
 
-    //await seedPost();
-    //await seeMedias();
+    await seedPost();
+    await seeMedias();
+    await seedPostComments();
+    await seedPostReactions();
+    await seedPostMediaComments();
+    await seedPostMediaReactions();
 
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {

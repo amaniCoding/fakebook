@@ -38,3 +38,9 @@ export type Post = {
   lname: string;
   profilepic: string;
 };
+
+export type PostReactor = {
+  userid: string;
+  fname: string;
+  lname: string;
+};

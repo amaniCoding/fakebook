@@ -13,10 +13,14 @@ import { useAppDispatch } from "@/app/store/hooks";
 import { CommentItemProps } from "./types";
 import { react, reReact } from "@/app/libs/actions/post";
 import { updateFeedsWithReactionInfo } from "@/app/store/slices/user/post/postSlice";
+import ViewReactions from "../../reaction/reactionbox";
+import { showReactionBox } from "@/app/store/slices/feed";
 
 export default function CommentItem({ feed, refer }: CommentItemProps) {
   const dispatch = useAppDispatch();
-
+  const [toShowViewReactions, setToShowViewReactions] =
+    useState<boolean>(false);
+  const [activeReactionType, setActiveReactionType] = useState<string>("");
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
@@ -28,6 +32,11 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
   const handelHideCommentBox = () => {
     setToShowCommentBox(false);
     dispatch(showCommentBox(false));
+  };
+
+  const handelHideViewReactionBox = () => {
+    setToShowViewReactions(false);
+    dispatch(showReactionBox(false));
   };
 
   const handelMouseOverLike = () => {
@@ -323,10 +332,24 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
     }
   };
 
+  const handelReactionClick = (activeReaction: string) => {
+    setToShowViewReactions(true);
+    setActiveReactionType(activeReaction);
+  };
+
   return (
     <>
       {toShowCommentBox && (
         <CommentBox post={feed} onClose={handelHideCommentBox} />
+      )}
+
+      {toShowViewReactions && (
+        <ViewReactions
+          activeReactionType={activeReactionType}
+          groupedReactions={feed.reactionInfo.reactionGroup}
+          onClose={handelHideViewReactionBox}
+          postId={feed.postId}
+        />
       )}
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
@@ -335,7 +358,11 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
                   return (
-                    <ReactionIcons key={index} reactiontype={gr.reactionType} />
+                    <ReactionIcons
+                      onClick={handelReactionClick}
+                      key={index}
+                      reactiontype={gr.reactionType}
+                    />
                   );
                 })
               : null}

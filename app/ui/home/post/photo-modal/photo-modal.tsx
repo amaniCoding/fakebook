@@ -741,7 +741,7 @@ export default function PhotoModal(props: PhotoModalProps) {
   return (
     <>
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">
-        <div className=" grid grid-cols-12 gap-3 ">
+        <div className=" grid grid-cols-12">
           <div className="lg:col-span-9 col-span-12 h-screen bg-black relative">
             <div className="absolute top-2 left-2 flex items-center">
               <Link href={"/"} scroll={false} className=" cursor-pointer">

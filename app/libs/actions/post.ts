@@ -17,6 +17,7 @@ import {
 import { fetchNewPost, fetchPosts, fetchPostsCount } from "../data/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { AddPostState } from "@/app/types/action/user/post";
+import { UserReaction } from "@/app/types/db/query/reaction";
 export async function createPost(
   _prevState: AddPostState | undefined,
   formData: FormData
@@ -207,4 +208,26 @@ export async function fetchFeedCount() {
 export async function fetchFeeds(userid: string, page: number) {
   const feeds = await fetchPosts(userid, page);
   return feeds;
+}
+
+export async function getReactors(
+  postId: string,
+  reactionType: string,
+  page: number
+) {
+  const offest = page - 1 * 7;
+  const query =
+    await sql<UserReaction>`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND ureactions.reactiontype = ${reactionType} LIMIT 7 OFFSET ${offest}`;
+  const reactors = query.rows.map((user) => {
+    return {
+      user: {
+        userId: user.userid,
+        fName: user.fname,
+        lName: user.lname,
+        profilePic: user.profilepic,
+      },
+      reactionType: user.reactiontype,
+    };
+  });
+  return reactors;
 }

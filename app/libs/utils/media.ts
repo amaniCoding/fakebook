@@ -107,3 +107,24 @@ export async function mcomments(postId: string, mediaId: string) {
     await sql<Comment>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediacomments ON umediacomments.mediaid = umedias.mediaid JOIN users ON users.userid = umediacomments.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId}`;
   return data.rows;
 }
+
+export async function constructGroupReactionInfoForMedia(
+  mediaId: string,
+  postId: string,
+  reaction: {
+    reactionType: string;
+    count: string;
+  }
+) {
+  const query =
+    await sql`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId} and ureactions.reactiontype = ${reaction.reactionType}`;
+  return {
+    [reaction.reactionType]: {
+      loading: true,
+      page: 1,
+      rowCount: query.rowCount,
+      reactors: [],
+      reactionType: reaction.reactionType,
+    },
+  };
+}

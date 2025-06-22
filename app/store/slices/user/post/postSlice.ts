@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ReactionInfoPayLoad } from "@/app/types/store/reaction";
+import {
+  ReactionInfoPayLoad,
+  ReactionLoadingPayLoad,
+  ReactionPagePayLoad,
+  ReactionReactorsPayLoad,
+} from "@/app/types/store/reaction";
 import {
   MediaCommentPayload,
   MediaCommentsPayload,
@@ -229,6 +234,74 @@ export const userPostSlice = createSlice({
       feed!.commentInfo.comments.page = action.payload.page;
     },
 
+    updatePostReactionPage: (
+      state,
+      action: PayloadAction<ReactionPagePayLoad>
+    ) => {
+      const feed = state.feeds.posts.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      if (feed) {
+        const reaction = feed.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].page = action.payload.page;
+        }
+      }
+    },
+
+    updatePostReactionReactors: (
+      state,
+      action: PayloadAction<ReactionReactorsPayLoad>
+    ) => {
+      const feed = state.feeds.posts.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      if (feed) {
+        const reaction = feed.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].reactors = [
+            ...reaction[action.payload.reactionType].reactors,
+            ...action.payload.reactors,
+          ];
+          reaction[action.payload.reactionType].loading = false;
+        }
+      }
+    },
+
+    updatePostReactionLoading: (
+      state,
+      action: PayloadAction<ReactionLoadingPayLoad>
+    ) => {
+      const feed = state.feeds.posts.find((feed) => {
+        return feed.postId === action.payload.postId;
+      });
+
+      if (feed) {
+        const reaction = feed.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].loading =
+            action.payload.loading;
+        }
+      }
+    },
+
     updatePostLoading: (state, action: PayloadAction<loadingPayload>) => {
       const feed = state.feeds.posts.find((feed) => {
         return feed.postId === action.payload.postId;
@@ -296,7 +369,10 @@ export const {
   setMediaComments,
   updatePostLoading,
   updatePostCommentPage,
+  updatePostReactionPage,
+  updatePostReactionReactors,
   updatePostMediaCommentPage,
+  updatePostReactionLoading,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

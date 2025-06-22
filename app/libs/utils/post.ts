@@ -3,12 +3,14 @@ import { sql } from "@vercel/postgres";
 import {
   Comment,
   GroupReaction,
+  PostReactor,
   Reaction,
   ReactionInfo,
 } from "@/app/types/db/query/post";
 import { Media } from "@/app/types/db/query/media";
 import { CommentsCount } from "@/app/types/db/query/post";
 import {
+  constructGroupReactionInfoForMedia,
   isMediaReacted,
   mfirstReactor,
   mgroupReactions,
@@ -151,6 +153,15 @@ export async function MediasInfo(postId: string) {
             page: 1,
           },
         },
+        groupReactionInfo: await Promise.all(
+          reactionGroup.map((reaction) => {
+            return constructGroupReactionInfoForMedia(
+              media.mediaid,
+              postId,
+              reaction
+            );
+          })
+        ),
       };
     })
   );
@@ -190,4 +201,42 @@ export async function comments(postId: string) {
       },
     };
   });
+}
+
+export async function getReactorsForReactionType(
+  postId: string,
+  reactionType: string
+) {
+  const reactors =
+    await sql<PostReactor>`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND reactiontype = ${reactionType}`;
+  return {
+    reactionType: reactionType,
+    reactors: reactors.rows.map((reactor) => {
+      return {
+        userId: reactor.userid,
+        fName: reactor.fname,
+        Lname: reactor.lname,
+      };
+    }),
+  };
+}
+
+export async function constructGroupReactionInfo(
+  postId: string,
+  reaction: {
+    reactionType: string;
+    count: string;
+  }
+) {
+  const query =
+    await sql`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId} and ureactions.reactiontype = ${reaction.reactionType}`;
+  return {
+    [reaction.reactionType]: {
+      loading: true,
+      page: 1,
+      rowCount: query.rowCount,
+      reactors: [],
+      reactionType: reaction.reactionType,
+    },
+  };
 }

@@ -49,3 +49,13 @@ export const letters = [
   "y",
   "z",
 ];
+
+export const reactions = [
+  "like",
+  "love",
+  "care",
+  "haha",
+  "waw",
+  "sad",
+  "angry",
+];

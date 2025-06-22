@@ -10,3 +10,12 @@ export type ReactionInfo = {
   fname: string;
   lname: string;
 };
+
+export type UserReaction = {
+  reactionid: string;
+  reactiontype: string;
+  userid: string;
+  fname: string;
+  lname: string;
+  profilepic: string;
+};

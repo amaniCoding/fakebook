@@ -8,6 +8,7 @@ import {
   totalReactions,
   totalComments,
   MediasInfo,
+  constructGroupReactionInfo,
 } from "../utils/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 
@@ -72,6 +73,11 @@ export async function fetchPosts(userId: string, page: number) {
             reactions: _totalPostReactions,
             reactionGroup: _groupPostReactions,
           },
+          groupReactionInfo: await Promise.all(
+            _groupPostReactions.map((reaction) => {
+              return constructGroupReactionInfo(row.postid, reaction);
+            })
+          ),
         };
       })
     );
@@ -133,6 +139,11 @@ export async function fetchNewPost(userId: string, postId: string) {
             reactions: _totalPostReactions,
             reactionGroup: _groupPostReactions,
           },
+          groupReactionInfo: await Promise.all(
+            _groupPostReactions.map((reaction) => {
+              return constructGroupReactionInfo(row.postid, reaction);
+            })
+          ),
         };
       })
     );
@@ -191,6 +202,11 @@ export async function fetchPostInfo(postId: string) {
         reactions: _totalPostReactions,
         reactionGroup: _groupPostReactions,
       },
+      groupReactionInfo: await Promise.all(
+        _groupPostReactions.map((reaction) => {
+          return constructGroupReactionInfo(postId, reaction);
+        })
+      ),
     };
   } catch (error) {
     console.log("Failed to fetch postinfo", error);

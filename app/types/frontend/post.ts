@@ -7,6 +7,19 @@ export type Media = {
   media: string;
 };
 
+export type GroupedReactionsInfo = {
+  [reactionType: string]: {
+    loading: boolean;
+    page: number;
+    rowCount: number | null;
+    reactors: {
+      user: User;
+      reactionType: string;
+    }[];
+    reactionType: string;
+  };
+};
+
 export type Post = {
   postId: string;
   post: string;
@@ -15,6 +28,7 @@ export type Post = {
   user: User;
   commentInfo: CommentInfo;
   reactionInfo: ReactionInfo;
+  groupReactionInfo: GroupedReactionsInfo[];
 };
 
 export type APost = {
@@ -33,6 +47,7 @@ export type APost = {
       reactions: string;
       reactionGroup: ReactionGroup[];
     };
+    groupReactionInfo: GroupedReactionsInfo[];
     commentInfo: {
       count: string;
       comments: {
@@ -44,4 +59,5 @@ export type APost = {
   }[];
   commentInfo: CommentInfo;
   reactionInfo: ReactionInfo;
+  groupReactionInfo: GroupedReactionsInfo[];
 };
