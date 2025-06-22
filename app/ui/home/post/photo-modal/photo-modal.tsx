@@ -41,7 +41,7 @@ import {
   mReReact,
 } from "@/app/libs/actions/media";
 import { showReactionBox } from "@/app/store/slices/feed";
-import ViewReactions from "./reaction/reactionbox";
+import ViewReactions from "../reaction/reactionbox";
 
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
