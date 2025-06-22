@@ -229,7 +229,7 @@ export async function constructGroupReactionInfo(
   }
 ) {
   const query =
-    await sql`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId} and ureactions.reactiontype = ${reaction.reactionType}`;
+    await sql`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND ureactions.reactiontype = ${reaction.reactionType}`;
   return {
     [reaction.reactionType]: {
       loading: true,

@@ -117,7 +117,7 @@ export async function constructGroupReactionInfoForMedia(
   }
 ) {
   const query =
-    await sql`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE postid = ${postId} and ureactions.reactiontype = ${reaction.reactionType}`;
+    await sql`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umedias.mediaid = umediareactions.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND ureactions.reactiontype = ${reaction.reactionType}`;
   return {
     [reaction.reactionType]: {
       loading: true,
