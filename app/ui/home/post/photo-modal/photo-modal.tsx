@@ -40,6 +40,9 @@ import {
   mReact,
   mReReact,
 } from "@/app/libs/actions/media";
+import { showReactionBox } from "@/app/store/slices/feed";
+import ViewReactions from "./reaction/reactionbox";
+
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
@@ -68,6 +71,9 @@ export default function PhotoModal(props: PhotoModalProps) {
   }, [currentPhotoIndexFromProp]);
 
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
+  const [toShowViewReactionBox, setToShowViewReactionBox] =
+    useState<boolean>(false);
+  const [activeReactionType, setActiveReactionType] = useState<string>("");
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
 
   const [comment, setComment] = useState<string>("");
@@ -160,7 +166,13 @@ export default function PhotoModal(props: PhotoModalProps) {
     ) {
       return postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup.map(
         (gr, index) => {
-          return <ReactionIcons key={index} reactiontype={gr.reactionType} />;
+          return (
+            <ReactionIcons
+              key={index}
+              reactiontype={gr.reactionType}
+              onClick={handelShowReactionBox}
+            />
+          );
         }
       );
     }
@@ -673,6 +685,11 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
+  const handelShowReactionBox = (activeReactionType: string) => {
+    setToShowViewReactionBox(true);
+    setActiveReactionType(activeReactionType);
+  };
+
   useEffect(() => {
     if (!postInfo) {
       return;
@@ -738,8 +755,25 @@ export default function PhotoModal(props: PhotoModalProps) {
     setcommentsScrollHeight(`${commentsRef.current?.scrollHeight}px`);
   }, [currentPhotoIndex, postInfo, dispatch, props.postId]);
 
+  const closeViewReactionBox = () => {
+    setToShowViewReactionBox(false);
+    dispatch(showReactionBox(false));
+  };
+
   return (
     <>
+      {toShowViewReactionBox && (
+        <ViewReactions
+          activeReactionType={activeReactionType}
+          groupedReactions={
+            postInfo &&
+            postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionGroup
+          }
+          onClose={closeViewReactionBox}
+          postId={props.postId}
+          mediaId={postInfo && postInfo.medias[currentPhotoIndex]?.mediaId}
+        />
+      )}
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">
         <div className=" grid grid-cols-12">
           <div className="lg:col-span-9 col-span-12 h-screen bg-black relative">

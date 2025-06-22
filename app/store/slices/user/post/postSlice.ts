@@ -12,6 +12,9 @@ import {
   MediaReactionInfoPayLoad,
   MediaPagePayload,
   MeidaLoadingPayload,
+  MediaReactionLoadingPayLoad,
+  MediaReactionPagePayLoad,
+  MediaReactionReactorsPayLoad,
 } from "@/app/types/store/media";
 import {
   InsertCommentAction,
@@ -255,6 +258,27 @@ export const userPostSlice = createSlice({
       }
     },
 
+    updatePostMediaReactionPage: (
+      state,
+      action: PayloadAction<MediaReactionPagePayLoad>
+    ) => {
+      const media = state.aPost?.medias.find((media) => {
+        return media.mediaId === action.payload.mediaId;
+      });
+
+      if (media) {
+        const reaction = media.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].page = action.payload.page;
+        }
+      }
+    },
+
     updatePostReactionReactors: (
       state,
       action: PayloadAction<ReactionReactorsPayLoad>
@@ -280,6 +304,31 @@ export const userPostSlice = createSlice({
       }
     },
 
+    updatePostMediaReactionReactors: (
+      state,
+      action: PayloadAction<MediaReactionReactorsPayLoad>
+    ) => {
+      const media = state.aPost?.medias.find((media) => {
+        return media.mediaId === action.payload.mediaId;
+      });
+
+      if (media) {
+        const reaction = media.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].reactors = [
+            ...reaction[action.payload.reactionType].reactors,
+            ...action.payload.reactors,
+          ];
+          reaction[action.payload.reactionType].loading = false;
+        }
+      }
+    },
+
     updatePostReactionLoading: (
       state,
       action: PayloadAction<ReactionLoadingPayLoad>
@@ -287,9 +336,29 @@ export const userPostSlice = createSlice({
       const feed = state.feeds.posts.find((feed) => {
         return feed.postId === action.payload.postId;
       });
-
       if (feed) {
         const reaction = feed.groupReactionInfo.find((reactionInfo) => {
+          return (
+            reactionInfo[action.payload.reactionType].reactionType ===
+            action.payload.reactionType
+          );
+        });
+        if (reaction) {
+          reaction[action.payload.reactionType].loading =
+            action.payload.loading;
+        }
+      }
+    },
+
+    updatePostMediaReactionLoading: (
+      state,
+      action: PayloadAction<MediaReactionLoadingPayLoad>
+    ) => {
+      const media = state.aPost?.medias.find((media) => {
+        return media.mediaId === action.payload.mediaId;
+      });
+      if (media) {
+        const reaction = media.groupReactionInfo.find((reactionInfo) => {
           return (
             reactionInfo[action.payload.reactionType].reactionType ===
             action.payload.reactionType
@@ -373,6 +442,9 @@ export const {
   updatePostReactionReactors,
   updatePostMediaCommentPage,
   updatePostReactionLoading,
+  updatePostMediaReactionPage,
+  updatePostMediaReactionReactors,
+  updatePostMediaReactionLoading,
 } = userPostSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
