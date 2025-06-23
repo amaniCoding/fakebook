@@ -48,10 +48,10 @@ async function seedPost() {
       const isOdd = randomNumberForIsPost % 2 !== 0;
 
       if (isOdd) {
-        return client.sql`INSERT INTO uposts (posttype, userid) VALUES ('userpost', ${users[randomUserIndex].userid}) ON CONFLICT (postid) DO NOTHING;
+        return client.sql`INSERT INTO uposts (userid, posttype) VALUES (${users[randomUserIndex].userid}, 'posttype') ON CONFLICT (postid) DO NOTHING;
       `;
       }
-      return client.sql`INSERT INTO uposts (posttype, userid, post) VALUES ('userpost', ${users[randomUserIndex].userid}, ${post}) ON CONFLICT (postid) DO NOTHING;
+      return client.sql`INSERT INTO uposts (userid, post, posttype) VALUES (${users[randomUserIndex].userid}, ${post}, 'posttype') ON CONFLICT (postid) DO NOTHING;
       `;
     })
   );
