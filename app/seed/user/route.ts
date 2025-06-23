@@ -238,7 +238,7 @@ async function seeMedias() {
       /** Recreate */
       lettersArray = [];
       mediasArray = [];
-      randomPhotoCount = Math.floor(Math.random() * 15) + 1;
+      randomPhotoCount = Math.floor(Math.random() * 9) + 1;
       Array.from(Array(randomPhotoCount).keys()).map(() => {
         const randomLetterIndex = Math.floor(Math.random() * 26);
         const letter = letters[randomLetterIndex];
@@ -414,8 +414,8 @@ export async function GET() {
     await client.sql`BEGIN`;
     await client.sql`COMMIT`;
 
-    await seedPost();
-    // await seeMedias();
+    //await seedPost();
+    await seeMedias();
     // await seedPostComments();
     // await seedPostReactions();
     // await seedPostMediaComments();
