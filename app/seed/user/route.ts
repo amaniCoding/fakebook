@@ -354,7 +354,7 @@ async function seedPostReactions() {
       });
       return Promise.all(
         ReactionArray.map((reaction) => {
-          const randomReactionCount = Math.floor(Math.random() * 200) + 200;
+          const randomReactionCount = Math.floor(Math.random() * 201) + 200;
 
           return Promise.all(
             Array.from(Array(randomReactionCount).keys()).map(() => {
