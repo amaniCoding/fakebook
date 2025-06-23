@@ -354,13 +354,13 @@ async function seedPostReactions() {
       });
       return Promise.all(
         ReactionArray.map((reaction) => {
-          const randomReactionCount = Math.floor(Math.random() * 201) + 200;
+          const randomReactionCount = Math.floor(Math.random() * 701) + 700;
 
           return Promise.all(
             Array.from(Array(randomReactionCount).keys()).map(() => {
               const randomUserIndex = Math.floor(Math.random() * 20);
               const randomUser = users[randomUserIndex];
-              return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postId}, ${randomUser.userid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
+              return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postid}, ${randomUser.userid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
             })
           );
         })
