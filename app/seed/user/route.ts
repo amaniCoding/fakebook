@@ -400,9 +400,9 @@ export async function GET() {
     await client.sql`COMMIT`;
 
     //await seedPost();
-    await seeMedias();
+    //await seeMedias();
     // await seedPostComments();
-    //await seedPostReactions();
+    await seedPostReactions();
     // await seedPostMediaComments();
     // await seedPostMediaReactions();
     // await seedReplyReactions();
