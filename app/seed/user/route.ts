@@ -399,8 +399,8 @@ export async function GET() {
     await client.sql`BEGIN`;
     await client.sql`COMMIT`;
 
-    await seedPost();
-    //await seeMedias();
+    //await seedPost();
+    await seeMedias();
     // await seedPostComments();
     //await seedPostReactions();
     // await seedPostMediaComments();
