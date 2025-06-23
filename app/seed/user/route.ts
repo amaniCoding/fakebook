@@ -39,7 +39,7 @@ async function seedPost() {
   const usersDb = await client.sql<User>`SELECT * FROM users`;
   const users = usersDb.rows;
   const insertedPosts = await Promise.all(
-    Array.from(Array(500).keys()).map(() => {
+    Array.from(Array(100).keys()).map(() => {
       const randomUserIndex = Math.floor(Math.random() * 20);
       const randomTextIndex = Math.floor(Math.random() * 20);
       const post = randomTexts[randomTextIndex];
@@ -343,26 +343,11 @@ async function seedPostReactions() {
 
   const _reactions = await Promise.all(
     posts.map((post) => {
-      const ReactionArray: string[] = [];
-
-      const randomReactionCount = Math.floor(Math.random() * 7) + 1;
-
-      Array.from(Array(randomReactionCount).keys()).map(() => {
-        const randomReactionIndex = Math.floor(Math.random() * 7);
-        const reaction = reactions[randomReactionIndex];
-        ReactionArray.push(reaction);
-      });
       return Promise.all(
-        ReactionArray.map((reaction) => {
-          const randomReactionCount = Math.floor(Math.random() * 301) + 200;
-
-          return Promise.all(
-            Array.from(Array(randomReactionCount).keys()).map(() => {
-              const randomUserIndex = Math.floor(Math.random() * 20);
-              const randomUser = users[randomUserIndex];
-              return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postid}, ${randomUser.userid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
-            })
-          );
+        Array.from(Array(50).keys()).map(() => {
+          const randomUserIndex = Math.floor(Math.random() * 20);
+          const randomUser = users[randomUserIndex];
+          return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postid}, ${randomUser.userid}, 'like') ON CONFLICT (reactionid) DO NOTHING`;
         })
       );
     })
@@ -414,10 +399,10 @@ export async function GET() {
     await client.sql`BEGIN`;
     await client.sql`COMMIT`;
 
-    //await seedPost();
+    await seedPost();
     //await seeMedias();
     // await seedPostComments();
-    await seedPostReactions();
+    //await seedPostReactions();
     // await seedPostMediaComments();
     // await seedPostMediaReactions();
     // await seedReplyReactions();
