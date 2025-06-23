@@ -347,7 +347,7 @@ async function seedPostReactions() {
         Array.from(Array(50).keys()).map(() => {
           const randomUserIndex = Math.floor(Math.random() * 20);
           const randomUser = users[randomUserIndex];
-          return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postid}, ${randomUser.userid}, 'love') ON CONFLICT (reactionid) DO NOTHING`;
+          return client.sql`INSERT INTO ureactions (postid, userid, reactiontype) VALUES (${post.postid}, ${randomUser.userid}, 'wow') ON CONFLICT (reactionid) DO NOTHING`;
         })
       );
     })
