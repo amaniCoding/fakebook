@@ -341,7 +341,7 @@ async function seedPostReactions() {
   const posts = _posts.rows;
   const users = _users.rows;
 
-  const comments = await Promise.all(
+  const _reactions = await Promise.all(
     posts.map((post) => {
       const ReactionArray: string[] = [];
 
@@ -367,7 +367,7 @@ async function seedPostReactions() {
       );
     })
   );
-  return comments;
+  return _reactions;
 }
 
 async function seedPostMediaReactions() {
@@ -415,9 +415,9 @@ export async function GET() {
     await client.sql`COMMIT`;
 
     //await seedPost();
-    await seeMedias();
+    //await seeMedias();
     // await seedPostComments();
-    // await seedPostReactions();
+    await seedPostReactions();
     // await seedPostMediaComments();
     // await seedPostMediaReactions();
     // await seedReplyReactions();
