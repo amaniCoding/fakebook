@@ -157,7 +157,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
 
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
-      <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
+      <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10 shadow-xl">
         <div className="flex rounded-t-xl items-center justify-between mb-2 border-b-2 border-b-slate-200 p-2 sticky w-full left-0 right-0 bg-white top-0">
           <p></p>
           <p>
