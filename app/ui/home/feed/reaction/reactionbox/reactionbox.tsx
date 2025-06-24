@@ -10,7 +10,7 @@ import {
   updatePostReactionPage,
   updatePostReactionReactors,
 } from "@/app/store/slices/user/post/postSlice";
-import ReactorItem from "./reactoritem/reactoritem";
+import ReactorItem from "../reactoritem/reactoritem";
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
 export default function ViewReactions({
   onClose,

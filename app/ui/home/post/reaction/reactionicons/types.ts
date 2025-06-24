@@ -10,7 +10,8 @@ export type ReactionBoxTypes = {
 
 export type ReactionIconsProps = {
   reactiontype: string;
-  onClick: (reactionType: string) => void;
+  onClick: (activeReaction: string) => void;
   onHover: (index: number) => void;
-  isActive: boolean;
+  index: number;
+  activeIndex: number;
 };

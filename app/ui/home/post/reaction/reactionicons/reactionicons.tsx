@@ -1,18 +1,25 @@
 "use client";
-import { ReactionIconsProps } from "./types";
 import Image from "next/image";
+import { ReactionIconsProps } from "./types";
 
 export default function ReactionIcons({
-  reactiontype,
-  isActive,
   onClick,
+  reactiontype,
+  onHover,
+  index,
+  activeIndex,
 }: ReactionIconsProps) {
   if (reactiontype === "like") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -24,17 +31,22 @@ export default function ReactionIcons({
             onClick("like");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
   }
   if (reactiontype === "love") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -46,7 +58,7 @@ export default function ReactionIcons({
             onClick("love");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
@@ -54,10 +66,15 @@ export default function ReactionIcons({
 
   if (reactiontype === "care") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -69,17 +86,22 @@ export default function ReactionIcons({
             onClick("care");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
   }
   if (reactiontype === "haha") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -91,17 +113,22 @@ export default function ReactionIcons({
             onClick("haha");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
   }
   if (reactiontype === "wow") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -113,17 +140,22 @@ export default function ReactionIcons({
             onClick("wow");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
   }
   if (reactiontype === "sad") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -135,7 +167,7 @@ export default function ReactionIcons({
             onClick("sad");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );
@@ -143,10 +175,15 @@ export default function ReactionIcons({
 
   if (reactiontype === "angry") {
     return (
-      <div className={`relative hover:bg-gray-100 rounded-lg px-3`}>
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
+        }}
+      >
         <div
-          className={`absolute left-0 bottom-0 w-16 border-b-2 ${
-            isActive ? "border-b-blue-600" : "border-b-transparent"
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex ? "block" : "hidden"
           }`}
         ></div>
         <Image
@@ -158,7 +195,7 @@ export default function ReactionIcons({
             onClick("angry");
           }}
           sizes="100vh"
-          className="w-10 h-10 object-cover rounded-full block border-b flex-none"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
         />
       </div>
     );

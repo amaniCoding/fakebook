@@ -41,7 +41,7 @@ import {
 } from "@/app/libs/actions/media";
 import { showReactionBox } from "@/app/store/slices/feed";
 import ViewReactions from "../reaction/reactionbox/reactionbox";
-import ReactionIcons from "../reaction/reactionicons";
+import ReactionIcons from "../reaction/reactionicons/reactionicons";
 
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
@@ -171,11 +171,12 @@ export default function PhotoModal(props: PhotoModalProps) {
         (gr, index) => {
           return (
             <ReactionIcons
+              onClick={handelReactionClick}
               key={index}
               reactiontype={gr.reactionType}
-              onClick={handelShowReactionBox}
-              onHover={onHoverReaction}
-              isActive={index === activeReactionIndex}
+              onHover={hoverReactionIcon}
+              index={index}
+              activeIndex={activeReactionIndex}
             />
           );
         }
@@ -690,12 +691,12 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
-  const handelShowReactionBox = (activeReactionType: string) => {
+  const handelReactionClick = (activeReactionType: string) => {
     setActiveReactionType(activeReactionType);
     setToShowViewReactionBox(true);
   };
 
-  const onHoverReaction = (index: number) => {
+  const hoverReactionIcon = (index: number) => {
     setActiveReactionIndex(index);
   };
 

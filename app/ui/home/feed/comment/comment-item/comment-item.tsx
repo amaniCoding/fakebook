@@ -13,7 +13,7 @@ import { useAppDispatch } from "@/app/store/hooks";
 import { CommentItemProps } from "./types";
 import { react, reReact } from "@/app/libs/actions/post";
 import { updateFeedsWithReactionInfo } from "@/app/store/slices/user/post/postSlice";
-import ViewReactions from "../../reaction/reactionbox";
+import ViewReactions from "../../reaction/reactionbox/reactionbox";
 import { showReactionBox } from "@/app/store/slices/feed";
 
 export default function CommentItem({ feed, refer }: CommentItemProps) {
