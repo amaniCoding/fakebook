@@ -32,27 +32,14 @@ export default function ViewReactions({
     );
   });
 
-  const page =
-    reactionInfo && reactionInfo[_activeReactionType]?.page
-      ? reactionInfo[_activeReactionType].page
-      : 1;
+  const page = reactionInfo && reactionInfo[_activeReactionType].page;
 
-  const rowCount =
-    reactionInfo && reactionInfo[_activeReactionType]?.rowCount
-      ? reactionInfo[_activeReactionType].rowCount
-      : 0;
+  const rowCount = reactionInfo && reactionInfo[_activeReactionType].rowCount;
+  const loading = reactionInfo && reactionInfo[_activeReactionType].loading;
 
-  const loading =
-    reactionInfo && reactionInfo[_activeReactionType]?.loading
-      ? reactionInfo[_activeReactionType].loading
-      : true;
+  const reactors = reactionInfo && reactionInfo[_activeReactionType].reactors;
 
-  const reactors =
-    reactionInfo && reactionInfo[_activeReactionType]?.reactors
-      ? reactionInfo[_activeReactionType].reactors
-      : [];
-
-  const hasMore = page > Math.ceil(rowCount / 7);
+  const hasMore = page! > Math.ceil(rowCount! / 7);
 
   const handelReactionClick = (reactionType: string) => {
     setActiveReactionType(reactionType);
@@ -66,7 +53,7 @@ export default function ViewReactions({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = page + 1;
+          const newPage = page! + 1;
           console.log("PAGE__", newPage);
           dispatch(
             updatePostReactionPage({
@@ -87,7 +74,8 @@ export default function ViewReactions({
     console.log("PAGE", page);
     console.log("HAS MORE", hasMore);
     console.log("ROW COUNT", rowCount);
-  }, [hasMore, page, rowCount]);
+    console.log("FEED__REACTIONINFO_", feed?.groupReactionInfo);
+  }, [feed, hasMore, page, rowCount]);
 
   useEffect(() => {
     dispatch(
@@ -99,7 +87,7 @@ export default function ViewReactions({
     );
     const getReactorsForReaction = async () => {
       try {
-        const reactors = await getReactors(postId, _activeReactionType, page);
+        const reactors = await getReactors(postId, _activeReactionType, page!);
         if (!hasMore) {
           dispatch(
             updatePostReactionReactors({
@@ -161,13 +149,13 @@ export default function ViewReactions({
         </div>
 
         <div className="px-3 w-full h-[430px] overflow-y-auto">
-          {reactors.map((reactor, index) => {
+          {reactors!.map((reactor, index) => {
             return (
               <ReactorItem
                 key={index}
                 reactor={reactor}
                 ref={
-                  reactors.length === index + 1 ? lastReactorElementRef : null
+                  reactors!.length === index + 1 ? lastReactorElementRef : null
                 }
               />
             );
