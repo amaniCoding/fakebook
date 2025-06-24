@@ -1,6 +1,6 @@
 "use client";
-import { ReactionIconsProps } from "./types";
 import Image from "next/image";
+import { ReactionIconsProps } from "./types";
 
 export default function ReactionIcons({
   reactiontype,

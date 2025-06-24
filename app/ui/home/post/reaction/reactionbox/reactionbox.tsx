@@ -1,6 +1,6 @@
 "use client";
 import { FaXmark } from "react-icons/fa6";
-import ReactionIcons from "./reactionicons";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getReactors } from "@/app/libs/actions/post";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
@@ -9,8 +9,9 @@ import {
   updatePostMediaReactionPage,
   updatePostMediaReactionReactors,
 } from "@/app/store/slices/user/post/postSlice";
-import ReactorItem from "./reactoritem/reactoritem";
-import { ReactionBoxTypes } from "./types";
+import ReactorItem from "../reactoritem/reactoritem";
+import { ReactionBoxTypes } from "../types";
+import ReactionIcons from "./reactionicons";
 export default function ViewReactions({
   onClose,
   activeReactionType,

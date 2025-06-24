@@ -40,7 +40,7 @@ import {
   mReReact,
 } from "@/app/libs/actions/media";
 import { showReactionBox } from "@/app/store/slices/feed";
-import ViewReactions from "../reaction/reactionbox";
+import ViewReactions from "../reaction/reactionbox/reactionbox";
 import ReactionIcons from "../reaction/reactionicons";
 
 export default function PhotoModal(props: PhotoModalProps) {
@@ -174,7 +174,7 @@ export default function PhotoModal(props: PhotoModalProps) {
               key={index}
               reactiontype={gr.reactionType}
               onClick={handelShowReactionBox}
-              index={index}
+              onHover={onHoverReaction}
               isActive={index === activeReactionIndex}
             />
           );
@@ -690,10 +690,13 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
-  const handelShowReactionBox = (activeReactionType: string, index: number) => {
+  const handelShowReactionBox = (activeReactionType: string) => {
     setActiveReactionType(activeReactionType);
-    setActiveReactionIndex(index);
     setToShowViewReactionBox(true);
+  };
+
+  const onHoverReaction = (index: number) => {
+    setActiveReactionIndex(index);
   };
 
   useEffect(() => {
