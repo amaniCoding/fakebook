@@ -145,7 +145,7 @@ export default function ViewReactions({
           />
         </div>
 
-        <div className="w-full h-[430px] overflow-y-auto">
+        <div className="px-3 w-full h-[430px] overflow-y-auto">
           {reactors.map((reactor, index) => {
             return (
               <ReactorItem
