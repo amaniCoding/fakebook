@@ -9,7 +9,7 @@ import {
   updatePostMediaReactionReactors,
 } from "@/app/store/slices/user/post/postSlice";
 import ReactorItem from "../reactoritem/reactoritem";
-import { ReactionBoxTypes } from "../types";
+import { ReactionBoxTypes } from "../reactionicons/types";
 import ReactionIcons from "./reactionicons";
 import { getMediaReactors } from "@/app/libs/actions/post";
 export default function ViewReactions({
