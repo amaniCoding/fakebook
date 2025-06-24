@@ -299,7 +299,6 @@ export const userPostSlice = createSlice({
             ...reaction[action.payload.reactionType].reactors,
             ...action.payload.reactors,
           ];
-          reaction[action.payload.reactionType].loading = false;
         }
       }
     },

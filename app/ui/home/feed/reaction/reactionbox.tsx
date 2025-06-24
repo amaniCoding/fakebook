@@ -90,14 +90,14 @@ export default function ViewReactions({
   }, [hasMore, page, rowCount]);
 
   useEffect(() => {
+    dispatch(
+      updatePostReactionLoading({
+        postId: postId,
+        reactionType: _activeReactionType,
+        loading: true,
+      })
+    );
     const getReactorsForReaction = async () => {
-      dispatch(
-        updatePostReactionLoading({
-          postId: postId,
-          reactionType: _activeReactionType,
-          loading: true,
-        })
-      );
       try {
         const reactors = await getReactors(postId, _activeReactionType, page);
         if (!hasMore) {

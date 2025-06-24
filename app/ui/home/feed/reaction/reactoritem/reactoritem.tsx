@@ -92,10 +92,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
     return null;
   };
   return (
-    <div
-      className="flex items-center justify-between mb-4 bg-amber-400"
-      ref={ref}
-    >
+    <div className="flex items-center justify-between mb-4" ref={ref}>
       <div className="flex items-center space-x-2">
         <div className="relative">
           <Image
