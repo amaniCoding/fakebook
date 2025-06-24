@@ -836,7 +836,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                 <p className="text-sm">View Post</p>
               </div>
               <div className={``}>
-                <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center justify-between mb-5 pl-3">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
                       <Image
