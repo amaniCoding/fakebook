@@ -248,7 +248,7 @@ export const userPostSlice = createSlice({
       if (feed) {
         const reaction = feed.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });
@@ -269,7 +269,7 @@ export const userPostSlice = createSlice({
       if (media) {
         const reaction = media.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });
@@ -290,7 +290,7 @@ export const userPostSlice = createSlice({
       if (feed) {
         const reaction = feed.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });
@@ -315,7 +315,7 @@ export const userPostSlice = createSlice({
       if (media) {
         const reaction = media.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });
@@ -339,7 +339,7 @@ export const userPostSlice = createSlice({
       if (feed) {
         const reaction = feed.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });

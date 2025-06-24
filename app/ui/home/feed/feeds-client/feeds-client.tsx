@@ -14,9 +14,6 @@ export default function FeedsClient() {
   const [page, setPage] = useState<number>(1);
   const _rowCount = feedsFromRedux.rowsCount ? feedsFromRedux.rowsCount : 0;
   const hasMore = page > Math.ceil(_rowCount / 5);
-  useEffect(() => {
-    console.log("FEEDS FROM REDUX", feedsFromRedux);
-  }, [feedsFromRedux]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);
@@ -37,9 +34,6 @@ export default function FeedsClient() {
     [hasMore, loading, page]
   );
 
-  /**
-   * set feed data for the first time
-   */
   useEffect(() => {
     const fetchAllFeeds = async () => {
       try {

@@ -10,6 +10,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/like.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -21,6 +22,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/love.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -33,6 +35,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/care.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -44,6 +47,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/haha.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -55,6 +59,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/wow.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -66,6 +71,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/sad.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -78,6 +84,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           src={"/reactions/angry.png"}
           width={0}
           height={0}
+          className="w-8 h8"
           sizes="100vh"
         />
       );
@@ -85,7 +92,10 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
     return null;
   };
   return (
-    <div className="flex items-center justify-between" ref={ref}>
+    <div
+      className="flex items-center justify-between mb-4 bg-amber-400"
+      ref={ref}
+    >
       <div className="flex items-center space-x-2">
         <div className="relative">
           <Image
@@ -94,7 +104,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-14 h-14 rounded-full"
+            className="w-11 h-11 rounded-full object-cover"
           />
           <div className="w-4 h-4 rounded-full absolute bottom-0 right-0">
             {renderUserReactionAccordingly(reactor.reactionType)}
@@ -104,7 +114,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
           {reactor.user.fName} {reactor.user.lName}
         </p>
       </div>
-      <button className="px-2 py-2.5">Add Friend</button>
+      <button className="px-2 py-2.5 bg-gray-100 rounded-lg">Add Friend</button>
     </div>
   );
 }

@@ -19,39 +19,40 @@ export default function ViewReactions({
   postId,
 }: ReactionBoxTypes) {
   const dispatch = useAppDispatch();
+  const [_activeReactionType, setActiveReactionType] =
+    useState(activeReactionType);
   const feeds = useAppSelector((state) => state.userPost.feeds);
   const feed = feeds.posts.find((feed) => {
     return feed.postId === postId;
   });
 
   const reactionInfo = feed?.groupReactionInfo.find((reactionInfo) => {
-    return reactionInfo[activeReactionType].reactionType === activeReactionType;
+    return (
+      reactionInfo[_activeReactionType]?.reactionType === _activeReactionType
+    );
   });
 
   const page =
-    reactionInfo && reactionInfo[activeReactionType].page
-      ? reactionInfo[activeReactionType].page
+    reactionInfo && reactionInfo[_activeReactionType].page
+      ? reactionInfo[_activeReactionType].page
       : 1;
 
   const rowCount =
-    reactionInfo && reactionInfo[activeReactionType].rowCount
-      ? reactionInfo[activeReactionType].rowCount
+    reactionInfo && reactionInfo[_activeReactionType].rowCount
+      ? reactionInfo[_activeReactionType].rowCount
       : 0;
 
   const loading =
-    reactionInfo && reactionInfo[activeReactionType].loading
-      ? reactionInfo[activeReactionType].loading
+    reactionInfo && reactionInfo[_activeReactionType].loading
+      ? reactionInfo[_activeReactionType].loading
       : true;
 
   const reactors =
-    reactionInfo && reactionInfo[activeReactionType].reactors
-      ? reactionInfo[activeReactionType].reactors
+    reactionInfo && reactionInfo[_activeReactionType].reactors
+      ? reactionInfo[_activeReactionType].reactors
       : [];
 
   const hasMore = page > rowCount / 7;
-
-  const [_activeReactionType, setActiveReactionType] =
-    useState(activeReactionType);
 
   const handelReactionClick = (reactionType: string) => {
     setActiveReactionType(reactionType);
@@ -66,10 +67,11 @@ export default function ViewReactions({
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           const newPage = page + 1;
+          console.log("PAGE__", newPage);
           dispatch(
             updatePostReactionPage({
               postId: postId,
-              reactionType: activeReactionType,
+              reactionType: _activeReactionType,
               page: newPage,
             })
           );
@@ -78,25 +80,31 @@ export default function ViewReactions({
 
       if (node) observer.current.observe(node);
     },
-    [activeReactionType, dispatch, hasMore, loading, page, postId]
+    [_activeReactionType, dispatch, hasMore, loading, page, postId]
   );
+
+  useEffect(() => {
+    console.log("PAGE", page);
+    console.log("HAS MORE", hasMore);
+    console.log("ROW COUNT", rowCount);
+  }, [hasMore, page, rowCount]);
 
   useEffect(() => {
     const getReactorsForReaction = async () => {
       dispatch(
         updatePostReactionLoading({
           postId: postId,
-          reactionType: activeReactionType,
+          reactionType: _activeReactionType,
           loading: true,
         })
       );
       try {
-        const reactors = await getReactors(postId, activeReactionType, page);
+        const reactors = await getReactors(postId, _activeReactionType, page);
         if (!hasMore) {
           dispatch(
             updatePostReactionReactors({
               postId: postId,
-              reactionType: activeReactionType,
+              reactionType: _activeReactionType,
               reactors: reactors,
             })
           );
@@ -104,7 +112,7 @@ export default function ViewReactions({
         dispatch(
           updatePostReactionLoading({
             postId: postId,
-            reactionType: activeReactionType,
+            reactionType: _activeReactionType,
             loading: false,
           })
         );
@@ -113,14 +121,21 @@ export default function ViewReactions({
         dispatch(
           updatePostReactionLoading({
             postId: postId,
-            reactionType: activeReactionType,
+            reactionType: _activeReactionType,
             loading: false,
           })
         );
       }
     };
     getReactorsForReaction();
-  }, [activeReactionType, dispatch, hasMore, page, postId]);
+  }, [
+    _activeReactionType,
+    activeReactionType,
+    dispatch,
+    hasMore,
+    page,
+    postId,
+  ]);
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
       <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
@@ -149,7 +164,7 @@ export default function ViewReactions({
           {reactors.map((reactor, index) => {
             return (
               <ReactorItem
-                key={reactor.user.userId}
+                key={index}
                 reactor={reactor}
                 ref={
                   reactors.length === index + 1 ? lastReactorElementRef : null
