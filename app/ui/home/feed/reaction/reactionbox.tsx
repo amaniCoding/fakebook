@@ -33,22 +33,22 @@ export default function ViewReactions({
   });
 
   const page =
-    reactionInfo && reactionInfo[_activeReactionType].page
+    reactionInfo && reactionInfo[_activeReactionType]?.page
       ? reactionInfo[_activeReactionType].page
       : 1;
 
   const rowCount =
-    reactionInfo && reactionInfo[_activeReactionType].rowCount
+    reactionInfo && reactionInfo[_activeReactionType]?.rowCount
       ? reactionInfo[_activeReactionType].rowCount
       : 0;
 
   const loading =
-    reactionInfo && reactionInfo[_activeReactionType].loading
+    reactionInfo && reactionInfo[_activeReactionType]?.loading
       ? reactionInfo[_activeReactionType].loading
       : true;
 
   const reactors =
-    reactionInfo && reactionInfo[_activeReactionType].reactors
+    reactionInfo && reactionInfo[_activeReactionType]?.reactors
       ? reactionInfo[_activeReactionType].reactors
       : [];
 
