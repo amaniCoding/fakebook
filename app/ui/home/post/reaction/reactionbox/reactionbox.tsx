@@ -2,7 +2,6 @@
 import { FaXmark } from "react-icons/fa6";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getReactors } from "@/app/libs/actions/post";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import {
   updatePostMediaReactionLoading,
@@ -12,6 +11,7 @@ import {
 import ReactorItem from "../reactoritem/reactoritem";
 import { ReactionBoxTypes } from "../types";
 import ReactionIcons from "./reactionicons";
+import { getMediaReactors } from "@/app/libs/actions/post";
 export default function ViewReactions({
   onClose,
   activeReactionType,
@@ -26,30 +26,23 @@ export default function ViewReactions({
   });
 
   const reactionInfo = feed?.groupReactionInfo.find((reactionInfo) => {
-    return reactionInfo[activeReactionType].reactionType === activeReactionType;
+    return (
+      reactionInfo[activeReactionType]?.reactionType === activeReactionType
+    );
   });
 
-  const page =
-    reactionInfo && reactionInfo[activeReactionType].page
-      ? reactionInfo[activeReactionType].page
-      : 1;
+  const page = reactionInfo && reactionInfo[activeReactionType].page;
 
-  const rowCount =
-    reactionInfo && reactionInfo[activeReactionType].rowCount
-      ? reactionInfo[activeReactionType].rowCount
-      : 0;
+  const rowCount = reactionInfo && reactionInfo[activeReactionType].rowCount;
 
-  const loading =
-    reactionInfo && reactionInfo[activeReactionType].loading
-      ? reactionInfo[activeReactionType].loading
-      : true;
+  const loading = reactionInfo && reactionInfo[activeReactionType].loading;
 
   const reactors =
     reactionInfo && reactionInfo[activeReactionType].reactors
       ? reactionInfo[activeReactionType].reactors
       : [];
 
-  const hasMore = page > rowCount / 7;
+  const hasMore = page! > Math.ceil(rowCount! / 7);
 
   const [_activeReactionType, setActiveReactionType] =
     useState(activeReactionType);
@@ -66,7 +59,7 @@ export default function ViewReactions({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          const newPage = page + 1;
+          const newPage = page! + 1;
           dispatch(
             updatePostMediaReactionPage({
               mediaId: mediaId,
@@ -92,7 +85,12 @@ export default function ViewReactions({
         })
       );
       try {
-        const reactors = await getReactors(postId, activeReactionType, page);
+        const reactors = await getMediaReactors(
+          postId,
+          mediaId!,
+          activeReactionType,
+          page!
+        );
         dispatch(
           updatePostMediaReactionReactors({
             mediaId: mediaId,

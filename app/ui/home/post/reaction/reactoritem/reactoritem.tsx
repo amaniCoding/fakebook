@@ -1,7 +1,7 @@
 "use client";
 import { ReactorItemProps } from "./types";
 import Image from "next/image";
-export default function ReactorItem({ reactor }: ReactorItemProps) {
+export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
   const renderUserReactionAccordingly = (reactionType: string) => {
     if (reactionType === "like") {
       return (
@@ -85,7 +85,7 @@ export default function ReactorItem({ reactor }: ReactorItemProps) {
     return null;
   };
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between" ref={ref}>
       <div className="flex items-center space-x-2">
         <div className="relative">
           <Image
