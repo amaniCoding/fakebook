@@ -93,10 +93,12 @@ export async function mComment(
   loggedinuser: User,
   postId: string,
   mediaId: string,
-  comment: string
+  comment: string,
+  media?: string,
+  type?: string
 ) {
   const data =
-    await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${postId}, ${loggedinuser.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+    await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment, media, type) VALUES (${postId}, ${loggedinuser.userid}, ${mediaId}, ${comment}, ${media}, ${type}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
   return {
     commentId: data.rows[0].commentid,
@@ -107,6 +109,10 @@ export async function mComment(
       fName: loggedinuser.fname,
       lName: loggedinuser.lname,
       profilePic: loggedinuser.profilepic,
+    },
+    media: {
+      media: data.rows[0].media,
+      type: data.rows[0].type,
     },
   };
 }
@@ -125,6 +131,10 @@ export async function mComments(postId: string, mediaId: string, page: number) {
         lName: comment.lname,
         userId: comment.userid,
         profilePic: comment.profilepic,
+      },
+      media: {
+        media: comment.media,
+        type: comment.type,
       },
     };
   });

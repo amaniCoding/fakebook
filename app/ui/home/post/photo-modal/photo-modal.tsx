@@ -303,7 +303,18 @@ export default function PhotoModal(props: PhotoModalProps) {
                     <p className="font-semibold">
                       {comment?.user?.fName} {comment?.user?.lName}
                     </p>
-                    <p>{comment?.comment}</p>
+                    <p>{comment?.comment ? comment?.comment : null}</p>
+                    {comment.media.media !== null ? (
+                      <Image
+                        unoptimized
+                        className="w-20 h-20 rounded-full  object-cover"
+                        alt="Amanuel Ferede"
+                        src={comment.media.media}
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                      />
+                    ) : null}
                   </div>
 
                   <div className="flex space-x-4 pl-3">

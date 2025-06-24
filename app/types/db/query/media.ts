@@ -12,6 +12,8 @@ export type MComment = {
   fname: string;
   lname: string;
   profilepic: string;
+  media: string;
+  type: string;
 };
 
 export type ReactionGroup = {
