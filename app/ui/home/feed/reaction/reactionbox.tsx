@@ -52,7 +52,7 @@ export default function ViewReactions({
       ? reactionInfo[_activeReactionType].reactors
       : [];
 
-  const hasMore = page > rowCount / 7;
+  const hasMore = page > Math.ceil(rowCount / 7);
 
   const handelReactionClick = (reactionType: string) => {
     setActiveReactionType(reactionType);

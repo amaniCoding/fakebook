@@ -345,6 +345,7 @@ export const userPostSlice = createSlice({
         if (reaction) {
           reaction[action.payload.reactionType].loading =
             action.payload.loading;
+          alert("fuck");
         }
       }
     },
