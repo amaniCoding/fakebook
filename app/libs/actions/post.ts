@@ -97,6 +97,10 @@ export async function getComments(postId: string, page: number) {
           userId: comment.userid,
           profilePic: comment.profilepic,
         },
+        media: {
+          media: comment.media,
+          type: comment.type,
+        },
       };
     });
     return {
@@ -108,10 +112,16 @@ export async function getComments(postId: string, page: number) {
   }
 }
 
-export async function postComment(user: User, postId: string, comment: string) {
+export async function postComment(
+  user: User,
+  postId: string,
+  comment: string,
+  media?: string,
+  type?: string
+) {
   try {
     const insertComments =
-      await sql<Comment>`INSERT INTO ucomments (postid, userid, comment) VALUES (${postId}, ${user.userid}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+      await sql<Comment>`INSERT INTO ucomments (postid, userid, comment, media, type) VALUES (${postId}, ${user.userid}, ${comment}, ${media}, ${type}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
     return {
       comment: insertComments.rows[0].comment,
@@ -122,6 +132,10 @@ export async function postComment(user: User, postId: string, comment: string) {
         fName: user.fname,
         lName: user.lname,
         profilePic: user.profilepic,
+      },
+      media: {
+        media: insertComments.rows[0].media,
+        type: insertComments.rows[0].type,
       },
     };
   } catch (error) {

@@ -538,6 +538,17 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                     <div className="p-3 bg-gray-100 rounded-xl ">
                       <p className="font-semibold">Amanuel Ferede</p>
                       <p>{comment.comment !== null ? comment.comment : null}</p>
+                      {comment.media.media !== null ? (
+                        <Image
+                          unoptimized
+                          className="w-20 h-20 rounded-full  object-cover"
+                          alt="Amanuel Ferede"
+                          src={comment.media.media}
+                          width={0}
+                          height={0}
+                          sizes="100vh"
+                        />
+                      ) : null}
                     </div>
 
                     <div className="flex space-x-4 pl-3">

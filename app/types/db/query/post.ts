@@ -27,6 +27,8 @@ export type Comment = {
   fname: string;
   lname: string;
   profilepic: string;
+  media: string;
+  type: string;
 };
 
 export type Post = {

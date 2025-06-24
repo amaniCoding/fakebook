@@ -5,6 +5,10 @@ export type Comment = {
   comment: string;
   date: string;
   user: User;
+  media: {
+    media: string;
+    type: string;
+  };
 };
 
 export type CommentInfo = {
