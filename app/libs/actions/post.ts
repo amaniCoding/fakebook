@@ -215,7 +215,7 @@ export async function getReactors(
   reactionType: string,
   page: number
 ) {
-  const offest = page - 1 * 7;
+  const offest = (page - 1) * 7;
   const query =
     await sql<UserReaction>`SELECT * FROM uposts JOIN ureactions ON uposts.postid = ureactions.postid JOIN users ON ureactions.userid = users.userid WHERE uposts.postid = ${postId} AND ureactions.reactiontype = ${reactionType} LIMIT 7 OFFSET ${offest}`;
   const reactors = query.rows.map((user) => {

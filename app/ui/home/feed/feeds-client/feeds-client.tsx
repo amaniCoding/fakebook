@@ -15,9 +15,8 @@ export default function FeedsClient() {
   const _rowCount = feedsFromRedux.rowsCount ? feedsFromRedux.rowsCount : 0;
   const hasMore = page > Math.ceil(_rowCount / 5);
   useEffect(() => {
-    console.log("hasmore", hasMore);
-    console.log("page", page);
-  }, [hasMore, page]);
+    console.log("FEEDS FROM REDUX", feedsFromRedux);
+  }, [feedsFromRedux]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>(null);

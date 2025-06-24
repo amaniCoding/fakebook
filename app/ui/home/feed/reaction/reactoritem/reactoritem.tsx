@@ -1,7 +1,7 @@
 "use client";
 import { ReactorItemProps } from "./types";
 import Image from "next/image";
-export default function ReactorItem({ reactor }: ReactorItemProps) {
+export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
   const renderUserReactionAccordingly = (reactionType: string) => {
     if (reactionType === "like") {
       return (
@@ -85,18 +85,18 @@ export default function ReactorItem({ reactor }: ReactorItemProps) {
     return null;
   };
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between" ref={ref}>
       <div className="flex items-center space-x-2">
         <div className="relative">
           <Image
             alt="Amanuel Ferede"
-            src={"/reactions/like.png"}
+            src={reactor.user.profilePic}
             width={0}
             height={0}
             sizes="100vh"
             className="w-14 h-14 rounded-full"
           />
-          <div className="w-8 h-8 rounded-full absolute bottom-0 right-0">
+          <div className="w-4 h-4 rounded-full absolute bottom-0 right-0">
             {renderUserReactionAccordingly(reactor.reactionType)}
           </div>
         </div>

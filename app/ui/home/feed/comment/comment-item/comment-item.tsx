@@ -24,6 +24,14 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
   const [toShowCommentBox, setToShowCommentBox] = useState<boolean>(false);
   const [toShowReactionBox, settoShowReactionBox] = useState<boolean>(false);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout>();
+  const [reactionIconActiveIndex, setReactionIconActiveIndex] =
+    useState<number>(0);
+
+  const [activePostId, setActivePostId] = useState<string>("");
+  const hoverReactionIcon = (index: number) => {
+    setReactionIconActiveIndex(index);
+    setActivePostId(feed.postId);
+  };
   const handelShowCommentBox = () => {
     setToShowCommentBox(true);
     dispatch(showCommentBox(true));
@@ -184,7 +192,7 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
     }
     if (
       feed.reactionInfo.isReacted &&
-      feed.reactionInfo.reactionType === "lagh"
+      feed.reactionInfo.reactionType === "haha"
     ) {
       return (
         <div
@@ -333,8 +341,8 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
   };
 
   const handelReactionClick = (activeReaction: string) => {
-    setToShowViewReactions(true);
     setActiveReactionType(activeReaction);
+    setToShowViewReactions(true);
   };
 
   return (
@@ -354,7 +362,7 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
 
       <div className="flex items-center px-3 justify-between border-b py-2 border-b-gray-300">
         <div className="flex items-center space-x-0">
-          <div className="flex -space-x-1.5">
+          <div className="flex -space-x-1">
             {feed.reactionInfo.reactionGroup.length > 0
               ? feed.reactionInfo.reactionGroup.map((gr, index) => {
                   return (
@@ -362,6 +370,11 @@ export default function CommentItem({ feed, refer }: CommentItemProps) {
                       onClick={handelReactionClick}
                       key={index}
                       reactiontype={gr.reactionType}
+                      onHover={hoverReactionIcon}
+                      index={index}
+                      activeIndex={reactionIconActiveIndex}
+                      postId={feed.postId}
+                      activePostId={activePostId}
                     />
                   );
                 })

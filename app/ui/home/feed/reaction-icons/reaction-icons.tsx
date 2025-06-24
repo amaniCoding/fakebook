@@ -5,112 +5,201 @@ import Image from "next/image";
 export default function ReactionIcons({
   onClick,
   reactiontype,
+  onHover,
+  index,
+  activeIndex,
+  postId,
+  activePostId,
 }: ReactionIconsProps) {
   if (reactiontype === "like") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/like.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("like");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/like.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("like");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
   if (reactiontype === "love") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/love.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("love");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/love.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("love");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
 
   if (reactiontype === "care") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/care.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("care");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/care.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("care");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
   if (reactiontype === "haha") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/haha.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("care");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/haha.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("haha");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
   if (reactiontype === "wow") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/wow.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("like");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/wow.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("wow");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
   if (reactiontype === "sad") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/sad.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("sad");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/sad.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("sad");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
 
   if (reactiontype === "angry") {
     return (
-      <Image
-        alt="Amanuel Ferede"
-        src={"/reactions/angry.png"}
-        width={0}
-        height={0}
-        onClick={() => {
-          onClick("angry");
+      <div
+        className="relative cursor-pointer"
+        onMouseEnter={() => {
+          onHover(index);
         }}
-        sizes="100vh"
-        className="w-6 h-6 object-cover rounded-full block flex-none"
-      />
+      >
+        <div
+          className={`absolute bottom-0 w-6 h-[1px] bg-black ${
+            index == activeIndex && postId === activePostId ? "block" : "hidden"
+          }`}
+        ></div>
+        <Image
+          alt="Amanuel Ferede"
+          src={"/reactions/angry.png"}
+          width={0}
+          height={0}
+          onClick={() => {
+            onClick("angry");
+          }}
+          sizes="100vh"
+          className="w-6 h-6 object-cover rounded-full block flex-none"
+        />
+      </div>
     );
   }
   return null;

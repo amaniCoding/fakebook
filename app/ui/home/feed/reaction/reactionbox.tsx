@@ -11,6 +11,7 @@ import {
   updatePostReactionReactors,
 } from "@/app/store/slices/user/post/postSlice";
 import ReactorItem from "./reactoritem/reactoritem";
+import CommentsSkeleton from "@/app/ui/skeletons/comments";
 export default function ViewReactions({
   onClose,
   activeReactionType,
@@ -52,7 +53,7 @@ export default function ViewReactions({
   const [_activeReactionType, setActiveReactionType] =
     useState(activeReactionType);
 
-  const handelReactionClick = async (reactionType: string) => {
+  const handelReactionClick = (reactionType: string) => {
     setActiveReactionType(reactionType);
   };
   const observer = useRef<IntersectionObserver>(null);
@@ -91,13 +92,15 @@ export default function ViewReactions({
       );
       try {
         const reactors = await getReactors(postId, activeReactionType, page);
-        dispatch(
-          updatePostReactionReactors({
-            postId: postId,
-            reactionType: activeReactionType,
-            reactors: reactors,
-          })
-        );
+        if (!hasMore) {
+          dispatch(
+            updatePostReactionReactors({
+              postId: postId,
+              reactionType: activeReactionType,
+              reactors: reactors,
+            })
+          );
+        }
         dispatch(
           updatePostReactionLoading({
             postId: postId,
@@ -117,18 +120,16 @@ export default function ViewReactions({
       }
     };
     getReactorsForReaction();
-  }, [activeReactionType, dispatch, page, postId]);
+  }, [activeReactionType, dispatch, hasMore, page, postId]);
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
       <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
-        <div className="sticky flex items-center justify-between py-1 top-0 left-0 right-0">
+        <div className="sticky flex items-center border-b border-b-gray-200 shadow-sm justify-between py-2 px-5 top-0 left-0 right-0">
           <div className="flex items-center">
             {groupedReactions.map((reaction, index) => {
               return (
                 <ReactionIcons
-                  onClick={() => {
-                    handelReactionClick(reaction.reactionType);
-                  }}
+                  onClick={handelReactionClick}
                   isActive={_activeReactionType === reaction.reactionType}
                   key={index}
                   reactiontype={reaction.reactionType}
@@ -144,7 +145,7 @@ export default function ViewReactions({
           />
         </div>
 
-        <div className="w-full">
+        <div className="w-full h-[430px] overflow-y-auto">
           {reactors.map((reactor, index) => {
             return (
               <ReactorItem
@@ -156,6 +157,7 @@ export default function ViewReactions({
               />
             );
           })}
+          {loading && <CommentsSkeleton />}
         </div>
       </div>
     </section>
