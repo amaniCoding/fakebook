@@ -286,7 +286,7 @@ async function seedPostComments() {
           const randomMediaIndex = Math.floor(Math.random() * 26);
           const media = `/feeds/dummy/${letters[randomMediaIndex]}.jpg`;
 
-          return client.sql`INSERT INTO ucomments (postid, userid, comment, media, type) VALUES (${post.postid}, ${randomUser.userid}, ${randomComment}, ${media}, 'image/jpeg') ON CONFLICT (commentid) DO NOTHING`;
+          return client.sql`INSERT INTO ucomments (postid, userid, media, type) VALUES (${post.postid}, ${randomUser.userid}, ${media}, 'image/jpeg') ON CONFLICT (commentid) DO NOTHING`;
         })
       );
     })

@@ -537,7 +537,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                   <div className="">
                     <div className="p-3 bg-gray-100 rounded-xl ">
                       <p className="font-semibold">Amanuel Ferede</p>
-                      <p>{comment.comment}</p>
+                      <p>{comment.comment !== null ? comment.comment : null}</p>
                     </div>
 
                     <div className="flex space-x-4 pl-3">
