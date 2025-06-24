@@ -255,9 +255,10 @@ export default function PostBox(props: { onClose: () => void }) {
               </div>
             </div>
             <button
+              disabled={filesToView.length === 0 && !!postFromPostBox}
               type="submit"
               className={`w-full text-center  py-2 cursor-pointer text-white rounded-md ${
-                filesToView.length > 0 || postFromPostBox
+                filesToView.length > 0 || !!postFromPostBox
                   ? "bg-blue-600"
                   : "bg-gray-300"
               }`}
