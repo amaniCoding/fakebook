@@ -6,6 +6,7 @@ export default function ReactionIcons({
   reactiontype,
   isActive,
   onClick,
+  index,
 }: ReactionIconsProps) {
   if (reactiontype === "like") {
     return (
@@ -14,7 +15,9 @@ export default function ReactionIcons({
         src={"/reactions/like.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -29,7 +32,9 @@ export default function ReactionIcons({
         src={"/reactions/love.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -45,7 +50,9 @@ export default function ReactionIcons({
         src={"/reactions/care.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -60,7 +67,9 @@ export default function ReactionIcons({
         src={"/reactions/haha.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -75,7 +84,9 @@ export default function ReactionIcons({
         src={"/reactions/wow.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -90,7 +101,9 @@ export default function ReactionIcons({
         src={"/reactions/sad.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"
@@ -106,7 +119,9 @@ export default function ReactionIcons({
         src={"/reactions/angry.png"}
         width={0}
         height={0}
-        onClick={onClick}
+        onClick={() => {
+          onClick("like", index);
+        }}
         sizes="100vh"
         className={`w-6 h-6 object-cover rounded-full block border-b flex-none ${
           isActive ? "border-b-blue-600" : "border-b-transparent"

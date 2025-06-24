@@ -11,5 +11,6 @@ export type ReactionBoxTypes = {
 export type ReactionIconsProps = {
   reactiontype: string;
   isActive: boolean;
-  onClick: () => void;
+  onClick: (reactionType: string, index: number) => void;
+  index: number;
 };

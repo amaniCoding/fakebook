@@ -21,7 +21,6 @@ import { FaUserFriends } from "react-icons/fa";
 
 import { LoggedInUser } from "@/app/config/loggedinuser";
 
-import ReactionIcons from "../../feed/reaction-icons/reaction-icons";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 
 import CommentsSkeleton from "@/app/ui/skeletons/comments";
@@ -42,9 +41,13 @@ import {
 } from "@/app/libs/actions/media";
 import { showReactionBox } from "@/app/store/slices/feed";
 import ViewReactions from "../reaction/reactionbox";
+import ReactionIcons from "../reaction/reactionicons";
 
 export default function PhotoModal(props: PhotoModalProps) {
   const dispatch = useAppDispatch();
+
+  const [activeReactionIndex, setActiveReactionIndex] = useState<number>(0);
+
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
 
   const postInfo = useAppSelector((state) => state.userPost.aPost);
@@ -171,6 +174,8 @@ export default function PhotoModal(props: PhotoModalProps) {
               key={index}
               reactiontype={gr.reactionType}
               onClick={handelShowReactionBox}
+              index={index}
+              isActive={index === activeReactionIndex}
             />
           );
         }
@@ -685,9 +690,10 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
   };
 
-  const handelShowReactionBox = (activeReactionType: string) => {
-    setToShowViewReactionBox(true);
+  const handelShowReactionBox = (activeReactionType: string, index: number) => {
     setActiveReactionType(activeReactionType);
+    setActiveReactionIndex(index);
+    setToShowViewReactionBox(true);
   };
 
   useEffect(() => {
