@@ -93,12 +93,10 @@ export async function mComment(
   loggedinuser: User,
   postId: string,
   mediaId: string,
-  comment: string,
-  media?: string,
-  type?: string
+  comment: string
 ) {
   const data =
-    await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment, media, type) VALUES (${postId}, ${loggedinuser.userid}, ${mediaId}, ${comment}, ${media}, ${type}) ON CONFLICT (commentid) DO NOTHING RETURNING *
+    await sql<Comment>`INSERT INTO umediacomments (postid, userid, mediaid, comment, media, type) VALUES (${postId}, ${loggedinuser.userid}, ${mediaId}, ${comment}) ON CONFLICT (commentid) DO NOTHING RETURNING *
 `;
   return {
     commentId: data.rows[0].commentid,
