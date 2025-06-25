@@ -368,7 +368,7 @@ async function seedPostMediaReactions() {
   const _reactions = await Promise.all(
     medias.map((media) => {
       return Promise.all(
-        Array.from(Array(10).keys()).map(() => {
+        Array.from(Array(25).keys()).map(() => {
           const randomUserIndex = Math.floor(Math.random() * 20);
           const randomUser = users[randomUserIndex];
           return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postid}, ${randomUser.userid}, ${media.mediaid}, "like") ON CONFLICT (reactionid) DO NOTHING`;
