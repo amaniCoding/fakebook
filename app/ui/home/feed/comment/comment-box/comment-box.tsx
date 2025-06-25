@@ -541,7 +541,7 @@ export default function CommentBox({ post, onClose }: CommentBoxProps) {
                       {comment.media.media !== null ? (
                         <Image
                           unoptimized
-                          className="w-20 h-20 rounded-full  object-cover"
+                          className="w-96 object-cover"
                           alt="Amanuel Ferede"
                           src={comment.media.media}
                           width={0}

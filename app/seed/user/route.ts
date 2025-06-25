@@ -367,26 +367,11 @@ async function seedPostMediaReactions() {
 
   const _reactions = await Promise.all(
     medias.map((media) => {
-      const ReactionArray: string[] = [];
-
-      const randomReactionCount = Math.floor(Math.random() * 7) + 1;
-
-      Array.from(Array(randomReactionCount).keys()).map(() => {
-        const randomReactionIndex = Math.floor(Math.random() * 7);
-        const reaction = reactions[randomReactionIndex];
-        ReactionArray.push(reaction);
-      });
       return Promise.all(
-        ReactionArray.map((reaction) => {
-          const randomReactionCount = Math.floor(Math.random() * 701) + 200;
-
-          return Promise.all(
-            Array.from(Array(randomReactionCount).keys()).map(() => {
-              const randomUserIndex = Math.floor(Math.random() * 20);
-              const randomUser = users[randomUserIndex];
-              return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, ${reaction}) ON CONFLICT (reactionid) DO NOTHING`;
-            })
-          );
+        Array.from(Array(50).keys()).map(() => {
+          const randomUserIndex = Math.floor(Math.random() * 20);
+          const randomUser = users[randomUserIndex];
+          return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, "like") ON CONFLICT (reactionid) DO NOTHING`;
         })
       );
     })
@@ -401,10 +386,10 @@ export async function GET() {
 
     //await seedPost();
     //await seeMedias();
-    await seedPostComments();
+    //await seedPostComments();
     //await seedPostReactions();
-    // await seedPostMediaComments();
-    // await seedPostMediaReactions();
+    //await seedPostMediaComments();
+    await seedPostMediaReactions();
     // await seedReplyReactions();
     // await seedCommentReplies();
     // await seedCommentReactions();
