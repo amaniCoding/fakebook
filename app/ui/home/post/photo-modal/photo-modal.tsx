@@ -824,13 +824,13 @@ export default function PhotoModal(props: PhotoModalProps) {
           </div>
           <div className="lg:col-span-3 bg-white col-span-12">
             <NavBar2 />
-            <div className="">
-              <div className="flex items-center justify-between py-3 mb-3 pr-3 border-b border-gray-200">
+            <div className="h-[80vh overflow-y-hidden">
+              <div className="flex items-center justify-between py-3 mb-3 px-3 border-b border-gray-200">
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
               </div>
               <div className={``}>
-                <div className="flex items-center justify-between mb-5 pl-3">
+                <div className="flex items-center justify-between mb-5 px-3">
                   <div className="flex items-center space-x-2">
                     {postInfo?.user.profilePic ? (
                       <Image
@@ -839,7 +839,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                         width={0}
                         height={0}
                         sizes="100vh"
-                        className="w-10 h-10 rounded-full object-fill"
+                        className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : null}
                     <div className="flex flex-col">
