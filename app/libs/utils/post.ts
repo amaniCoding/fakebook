@@ -1,4 +1,3 @@
-"use server";
 import { sql } from "@vercel/postgres";
 import {
   Comment,
@@ -18,6 +17,7 @@ import {
   mtotalReactions,
 } from "./media";
 import { LoggedInUser } from "@/app/config/loggedinuser";
+
 export async function reReactPost(
   postId: string,
   userId: string,
@@ -237,6 +237,22 @@ export async function constructGroupReactionInfo(
       rowCount: query.rowCount,
       reactors: [],
       reactionType: reaction.reactionType,
+    },
+  };
+}
+
+export async function getGroupedReactionInfo(
+  postId: string,
+  commentId: string,
+  reactionInfo: { reactionType: string; count: string }
+) {
+  const query =
+    await sql`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN ucommentreactions ON ucommentreactions.commentid = ucomments.commentid WHERE ucomments.commentid = ${commentId} AND uposts.postid = ${postId}`;
+  return {
+    [reactionInfo.reactionType]: {
+      loading: true,
+      page: 1,
+      rowCount: query.rowCount,
     },
   };
 }

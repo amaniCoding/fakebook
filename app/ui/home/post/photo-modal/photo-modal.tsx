@@ -117,6 +117,7 @@ export default function PhotoModal(props: PhotoModalProps) {
     ]
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
   const renderCommentCount = () => {
@@ -824,7 +825,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           </div>
           <div className="lg:col-span-3 bg-white col-span-12">
             <NavBar2 />
-            <div className="h-[80vh overflow-y-hidden">
+            <div className="h-screen overflow-y-hidden">
               <div className="flex items-center justify-between py-3 mb-3 px-3 border-b border-gray-200">
                 <p className="text-sm">This is photo is from a post</p>
                 <p className="text-sm">View Post</p>
@@ -986,9 +987,7 @@ export default function PhotoModal(props: PhotoModalProps) {
                   </div>
                 </div>
 
-                <div
-                  className={`px-3 overflow-y-auto max-h-screen pb-96 min-h-[${commentsScrollHeight}]`}
-                >
+                <div className={`px-3 overflow-y-auto pb-96 max-h-[300px]`}>
                   {renderComments()}
                 </div>
               </div>

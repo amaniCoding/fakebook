@@ -18,6 +18,14 @@ import { fetchNewPost, fetchPosts, fetchPostsCount } from "../data/post";
 import { LoggedInUser } from "@/app/config/loggedinuser";
 import { AddPostState } from "@/app/types/action/user/post";
 import { UserReaction } from "@/app/types/db/query/reaction";
+import {
+  countCommentReactions,
+  countCommentReplies,
+  getCommentReactionInfo,
+  getCommentReplies,
+  groupCommentReactions,
+} from "../utils/post/comment/comment";
+import { groupReplyReactions } from "../utils/post/comment/reply/reply";
 export async function createPost(
   _prevState: AddPostState | undefined,
   formData: FormData
@@ -86,23 +94,52 @@ export async function getComments(postId: string, page: number) {
       commentsCount,
       comments,
     ]);
-    const commentsData = _comments.rows.map((comment) => {
-      return {
-        commentId: comment.commentid,
-        comment: comment.comment,
-        date: comment.date,
-        user: {
-          fName: comment.fname,
-          lName: comment.lname,
-          userId: comment.userid,
-          profilePic: comment.profilepic,
-        },
-        media: {
-          media: comment.media,
-          type: comment.type,
-        },
-      };
-    });
+    const commentsData = await Promise.all(
+      _comments.rows.map(async (comment) => {
+        const [
+          rxnsCount,
+          repliesCount,
+          groupedRxns,
+          reactionInfo,
+          replyReactionsInfo,
+        ] = await Promise.all([
+          countCommentReactions(postId, comment.commentid),
+          countCommentReplies(postId, comment.commentid),
+          groupCommentReactions(postId, comment.commentid),
+          getCommentReactionInfo(postId, comment.commentid),
+          groupReplyReactions(
+            postId,
+            comment.commentid,
+            await getCommentReplies(postId, comment.commentid)
+          ),
+        ]);
+        return {
+          commentId: comment.commentid,
+          comment: comment.comment,
+          date: comment.date,
+          user: {
+            fName: comment.fname,
+            lName: comment.lname,
+            userId: comment.userid,
+            profilePic: comment.profilepic,
+          },
+          media: {
+            media: comment.media,
+            type: comment.type,
+          },
+          reactionsCount: rxnsCount,
+          repliesCount: repliesCount,
+          groupedReactions: groupedRxns,
+          reactionsInfo: reactionInfo,
+          repliesInfo: {
+            loading: true,
+            page: 1,
+            rowsCount: 0,
+          },
+          replyReactionsInfo: replyReactionsInfo,
+        };
+      })
+    );
     return {
       comments: commentsData,
       count: _commentsCount.rowCount,
