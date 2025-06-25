@@ -96,6 +96,7 @@ export async function getComments(postId: string, page: number) {
     ]);
     const commentsData = await Promise.all(
       _comments.rows.map(async (comment) => {
+        const replyid = await getCommentReplies(postId, comment.commentid);
         const [
           rxnsCount,
           repliesCount,
@@ -107,11 +108,7 @@ export async function getComments(postId: string, page: number) {
           countCommentReplies(postId, comment.commentid),
           groupCommentReactions(postId, comment.commentid),
           getCommentReactionInfo(postId, comment.commentid),
-          groupReplyReactions(
-            postId,
-            comment.commentid,
-            await getCommentReplies(postId, comment.commentid)
-          ),
+          groupReplyReactions(postId, comment.commentid, replyid),
         ]);
         return {
           commentId: comment.commentid,
