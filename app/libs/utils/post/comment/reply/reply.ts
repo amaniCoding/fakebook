@@ -16,7 +16,7 @@ export async function groupReplyReactions(
   return rows;
 }
 
-export async function countCommentReactions(
+export async function countReplyReactions(
   postId: string,
   commentId: string,
   replyId: string
@@ -26,13 +26,7 @@ export async function countCommentReactions(
   return query.rowCount;
 }
 
-export async function countCommentReplies(postId: string, commentId: string) {
-  const query =
-    await sql`SELECT * FROM uposts JOIN ucomments ON uposts.postid = ucomments.postid JOIN ucommentreplies ON ucommentreplies.commentid = ucomments.commentid WHERE ucomments.commentid = ${commentId} AND uposts.postid = ${postId}`;
-  return query.rowCount;
-}
-
-export async function getCommentReactionInfo(
+export async function getReplyReactionInfo(
   postId: string,
   commentId: string,
   replyId: string

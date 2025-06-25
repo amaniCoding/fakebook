@@ -25,7 +25,10 @@ import {
   getCommentReplies,
   groupCommentReactions,
 } from "../utils/post/comment/comment";
-import { groupReplyReactions } from "../utils/post/comment/reply/reply";
+import {
+  countReplyReactions,
+  groupReplyReactions,
+} from "../utils/post/comment/reply/reply";
 export async function createPost(
   _prevState: AddPostState | undefined,
   formData: FormData
@@ -103,11 +106,15 @@ export async function getComments(postId: string, page: number) {
           groupedRxns,
           reactionInfo,
           replyReactionsInfo,
+          replyRxnsCount,
+          groupReplyRxns,
         ] = await Promise.all([
           countCommentReactions(postId, comment.commentid),
           countCommentReplies(postId, comment.commentid),
           groupCommentReactions(postId, comment.commentid),
           getCommentReactionInfo(postId, comment.commentid),
+          groupReplyReactions(postId, comment.commentid, replyid),
+          countReplyReactions(postId, comment.commentid, replyid),
           groupReplyReactions(postId, comment.commentid, replyid),
         ]);
         return {
@@ -133,6 +140,8 @@ export async function getComments(postId: string, page: number) {
             page: 1,
             rowsCount: 0,
           },
+          replyReactionsCount: replyRxnsCount,
+          groupedReplyReactions: groupReplyRxns,
           replyReactionsInfo: replyReactionsInfo,
         };
       })
