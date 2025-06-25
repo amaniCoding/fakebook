@@ -318,13 +318,13 @@ async function seedPostMediaComments() {
 
           const isOdd = mediaOrComment % 2 !== 0;
           if (isOdd) {
-            return client.sql`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, ${randomComment}) ON CONFLICT (commentid) DO NOTHING`;
+            return client.sql`INSERT INTO umediacomments (postid, userid, mediaid, comment) VALUES (${media.postid}, ${randomUser.userid}, ${media.mediaid}, ${randomComment}) ON CONFLICT (commentid) DO NOTHING`;
           }
 
           const randomLetterIndex = Math.floor(Math.random() * 26);
           const _media = `/feeds/dummy/${letters[randomLetterIndex]}.jpg`;
 
-          return client.sql`INSERT INTO umediacomments (postid, userid, mediaid, comment, media, type) VALUES (${media.postId}, ${randomUser.userid}, ${media.mediaid}, ${randomComment}, ${_media}, 'image/jpeg') ON CONFLICT (commentid) DO NOTHING`;
+          return client.sql`INSERT INTO umediacomments (postid, userid, mediaid, comment, media, type) VALUES (${media.postid}, ${randomUser.userid}, ${media.mediaid}, ${randomComment}, ${_media}, 'image/jpeg') ON CONFLICT (commentid) DO NOTHING`;
         })
       );
     })
