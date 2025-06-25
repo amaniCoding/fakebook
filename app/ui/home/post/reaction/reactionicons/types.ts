@@ -1,3 +1,4 @@
+import { APost } from "@/app/types/frontend/post";
 import { ReactionGroup } from "@/app/types/frontend/reaction";
 
 export type ReactionBoxTypes = {
@@ -6,6 +7,7 @@ export type ReactionBoxTypes = {
   groupedReactions: ReactionGroup[] | undefined;
   postId: string;
   mediaId: string | undefined;
+  postInfo: APost | undefined;
 };
 
 export type ReactionIconsProps = {

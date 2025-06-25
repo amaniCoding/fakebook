@@ -2,7 +2,7 @@
 import { FaXmark } from "react-icons/fa6";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import { useAppDispatch } from "@/app/store/hooks";
 import {
   updatePostMediaReactionLoading,
   updatePostMediaReactionPage,
@@ -18,34 +18,26 @@ export default function ViewReactions({
   groupedReactions,
   postId,
   mediaId,
+  postInfo,
 }: ReactionBoxTypes) {
   const dispatch = useAppDispatch();
-  const feeds = useAppSelector((state) => state.userPost.feeds);
-  const feed = feeds.posts.find((feed) => {
-    return feed.postId === postId;
-  });
+  const [_activeReactionType, setActiveReactionType] =
+    useState(activeReactionType);
 
-  const reactionInfo = feed?.groupReactionInfo.find((reactionInfo) => {
+  const reactionInfo = postInfo?.groupReactionInfo.find((reactionInfo) => {
     return (
-      reactionInfo[activeReactionType]?.reactionType === activeReactionType
+      reactionInfo[_activeReactionType]?.reactionType === _activeReactionType
     );
   });
 
-  const page = reactionInfo && reactionInfo[activeReactionType].page;
+  const page = reactionInfo && reactionInfo[_activeReactionType].page;
 
-  const rowCount = reactionInfo && reactionInfo[activeReactionType].rowCount;
+  const rowCount = reactionInfo && reactionInfo[_activeReactionType].rowCount;
 
-  const loading = reactionInfo && reactionInfo[activeReactionType].loading;
+  const loading = reactionInfo && reactionInfo[_activeReactionType].loading;
 
-  const reactors =
-    reactionInfo && reactionInfo[activeReactionType].reactors
-      ? reactionInfo[activeReactionType].reactors
-      : [];
-
+  const reactors = reactionInfo && reactionInfo[_activeReactionType].reactors;
   const hasMore = page! > Math.ceil(rowCount! / 7);
-
-  const [_activeReactionType, setActiveReactionType] =
-    useState(activeReactionType);
 
   const handelReactionClick = async (reactionType: string) => {
     setActiveReactionType(reactionType);
@@ -63,7 +55,7 @@ export default function ViewReactions({
           dispatch(
             updatePostMediaReactionPage({
               mediaId: mediaId,
-              reactionType: activeReactionType,
+              reactionType: _activeReactionType,
               page: newPage,
             })
           );
@@ -72,7 +64,7 @@ export default function ViewReactions({
 
       if (node) observer.current.observe(node);
     },
-    [activeReactionType, dispatch, hasMore, loading, mediaId, page]
+    [_activeReactionType, dispatch, hasMore, loading, mediaId, page]
   );
 
   useEffect(() => {
@@ -80,7 +72,7 @@ export default function ViewReactions({
       dispatch(
         updatePostMediaReactionLoading({
           mediaId: postId,
-          reactionType: activeReactionType,
+          reactionType: _activeReactionType,
           loading: true,
         })
       );
@@ -88,20 +80,20 @@ export default function ViewReactions({
         const reactors = await getMediaReactors(
           postId,
           mediaId!,
-          activeReactionType,
+          _activeReactionType,
           page!
         );
         dispatch(
           updatePostMediaReactionReactors({
             mediaId: mediaId,
-            reactionType: activeReactionType,
+            reactionType: _activeReactionType,
             reactors: reactors,
           })
         );
         dispatch(
           updatePostMediaReactionLoading({
             mediaId: mediaId,
-            reactionType: activeReactionType,
+            reactionType: _activeReactionType,
             loading: false,
           })
         );
@@ -110,17 +102,17 @@ export default function ViewReactions({
         dispatch(
           updatePostMediaReactionLoading({
             mediaId: mediaId,
-            reactionType: activeReactionType,
+            reactionType: _activeReactionType,
             loading: false,
           })
         );
       }
     };
     getReactorsForReaction();
-  }, [activeReactionType, dispatch, mediaId, page, postId]);
+  }, [_activeReactionType, dispatch, mediaId, page, postId]);
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
-      <div className="max-w-[700px] mx-auto rounded-xl bg-white my-10">
+      <div className="max-w-[550px] mx-auto rounded-xl bg-white my-10">
         <div className="sticky flex items-center justify-between py-1 top-0 left-0 right-0">
           <div className="flex items-center">
             {groupedReactions &&
@@ -145,14 +137,14 @@ export default function ViewReactions({
           />
         </div>
 
-        <div className="w-full">
-          {reactors.map((reactor, index) => {
+        <div className="px-3 w-full h-[430px] overflow-y-auto">
+          {reactors!.map((reactor, index) => {
             return (
               <ReactorItem
-                key={reactor.user.userId}
+                key={index}
                 reactor={reactor}
                 ref={
-                  reactors.length === index + 1 ? lastReactorElementRef : null
+                  reactors!.length === index + 1 ? lastReactorElementRef : null
                 }
               />
             );

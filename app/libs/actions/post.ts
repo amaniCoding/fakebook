@@ -254,7 +254,7 @@ export async function getMediaReactors(
 ) {
   const offest = (page - 1) * 7;
   const query =
-    await sql<UserReaction>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND ureactions.reactiontype = ${reactionType} LIMIT 7 OFFSET ${offest}`;
+    await sql<UserReaction>`SELECT * FROM uposts JOIN umedias ON uposts.postid = umedias.postid JOIN umediareactions ON umediareactions.mediaid = umedias.mediaid JOIN users ON umediareactions.userid = users.userid WHERE uposts.postid = ${postId} AND umedias.mediaid = ${mediaId} AND umediareactions.reactiontype = ${reactionType} LIMIT 7 OFFSET ${offest}`;
   const reactors = query.rows.map((user) => {
     return {
       user: {

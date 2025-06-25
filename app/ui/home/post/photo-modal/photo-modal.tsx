@@ -516,13 +516,13 @@ export default function PhotoModal(props: PhotoModalProps) {
     }
     if (
       postInfo.medias[currentPhotoIndex]?.reactionInfo.isReacted &&
-      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "lagh"
+      postInfo.medias[currentPhotoIndex]?.reactionInfo.reactionType === "haha"
     ) {
       return (
         <div
           className="flex items-center space-x-2 grow justify-center hover:bg-slate-50 px-3 py-1 rounded-md cursor-pointer"
           onClick={() => {
-            handelReaction(props.postId, LoggedInUser.userid, "lagh");
+            handelReaction(props.postId, LoggedInUser.userid, "haha");
           }}
           onMouseEnter={handelMouseOverLike}
           onMouseLeave={handelMouseOutLike}
@@ -793,6 +793,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           onClose={closeViewReactionBox}
           postId={props.postId}
           mediaId={postInfo && postInfo.medias[currentPhotoIndex]?.mediaId}
+          postInfo={postInfo}
         />
       )}
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">

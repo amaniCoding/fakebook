@@ -359,7 +359,7 @@ export const userPostSlice = createSlice({
       if (media) {
         const reaction = media.groupReactionInfo.find((reactionInfo) => {
           return (
-            reactionInfo[action.payload.reactionType].reactionType ===
+            reactionInfo[action.payload.reactionType]?.reactionType ===
             action.payload.reactionType
           );
         });
