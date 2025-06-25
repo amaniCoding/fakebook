@@ -371,7 +371,7 @@ async function seedPostMediaReactions() {
         Array.from(Array(25).keys()).map(() => {
           const randomUserIndex = Math.floor(Math.random() * 20);
           const randomUser = users[randomUserIndex];
-          return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postid}, ${randomUser.userid}, ${media.mediaid}, 'like') ON CONFLICT (reactionid) DO NOTHING`;
+          return client.sql`INSERT INTO umediareactions (postid, userid, mediaid, reactiontype) VALUES (${media.postid}, ${randomUser.userid}, ${media.mediaid}, 'love') ON CONFLICT (reactionid) DO NOTHING`;
         })
       );
     })
