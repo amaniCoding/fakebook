@@ -19,12 +19,15 @@ export default function ViewReactions({
   postId,
   mediaId,
   postInfo,
+  currentPhotoIndex,
 }: ReactionBoxTypes) {
   const dispatch = useAppDispatch();
   const [_activeReactionType, setActiveReactionType] =
     useState(activeReactionType);
 
-  const reactionInfo = postInfo?.groupReactionInfo.find((reactionInfo) => {
+  const reactionInfo = postInfo?.medias[
+    currentPhotoIndex
+  ].groupReactionInfo.find((reactionInfo) => {
     return (
       reactionInfo[_activeReactionType]?.reactionType === _activeReactionType
     );
@@ -83,13 +86,15 @@ export default function ViewReactions({
           _activeReactionType,
           page!
         );
-        dispatch(
-          updatePostMediaReactionReactors({
-            mediaId: mediaId,
-            reactionType: _activeReactionType,
-            reactors: reactors,
-          })
-        );
+        if (!hasMore) {
+          dispatch(
+            updatePostMediaReactionReactors({
+              mediaId: mediaId,
+              reactionType: _activeReactionType,
+              reactors: reactors,
+            })
+          );
+        }
         dispatch(
           updatePostMediaReactionLoading({
             mediaId: mediaId,
@@ -109,7 +114,14 @@ export default function ViewReactions({
       }
     };
     getReactorsForReaction();
-  }, [_activeReactionType, dispatch, mediaId, page, postId]);
+  }, [_activeReactionType, dispatch, hasMore, mediaId, page, postId]);
+
+  useEffect(() => {
+    console.log("PAGE", page);
+    console.log("HAS MORE", hasMore);
+    console.log("ROW COUNT", rowCount);
+    console.log("FEED__REACTIONINFO_", postInfo?.groupReactionInfo);
+  }, [hasMore, page, postInfo?.groupReactionInfo, rowCount]);
   return (
     <section className="bg-gray-100/75 fixed top-0 bottom-0 left-0 right-0 z-[300] overflow-hidden">
       <div className="max-w-[550px] mx-auto rounded-xl bg-white my-10">

@@ -117,12 +117,6 @@ export default function PhotoModal(props: PhotoModalProps) {
     ]
   );
 
-  useEffect(() => {
-    console.log("page", page);
-    console.log("hasMore", hasMore);
-    console.log("loading", loading);
-  }, [hasMore, loading, page, currentPhotoIndex]);
-
   const [commentsScrollHeight, setcommentsScrollHeight] = useState<string>("");
 
   const renderCommentCount = () => {
@@ -712,20 +706,6 @@ export default function PhotoModal(props: PhotoModalProps) {
   };
 
   useEffect(() => {
-    if (!postInfo) {
-      return;
-    }
-    console.log(
-      "media COMMENT INFO",
-      postInfo?.medias[currentPhotoIndex]?.commentInfo.comments.comments
-    );
-    console.log(
-      "mecia REACTION INFO",
-      postInfo?.medias[currentPhotoIndex]?.reactionInfo
-    );
-  }, [currentPhotoIndex, postInfo, postInfo?.medias]);
-
-  useEffect(() => {
     updatePostMediaCommentLoading({
       mediaId: postInfo?.medias[currentPhotoIndex]?.mediaId,
       loading: true,
@@ -794,6 +774,7 @@ export default function PhotoModal(props: PhotoModalProps) {
           postId={props.postId}
           mediaId={postInfo && postInfo.medias[currentPhotoIndex]?.mediaId}
           postInfo={postInfo}
+          currentPhotoIndex={currentPhotoIndex}
         />
       )}
       <div className="fixed top-0 left-0 bottom-0 right-0 z-50">

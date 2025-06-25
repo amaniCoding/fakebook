@@ -8,6 +8,7 @@ export type ReactionBoxTypes = {
   postId: string;
   mediaId: string | undefined;
   postInfo: APost | undefined;
+  currentPhotoIndex: number;
 };
 
 export type ReactionIconsProps = {

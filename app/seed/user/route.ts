@@ -306,7 +306,7 @@ async function seedPostMediaComments() {
 
   const comments = await Promise.all(
     posts.map((media) => {
-      const randomCommentCount = Math.floor(Math.random() * 701) + 700;
+      const randomCommentCount = Math.floor(Math.random() * 50) + 100;
 
       return Promise.all(
         Array.from(Array(randomCommentCount).keys()).map(() => {
@@ -388,8 +388,8 @@ export async function GET() {
     //await seeMedias();
     //await seedPostComments();
     //await seedPostReactions();
-    //await seedPostMediaComments();
-    await seedPostMediaReactions();
+    await seedPostMediaComments();
+    //await seedPostMediaReactions();
     // await seedReplyReactions();
     // await seedCommentReplies();
     // await seedCommentReactions();

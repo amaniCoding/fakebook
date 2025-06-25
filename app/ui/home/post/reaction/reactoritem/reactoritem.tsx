@@ -101,7 +101,7 @@ export default function ReactorItem({ reactor, ref }: ReactorItemProps) {
             width={0}
             height={0}
             sizes="100vh"
-            className="w-11 h-11 rounded-full object-cover"
+            className="w-9 h-9 rounded-full object-cover"
           />
           <div className="w-4 h-4 rounded-full absolute bottom-0 right-0">
             {renderUserReactionAccordingly(reactor.reactionType)}
